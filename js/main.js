@@ -213,6 +213,27 @@ const fiesta = el => window.confeti && confeti(el);
             }
         } catch { }
     }
+    // Musiquita de baile a 120 pulsos por minuto: bombo, platillo, bajo y melodía alegre
+    function musica(seg) {
+        if (!sonar()) return;
+        try {
+            const a = ac(), t0 = a.currentTime + .05, T = .5, sal = a.createGain(); sal.gain.value = .45; sal.connect(a.destination);
+            const nota = (hz, ini, dur, tipo, vol) => {
+                const o = a.createOscillator(), g = a.createGain(); o.type = tipo; o.frequency.value = hz; o.connect(g).connect(sal);
+                g.gain.setValueAtTime(vol, t0 + ini); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + dur); o.start(t0 + ini); o.stop(t0 + ini + dur + .02);
+            };
+            const bombo = ini => { const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(150, t0 + ini); o.frequency.exponentialRampToValueAtTime(45, t0 + ini + .25); g.gain.setValueAtTime(.9, t0 + ini); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + .3); o.connect(g).connect(sal); o.start(t0 + ini); o.stop(t0 + ini + .32) };
+            const plat = ini => { const n = ruido(.08), f = a.createBiquadFilter(), g = a.createGain(); f.type = 'highpass'; f.frequency.value = 7000; n.connect(f).connect(g).connect(sal); g.gain.setValueAtTime(.25, t0 + ini); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + .07); n.start(t0 + ini) };
+            const BAJO = [131, 131, 165, 165, 175, 175, 196, 196], MEL = [523, 659, 784, 659, 698, 880, 784, 1047];
+            const tiempos = Math.round(seg / T);
+            for (let i = 0; i < tiempos; i++) {
+                const t = i * T; bombo(t); plat(t + T / 2);
+                nota(BAJO[i % 8], t, T * .9, 'triangle', .5);
+                nota(MEL[i % 8], t, T * .45, 'square', .07); nota(MEL[i % 8] * (i % 2 ? 1.25 : 1.5), t + T / 2, T * .4, 'square', .05);
+            }
+            nota(1047, tiempos * T, .8, 'square', .08); nota(1319, tiempos * T, .8, 'square', .06); bombo(tiempos * T); plat(tiempos * T);
+        } catch { }
+    }
     function fanfarria() {
         if (!sonar()) return;
         try {
@@ -272,7 +293,7 @@ const fiesta = el => window.confeti && confeti(el);
             el('p', 'small', '✔ ' + nm + ' sale de la ruleta automáticamente para que no se repita.'));
         res.hidden = false; pintarLista();
         fanfarria(); fiesta(res);
-        if (window.Robot && Robot.presentar && !quieto()) Robot.presentar(nm).then(() => fiesta(res));
+        if (window.Robot && Robot.presentar && !quieto()) Robot.presentar(nm, { alBailar: musica }).then(() => fiesta(res));
         else robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
         pendiente = nm; tSacar = setTimeout(sacar, quieto() ? 800 : 2500);
     }

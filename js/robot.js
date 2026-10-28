@@ -81,7 +81,7 @@
 
         // Escena de la ruleta: el robot entra, mira el nombre y luego se acerca a la pantalla
         // como si mirara al público desde el otro lado del vidrio (romper la cuarta pared).
-        presentar(nombre) {
+        presentar(nombre, op = {}) {
             if (quieto()) return Promise.resolve();
             document.querySelector('.show')?.remove();
             const E = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e };
@@ -90,6 +90,15 @@
             show.setAttribute('role', 'dialog'); show.setAttribute('aria-label', 'Le toca a ' + nombre);
             cartel.append(E('small', null, '🎤 ¡Le toca a…'), E('b', null, nombre));
             const r = copiar('p-'); bot.append(r);
+            // Bracitos solo para el robot de la escena (para poder bailar)
+            const NS = 'http://www.w3.org/2000/svg', brazos = [[80, -1], [220, 1]].map(([x, lado]) => {
+                const g = document.createElementNS(NS, 'g'), b = document.createElementNS(NS, 'rect'), m = document.createElementNS(NS, 'circle');
+                Object.entries({ x: lado < 0 ? x - 52 : x, y: 262, width: 52, height: 16, rx: 8, fill: '#c9d5ee' }).forEach(([k, v]) => b.setAttribute(k, v));
+                Object.entries({ cx: x + lado * 56, cy: 270, r: 12, fill: '#22d3ee' }).forEach(([k, v]) => m.setAttribute(k, v));
+                g.append(b, m); g.style.transformBox = 'view-box'; g.style.transformOrigin = x + 'px 270px';
+                g.style.transform = 'rotate(' + (lado * 70) + 'deg)'; r.insertBefore(g, r.querySelector('#p-head')); return g;
+            });
+            const notas = E('div', 'show-notas'); show.append(notas);
             show.append(cartel, bot, vidrio, vaho, toc, dice, cerrar); document.body.append(show); comp.style.visibility = 'hidden';
             const ojos = r.querySelector('#p-eyes'), cabeza = r.querySelector('#p-head');
             [ojos, cabeza].forEach(x => { x.style.transformBox = 'fill-box'; x.style.transformOrigin = 'center'; x.style.transition = 'transform .45s cubic-bezier(.3,1.4,.5,1)' });
@@ -103,7 +112,30 @@
             const fin = new Promise(ok => listo = ok);
             const salir = () => { if (fuera) return; fuera = true; show.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' }).finished.then(() => { show.remove(); comp.style.visibility = ''; listo() }) };
             cerrar.onclick = salir; show.addEventListener('keydown', e => { if (e.key === 'Escape') salir() });
-            const LADO = 'translate(calc(-50% - 26vw), 0) scale(.62)', CERCA = 'translate(-50%, 34%) scale(2.3)';
+            // Coreografía de 8 tiempos (4 s a 120 pulsos por minuto)
+            async function bailar() {
+                const T = 500, brazo = (g, lado, pasos, dur) => g.animate(pasos.map(a => ({ transform: 'rotate(' + (lado * a) + 'deg)' })), { duration: dur, easing: 'ease-in-out' });
+                show.classList.add('baila'); op.alBailar && op.alBailar(8 * T / 1000);
+                dice.classList.add('centro'); habla('¡A bailar! 🎶'); setTimeout(() => { calla(); dice.classList.remove('centro') }, 1300);
+                ['♪', '♫', '♬', '♩', '♪', '♫'].forEach((n, i) => { const x = E('span', null, n); x.style.left = (12 + i * 15) + '%'; x.style.animationDelay = (i * .45) + 's'; notas.append(x) });
+                ojos.style.transform = 'scale(1.1, .55)';
+                // Tiempos 1-4: rebote, balanceo y brazos alternados
+                r.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-22px) rotate(-7deg)' }, { transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-22px) rotate(7deg)' }, { transform: 'translateY(0) rotate(0)' }], { duration: 4 * T, easing: 'ease-in-out' });
+                brazo(brazos[0], -1, [70, -40, 70, -40, 70], 4 * T); brazo(brazos[1], 1, [70, 70, -40, 70, -40], 4 * T);
+                cabeza.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(8deg)' }, { transform: 'rotate(-8deg)' }, { transform: 'rotate(8deg)' }, { transform: 'rotate(0)' }], { duration: 4 * T });
+                await espera(4 * T); if (fuera) return;
+                // Tiempos 5-6: pasitos de lado con los brazos arriba
+                r.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-46px) rotate(-5deg)' }, { transform: 'translateX(0)' }, { transform: 'translateX(46px) rotate(5deg)' }, { transform: 'translateX(0)' }], { duration: 2 * T, easing: 'ease-in-out' });
+                brazazos(-30, 2 * T);
+                await espera(2 * T); if (fuera) return;
+                // Tiempos 7-8: salto con vuelta completa y brazos arriba
+                r.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: 'translateY(-70px) rotate(180deg) scale(1.05)', offset: .45 }, { transform: 'translateY(-50px) rotate(360deg)', offset: .7 }, { transform: 'translateY(0) rotate(360deg)' }], { duration: 2 * T, easing: 'cubic-bezier(.3,.7,.4,1)' });
+                brazazos(-60, 2 * T);
+                await espera(2 * T);
+                show.classList.remove('baila'); ojos.style.transform = '';
+                function brazazos(a, d) { brazos.forEach((g, i) => brazo(g, i ? 1 : -1, [70, a, a + 30, a, 70], d)) }
+            }
+            const LADO = 'translate(calc(-50% - 26vw), 0) scale(.62)', CENTRO = 'translate(-50%, -8%) scale(.95)', CERCA = 'translate(-50%, 34%) scale(2.3)';
             (async () => {
                 show.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: 'forwards' }); cerrar.focus();
                 // 1. Entra desde la izquierda mirando el nombre
@@ -112,12 +144,16 @@
                 // 2. Lee el nombre
                 habla('Mmm… veamos…'); parpadeo(); await espera(900); if (fuera) return;
                 mirar(20, -14, 1.15, 9); habla('¡' + nombre + '!'); await espera(1000); if (fuera) return;
-                // 3. Voltea hacia el público y se acerca a la pantalla
-                calla(); mirar(0, 0, 1, 0); await espera(350);
+                // 3. ¡A bailar! Va al centro y baila con música y luces de discoteca
+                calla(); mirar(0, 0, 1, 0);
+                await mover(LADO, CENTRO, 600); if (fuera) return;
+                await bailar(); if (fuera) return;
+                // 4. Voltea hacia el público y se acerca a la pantalla
+                mirar(0, 0, 1, 0); await espera(200);
                 cartel.animate([{ opacity: 1 }, { opacity: innerWidth < 640 ? 0 : .9, transform: 'scale(.8)' }], { duration: 600, fill: 'forwards' });
                 mirar(0, 4, 1.35, 0);
-                await mover(LADO, CERCA, 1100, 'cubic-bezier(.5,0,.3,1.15)'); if (fuera) return;
-                // 4. Pegado al vidrio: se empaña la pantalla, toca el vidrio y saluda
+                await mover(CENTRO, CERCA, 1100, 'cubic-bezier(.5,0,.3,1.15)'); if (fuera) return;
+                // 5. Pegado al vidrio: se empaña la pantalla, toca el vidrio y saluda
                 show.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-5px,3px)' }, { transform: 'translate(4px,-3px)' }, { transform: 'translate(0,0)' }], { duration: 260 });
                 vidrio.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, fill: 'forwards' });
                 vaho.animate([{ opacity: 0, transform: 'translate(-50%,-50%) scale(.5)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)', offset: .25 }, { opacity: .8, transform: 'translate(-50%,-50%) scale(1.05)', offset: .7 }, { opacity: 0, transform: 'translate(-50%,-50%) scale(1.15)' }], { duration: 3600, easing: 'ease-out', fill: 'forwards' });
@@ -126,7 +162,7 @@
                 dice.classList.add('cerca'); habla('¡Le toca a usted, ' + nombre + '! 👀');
                 mirar(-8, 2, 1.35, -3); await espera(700); mirar(8, 2, 1.35, 3); await espera(700); mirar(0, 4, 1.35, 0);
                 await espera(1300); if (fuera) return;
-                // 5. Se despide y vuelve a su lugar
+                // 6. Se despide y vuelve a su lugar
                 calla(); vidrio.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' });
                 await mover(CERCA, 'translate(-50%, 120%) scale(.8)', 700, 'ease-in');
                 salir();
