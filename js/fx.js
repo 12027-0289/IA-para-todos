@@ -13,10 +13,10 @@
     }
     if (btn) btn.onclick = () => set(!on);
 
-    // Red de puntos conectados en la portada
+    // Red de puntos conectados (toda la página) con pulsos de luz que viajan por las líneas, como datos
     const cv = document.getElementById('red'), cx = cv && cv.getContext && cv.getContext('2d');
-    let W, H, pts = [], raf = 0;
-    const COL = ['103,232,249', '127,224,200', '182,168,255', '103,232,249'];
+    let W, H, pts = [], pulsos = [], raf = 0;
+    const COL = ['47,94,200', '31,138,122', '90,110,220', '47,94,200'];
     function size() {
         if (!cx) return; const fija = getComputedStyle(cv).position === 'fixed', r = fija ? { width: innerWidth, height: innerHeight } : cv.parentElement.getBoundingClientRect(), d = devicePixelRatio || 1;
         W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0);
@@ -27,9 +27,16 @@
         cx.clearRect(0, 0, W, H);
         for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
             const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.28 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
+            if (d < 140 && pulsos.length < (W < 700 ? 3 : 7) && Math.random() < .0009) pulsos.push({ a, b, t: 0 });
+            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.16 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
         }
-        for (const p of pts) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; cx.fillStyle = 'rgba(' + p.c + ',.55)'; cx.beginPath(); cx.arc(p.x, p.y, 2.6, 0, 6.3); cx.fill() }
+        for (const p of pts) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; cx.fillStyle = 'rgba(' + p.c + ',.4)'; cx.beginPath(); cx.arc(p.x, p.y, 2.6, 0, 6.3); cx.fill() }
+        // Pulsos: un punto brillante que recorre la línea entre dos nodos
+        pulsos = pulsos.filter(q => q.t <= 1 && Math.hypot(q.a.x - q.b.x, q.a.y - q.b.y) < 160);
+        for (const q of pulsos) {
+            q.t += .012; const x = q.a.x + (q.b.x - q.a.x) * q.t, y = q.a.y + (q.b.y - q.a.y) * q.t, g = cx.createRadialGradient(x, y, 0, x, y, 9);
+            g.addColorStop(0, 'rgba(56,189,248,.9)'); g.addColorStop(1, 'rgba(56,189,248,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, 9, 0, 6.3); cx.fill();
+        }
         raf = requestAnimationFrame(frame);
     }
     function loop() { if (!raf) raf = requestAnimationFrame(frame) }
