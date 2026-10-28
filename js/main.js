@@ -3,6 +3,8 @@ const $ = s => document.querySelector(s);
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e }
 const store = { get(k) { try { return localStorage.getItem(k) } catch { return null } }, set(k, v) { try { localStorage.setItem(k, v) } catch { } } };
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const robot = (txt, mood) => window.Robot && Robot.say(txt, mood);
+const fiesta = el => window.confeti && confeti(el);
 
 /* ---------- Lectura: tamaño de letra y contraste ---------- */
 (() => {
@@ -49,6 +51,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
         fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
         fb.replaceChildren(el('b', null, ok ? '¡Muy bien! ' : 'Casi. '), document.createTextNode((it[3] ? 'Sí usa IA. ' : 'No usa IA. ') + it[4]));
         fb.hidden = false; $('#a1Score').textContent = 'Aciertos: ' + score;
+        robot(ok ? ['¡Muy bien! 🎉', '¡Excelente!', '¡Eso es! 👏'][i % 3] : '¡Casi! Equivocarse también es aprender. 💪', ok ? 'feliz' : null);
         next.textContent = i < ITEMS.length - 1 ? 'Siguiente' : 'Ver mi resultado'; next.hidden = false; next.focus();
     });
     next.onclick = () => { i++; if (i < ITEMS.length) show(); else end() };
@@ -62,6 +65,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
         again.onclick = () => { i = 0; score = 0; box.replaceChildren(...saved); show() };
         wrap.append(again);
         const saved = [...box.children]; box.replaceChildren(wrap); again.focus();
+        fiesta(wrap); robot('¡Terminó la actividad 1! Acertó ' + score + ' de ' + ITEMS.length + '. 🏅', 'feliz');
     }
     show();
 })();
@@ -95,6 +99,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
         else { const hit = ANSWERS.find(([re]) => re.test(q)); a = hit ? hit[1] : 'Buena pregunta. Esta es solo una práctica y tengo pocas respuestas preparadas.\n\nEn un asistente real, intente dar más detalles: qué necesita, para quién y cómo lo quiere (por ejemplo, “en pasos cortos”).' }
         const t = bubble('', 'bot'); const dots = el('span', 'typing'); dots.setAttribute('aria-label', 'Escribiendo'); dots.append(el('i'), el('i'), el('i')); t.append(dots);
         setTimeout(() => { t.remove(); bubble(a, 'bot', alert ? 'alert' : '') }, calm ? 200 : 900);
+        if (alert) robot('¡Cuidado! Ese dato es privado. Nunca lo comparta. 🔒', 'alerta');
     }
     function ask(q) { q = q.trim(); if (!q) return; bubble(q, 'me'); reply(q) }
     SUGGEST.forEach(s => { const b = el('button', null, s); b.type = 'button'; b.onclick = () => ask(s); chips.append(b) });
@@ -169,6 +174,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
                 ? 'Aprendió bien porque usted le enseñó bien. Fíjese: no “entiende” los mensajes, solo encontró patrones en sus ejemplos.'
                 : 'Se equivocó porque aprendió de los ejemplos que usted le dio. Así funciona la IA real: si aprende de ejemplos equivocados, se equivoca.'));
         L.append(el('br'), el('span', 'small', 'Pruebe volver a empezar y enséñele a propósito algo diferente para ver qué pasa.'));
+        if (hits === TEST.length) { fiesta($('#a3Lesson')); robot('¡Gracias por enseñarme tan bien! 🤖💙', 'feliz') } else robot('Aprendí de sus ejemplos… ¡por eso me equivoqué! 🤔', 'alerta');
         $('#a3Learn').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
     }
     $('#a3Reset').onclick = () => { labels.fill(null); $('#a3Learn').hidden = true; $('#a3Train').hidden = false; step(0, 0); build(); $('#act3').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' }) };
