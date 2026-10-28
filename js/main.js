@@ -107,76 +107,115 @@ const fiesta = el => window.confeti && confeti(el);
     bubble('¡Hola! Soy un asistente de práctica. 👋\nPregúnteme algo o toque una de las sugerencias de abajo.', 'bot');
 })();
 
-/* ---------- Actividad 3: Enséñele a la máquina ---------- */
+/* ---------- Actividad 3: La ruleta de las experiencias ---------- */
 (() => {
-    const SIG = { urgencia: '⏱️ Prisa', dinero: '💰 Pide dinero', premio: '🎁 Premio', enlace: '🔗 Enlace raro', secreto: '🤫 Secreto', codigo: '🔢 Pide código o PIN' };
-    const TRAIN = [
-        ['📩', '¡Felicidades! Ganó un carro. Pague ₡15 000 hoy para reclamarlo: bit.ly/premio', ['premio', 'dinero', 'urgencia', 'enlace']],
-        ['💬', 'Hola mamá, ¿le parece si el domingo almorzamos juntos?', []],
-        ['📩', 'Su cuenta será bloqueada en 1 hora. Envíe el código que le llegó por SMS.', ['urgencia', 'codigo']],
-        ['🏥', 'Recordatorio: su cita en el EBAIS es el martes a las 9 a. m.', []],
-        ['💬', 'Abuelo, cambié de número. Necesito plata urgente, no le diga a nadie.', ['dinero', 'urgencia', 'secreto']],
-        ['💊', 'La farmacia le informa que su receta ya está lista para recoger.', []]
+    const PREGUNTAS = [
+        '¿Recuerda la primera vez que hizo una videollamada? ¿Con quién habló?',
+        '¿Alguna vez le ha hablado a su celular o le ha pedido algo a un asistente de voz?',
+        '¿Ha recibido un mensaje o una llamada sospechosa? ¿Qué hizo?',
+        '¿Qué aparato o aplicación le ha cambiado la vida para bien?',
+        '¿Ha usado un mapa en el celular para llegar a algún lugar?',
+        '¿Qué le gustaría que la inteligencia artificial le ayudara a hacer?',
+        '¿Cuál fue el primer celular o computadora que tuvo? ¿Cómo era?',
+        '¿Le ha pasado algo divertido o curioso con la tecnología?',
+        '¿Quién le enseñó a usar el celular? ¿Cómo fue esa experiencia?',
+        '¿Ha visto alguna noticia, foto o video que resultó ser falso?',
+        '¿Qué es lo que más le cuesta de la tecnología y qué es lo que más disfruta?',
+        '¿Cómo era comunicarse con la familia antes de los celulares?'
     ];
-    const TEST = [
-        ['📩', 'Último aviso: actualice los datos de su banco aquí: banco-seguro.xyz', ['urgencia', 'enlace'], 1],
-        ['💬', 'Doña Ana, ya le dejé las naranjas en la puerta. ¡Que esté bien!', [], 0],
-        ['📩', 'Ganó un bono del gobierno. Envíe su PIN para depositarlo.', ['premio', 'codigo'], 1]
-    ];
-    const labels = Array(TRAIN.length).fill(null);
-    const list = $('#trainList'), btn = $('#trainBtn');
-    const step = (on, done) => ['#s3a', '#s3b', '#s3c'].forEach((s, k) => { $(s).classList.toggle('on', k === on); $(s).classList.toggle('done', k < done) });
-    function msgText(icon, text) { const d = el('div', 'txt'); const i = el('span', null, icon); i.setAttribute('aria-hidden', 'true'); d.append(i, el('p', null, text)); return d }
-    function build() {
-        list.replaceChildren();
-        TRAIN.forEach(([ic, tx], k) => {
-            const li = el('li'), g = el('div', 'lbl'); g.setAttribute('role', 'group'); g.setAttribute('aria-label', 'Marcar mensaje ' + (k + 1));
-            [['safe', '✔ Seguro', 0], ['sus', '⚠ Sospechoso', 1]].forEach(([c, t, v]) => {
-                const b = el('button', c, t); b.type = 'button'; b.setAttribute('aria-pressed', 'false');
-                b.onclick = () => { labels[k] = v; g.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); update() };
-                g.append(b);
-            });
-            li.append(msgText(ic, tx), g); list.append(li);
+    const COLORES = ['#2449b8', '#7c4dff', '#0b8a7c', '#d9573b', '#e0457b', '#0ea5e9', '#c98a12', '#16a34a'];
+    const EJEMPLO = ['María', 'José', 'Ana', 'Carlos', 'Rosa', 'Luis', 'Carmen', 'Jorge'];
+    const cv = $('#ruletaCv'), ctx = cv.getContext('2d'), lista = $('#listaNombres'), res = $('#ruletaRes');
+    const botones = [$('#girar'), $('#girar2')];
+    let nombres = []; try { nombres = JSON.parse(store.get('ruleta') || '[]') } catch { }
+    let ang = 0, girando = false, audio = null;
+    const guardar = () => store.set('ruleta', JSON.stringify(nombres));
+    const quieto = () => calm || document.documentElement.classList.contains('no-anim');
+
+    function dibujar() {
+        const W = cv.width, c = W / 2, r = c - 8, n = nombres.length;
+        ctx.clearRect(0, 0, W, W);
+        if (!n) {
+            ctx.fillStyle = '#eef3fb'; ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.fill();
+            ctx.fillStyle = '#4a5672'; ctx.font = '700 26px "Atkinson Hyperlegible", sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('Agregue nombres', c, c - 70); ctx.fillText('para empezar ✍️', c, c - 38); return;
+        }
+        const paso = Math.PI * 2 / n, fs = Math.max(16, Math.min(34, 300 / n + 10));
+        nombres.forEach((nm, i) => {
+            const a0 = ang + i * paso - Math.PI / 2;
+            ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, r, a0, a0 + paso); ctx.closePath();
+            ctx.fillStyle = COLORES[i % COLORES.length]; if (n % COLORES.length === 1 && i === n - 1 && n > 1) ctx.fillStyle = COLORES[3];
+            ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.save(); ctx.translate(c, c); ctx.rotate(a0 + paso / 2);
+            ctx.fillStyle = '#fff'; ctx.font = '700 ' + fs + 'px "Atkinson Hyperlegible", sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+            let t = nm; while (ctx.measureText(t).width > r - 95 && t.length > 3) t = t.slice(0, -2) + '…';
+            ctx.fillText(t, r - 22, 0); ctx.restore();
         });
-        update();
+        ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.lineWidth = 10; ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.stroke();
     }
-    function update() {
-        const left = labels.filter(x => x === null).length;
-        btn.disabled = left > 0; btn.textContent = left ? 'Entrenar a la máquina (faltan ' + left + ')' : 'Entrenar a la máquina';
-    }
-    btn.onclick = () => {
-        // Cada señal suma +1 si apareció en un mensaje marcado sospechoso y −1 si apareció en uno marcado seguro.
-        const w = {}; Object.keys(SIG).forEach(s => w[s] = 0);
-        let plainSus = 0, plainSafe = 0;
-        TRAIN.forEach(([, , f], k) => { f.forEach(s => w[s] += labels[k] ? 1 : -1); if (!f.length) labels[k] ? plainSus++ : plainSafe++ });
-        step(1, 1); btn.disabled = true; btn.textContent = 'Entrenando…';
-        setTimeout(() => { showLearned(w, plainSus, plainSafe) }, calm ? 100 : 1100);
-    };
-    function showLearned(w, plainSus, plainSafe) {
-        step(2, 2); $('#a3Train').hidden = true; $('#a3Learn').hidden = false;
-        const sg = $('#signals'); sg.replaceChildren();
-        Object.entries(w).filter(([, v]) => v).forEach(([s, v]) => sg.append(el('span', 'sig ' + (v > 0 ? 'sus' : 'safe'), SIG[s] + (v > 0 ? ' → sospechoso' : ' → seguro'))));
-        sg.append(el('span', 'sig ' + (plainSus > plainSafe ? 'sus' : 'safe'), '💬 Sin señales → ' + (plainSus > plainSafe ? 'sospechoso' : 'seguro')));
-        const tl = $('#testList'); tl.replaceChildren(); let hits = 0;
-        TEST.forEach(([ic, tx, f, truth]) => {
-            const sc = f.reduce((a, s) => a + w[s], 0);
-            const pred = f.length ? (sc > 0 ? 1 : sc < 0 ? 0 : null) : (plainSus > plainSafe ? 1 : 0);
-            if (pred === truth) hits++;
-            const li = el('li'), v = el('div', 'verdict');
-            const tag = el('b', pred === null ? 'unsure' : pred ? 'sus' : 'safe', pred === null ? '🤔 No está segura' : pred ? '⚠ Sospechoso' : '✔ Seguro');
-            const why = f.length ? 'Señales: ' + f.map(s => SIG[s].replace(/^\S+\s/, '')).join(', ') : 'No encontró señales';
-            v.append(el('small', null, 'La máquina dice:'), tag, el('small', null, why));
-            li.append(msgText(ic, tx), v); tl.append(li);
+    function pintarLista() {
+        lista.replaceChildren(); $('#cuenta').textContent = nombres.length;
+        nombres.forEach((nm, i) => {
+            const li = el('li'); li.style.setProperty('--c', COLORES[i % COLORES.length]);
+            const x = el('button', null, '×'); x.type = 'button'; x.setAttribute('aria-label', 'Quitar a ' + nm);
+            x.onclick = () => { nombres.splice(i, 1); cambio() };
+            li.append(el('span', null, nm), x); lista.append(li);
         });
-        const L = $('#a3Lesson'); L.replaceChildren();
-        L.append(el('b', null, hits === TEST.length ? '¡La máquina acertó las 3! ' : 'La máquina acertó ' + hits + ' de 3. '),
-            document.createTextNode(hits === TEST.length
-                ? 'Aprendió bien porque usted le enseñó bien. Fíjese: no “entiende” los mensajes, solo encontró patrones en sus ejemplos.'
-                : 'Se equivocó porque aprendió de los ejemplos que usted le dio. Así funciona la IA real: si aprende de ejemplos equivocados, se equivoca.'));
-        L.append(el('br'), el('span', 'small', 'Pruebe volver a empezar y enséñele a propósito algo diferente para ver qué pasa.'));
-        if (hits === TEST.length) { fiesta($('#a3Lesson')); robot('¡Gracias por enseñarme tan bien! 🤖💙', 'feliz') } else robot('Aprendí de sus ejemplos… ¡por eso me equivoqué! 🤔', 'alerta');
-        $('#a3Learn').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+        botones.forEach(b => b.disabled = girando || nombres.length < 2);
     }
-    $('#a3Reset').onclick = () => { labels.fill(null); $('#a3Learn').hidden = true; $('#a3Train').hidden = false; step(0, 0); build(); $('#act3').scrollIntoView({ behavior: calm ? 'auto' : 'smooth' }) };
-    build();
+    function cambio() { guardar(); pintarLista(); dibujar() }
+    function agregar(txt) {
+        txt.split(/[,;\n]+/).map(t => t.trim().replace(/\s+/g, ' ').slice(0, 24)).filter(Boolean).forEach(t => {
+            if (nombres.length < 60 && !nombres.some(x => x.toLowerCase() === t.toLowerCase())) nombres.push(t);
+        });
+        cambio();
+    }
+    $('#nombreForm').onsubmit = e => { e.preventDefault(); agregar($('#nombreIn').value); $('#nombreIn').value = ''; $('#nombreIn').focus() };
+    $('#ejemplo').onclick = () => agregar(EJEMPLO.join(','));
+    $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { nombres = []; res.hidden = true; cambio() } };
+
+    function tic() {
+        if (!$('#sonido').checked) return;
+        try {
+            audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+            const o = audio.createOscillator(), g = audio.createGain();
+            o.frequency.value = 900; g.gain.setValueAtTime(.08, audio.currentTime); g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .05);
+            o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + .06);
+        } catch { }
+    }
+    function girar() {
+        if (girando || nombres.length < 2) return;
+        girando = true; res.hidden = true; pintarLista();
+        const n = nombres.length, paso = Math.PI * 2 / n, gana = Math.floor(Math.random() * n);
+        // Ángulo final: el centro del sector ganador queda bajo la flecha (arriba)
+        const base = -(gana * paso + paso / 2), vueltas = quieto() ? 1 : 6 + Math.floor(Math.random() * 3);
+        const desde = ang, hasta = base + Math.PI * 2 * (Math.ceil((desde - base) / (Math.PI * 2)) + vueltas) + (Math.random() - .5) * paso * .6;
+        const dur = quieto() ? 600 : 5200, t0 = performance.now();
+        let ult = Math.floor(desde / paso);
+        robot('¡Girando! ¿A quién le tocará? 🎡');
+        (function f(t) {
+            const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+            ang = desde + (hasta - desde) * e; dibujar();
+            const s = Math.floor(ang / paso); if (s !== ult) { ult = s; tic() }
+            if (k < 1) requestAnimationFrame(f); else fin(gana);
+        })(t0);
+    }
+    function fin(i) {
+        girando = false;
+        const nm = nombres[i];
+        let pi = Math.floor(Math.random() * PREGUNTAS.length);
+        res.replaceChildren();
+        const q = el('p', 'res-preg', PREGUNTAS[pi]);
+        const otra = el('button', 'btn ghost', '🔄 Otra pregunta'); otra.type = 'button';
+        otra.onclick = () => { pi = (pi + 1 + Math.floor(Math.random() * (PREGUNTAS.length - 1))) % PREGUNTAS.length; q.textContent = PREGUNTAS[pi] };
+        const listo = el('button', 'btn', $('#quitar').checked ? '✔ Ya participó: seguir' : '✔ ¡Gracias! Seguir'); listo.type = 'button';
+        listo.onclick = () => { if ($('#quitar').checked) { const k = nombres.indexOf(nm); if (k > -1) nombres.splice(k, 1) } res.hidden = true; cambio(); if (nombres.length === 1) robot('Solo falta ' + nombres[0] + '. ¡Su turno! 😊'); if (!nombres.length) robot('¡Todos participaron! Gracias por compartir. 💙', 'feliz') };
+        const b = el('div', 'btns'); b.append(otra, listo);
+        res.append(el('p', 'res-le', '🎤 ¡Le toca a…'), el('p', 'res-nombre', nm), el('p', 'small', 'Cuéntenos una experiencia con la tecnología o la IA. Por ejemplo:'), q, b);
+        res.hidden = false; pintarLista();
+        fiesta(res); robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
+    }
+    botones.forEach(b => b.onclick = girar);
+    if (document.fonts) document.fonts.ready.then(dibujar);
+    cambio();
 })();

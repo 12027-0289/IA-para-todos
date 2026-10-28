@@ -316,7 +316,7 @@
                 <ol class="act-index" aria-label="Lista de actividades">
                     <li><a href="#act1"><span>1</span> ¿Dónde hay IA?</a></li>
                     <li><a href="#act2"><span>2</span> Converse con un asistente</a></li>
-                    <li><a href="#act3"><span>3</span> Enséñele a la máquina</a></li>
+                    <li><a href="#act3"><span>3</span> La ruleta de las experiencias</a></li>
                 </ol>
 
                 <!-- ACTIVIDAD 1 -->
@@ -402,33 +402,39 @@
                 <article id="act3" class="activity panel">
                     <header class="act-head">
                         <span class="act-badge">Actividad 3 de 3</span>
-                        <h3>Enséñele a la máquina</h3>
-                        <p>Ahora <b>usted</b> es quien entrena a la IA. Marque cada mensaje como <b>seguro</b> o
-                            <b>sospechoso</b>. Después, la máquina intentará clasificar mensajes nuevos con lo que
-                            aprendió de usted.</p>
+                        <h3>La ruleta de las experiencias</h3>
+                        <p>Escriba los nombres de las personas del grupo y gire la ruleta. A quien le toque, nos cuenta
+                            una <b>experiencia con la tecnología o la inteligencia artificial</b>. ¡No hay respuestas
+                            malas: todas las historias valen!</p>
                     </header>
                     <div class="a3">
-                        <ol class="steps3" aria-label="Pasos">
-                            <li id="s3a" class="on">Enseñar</li>
-                            <li id="s3b">Entrenar</li>
-                            <li id="s3c">Probar</li>
-                        </ol>
-                        <div id="a3Train">
-                            <ul class="msgs" id="trainList"></ul>
-                            <div class="btns"><button class="btn" id="trainBtn" disabled>Entrenar a la máquina
-                                    (faltan 6)</button></div>
-                        </div>
-                        <div id="a3Learn" hidden>
-                            <div class="learned panel">
-                                <h4>Esto fue lo que la máquina aprendió de sus ejemplos</h4>
-                                <p class="small">Encontró estas “señales” en los mensajes que usted marcó:</p>
-                                <div class="signals" id="signals"></div>
+                        <div class="ruleta-zona">
+                            <div class="ruleta" id="ruleta">
+                                <span class="ruleta-flecha" aria-hidden="true"></span>
+                                <canvas id="ruletaCv" width="560" height="560" role="img"
+                                    aria-label="Ruleta con los nombres de las personas participantes"></canvas>
+                                <button class="ruleta-centro" id="girar" type="button">Girar</button>
                             </div>
-                            <h4 class="mt">Mensajes nuevos que la máquina nunca había visto</h4>
-                            <ul class="msgs" id="testList"></ul>
-                            <div class="feedback info" id="a3Lesson"></div>
-                            <div class="btns"><button class="btn ghost" id="a3Reset">Volver a empezar</button></div>
+                            <button class="btn shine girar-grande" id="girar2" type="button">🎡 ¡Girar la ruleta!</button>
+                            <div class="ruleta-res" id="ruletaRes" aria-live="assertive" hidden></div>
                         </div>
+                        <aside class="nombres">
+                            <h4>Participantes <span class="cuenta" id="cuenta">0</span></h4>
+                            <form class="nombre-form" id="nombreForm">
+                                <label class="sr" for="nombreIn">Nombre de la persona</label>
+                                <input id="nombreIn" maxlength="400" autocomplete="off" placeholder="Escriba un nombre…">
+                                <button class="btn" type="submit">Agregar</button>
+                            </form>
+                            <p class="small">Consejo: puede pegar varios nombres separados por comas.</p>
+                            <ul class="chips-nombres" id="listaNombres" aria-label="Nombres en la ruleta"></ul>
+                            <label class="check"><input type="checkbox" id="quitar" checked> Sacar de la ruleta a quien
+                                ya participó</label>
+                            <label class="check"><input type="checkbox" id="sonido" checked> Sonido al girar</label>
+                            <div class="btns">
+                                <button class="btn ghost" id="ejemplo" type="button">Usar nombres de ejemplo</button>
+                                <button class="btn ghost" id="vaciar" type="button">Borrar todos</button>
+                            </div>
+                        </aside>
                     </div>
                 </article>
             </div>

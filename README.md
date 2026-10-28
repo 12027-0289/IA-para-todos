@@ -18,7 +18,7 @@ El Reto IA detecta solo si hay servidor y elige el modo adecuado.
 | Portada | Video introductorio (`video/video_final.mp4`) |
 | Parte 1 · Lo básico | Qué es la IA, cómo aprende, dónde la usamos, qué puede y qué no, glosario |
 | Parte 2 · Seguridad | Tres reglas de oro y la palabra clave familiar |
-| Parte 3 · Actividades | 1) ¿Dónde hay IA? 2) Converse con un asistente (simulado) 3) Enséñele a la máquina |
+| Parte 3 · Actividades | 1) ¿Dónde hay IA? 2) Converse con un asistente (simulado) 3) La ruleta de las experiencias (nombres del grupo; a quien le toca cuenta una experiencia con la tecnología o la IA) |
 | Parte 4 · Reto IA | Enlace al quiz multijugador (`quiz.html` y `presentador.html`) |
 
 Las tres actividades funcionan solo en el navegador; no se envía ni se guarda ningún dato. El asistente de la actividad 2 es una simulación con respuestas preparadas.

@@ -52,7 +52,7 @@
         ['seguridad', 'Recuerde: deténgase, verifique y después decida. ✋'],
         ['actividades', '¡Ahora a practicar! Toque los botones grandes. 👆'],
         ['act2', 'Pregúnteme lo que quiera. No escriba datos privados. 🔒'],
-        ['act3', 'Hoy usted es quien me enseña a mí. 🤖'],
+        ['act3', '¡Gire la ruleta y compartamos experiencias! 🎡'],
         ['reto', '¡Llegó el reto final! Mucha suerte. 🏆']
     ];
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const m = SECC.find(x => x[0] === e.target.id); if (m && !cmsg.dataset.busy) cambiar(cmsg, m[1]) } }), { threshold: .3 });
@@ -69,7 +69,11 @@
             b.dataset.busy = 1; cambiar(b, txt);
             [stage, cbot].forEach(x => x.classList.remove('feliz', 'alerta', 'pensando'));
             if (mood) { void st.offsetWidth; st.classList.add(mood) }
-            clearTimeout(tm); tm = setTimeout(() => { delete bubble.dataset.busy; delete cmsg.dataset.busy;[stage, cbot].forEach(x => x.classList.remove('alerta', 'pensando')) }, 6000);
+            clearTimeout(tm); tm = setTimeout(() => {
+                delete bubble.dataset.busy; delete cmsg.dataset.busy;[stage, cbot].forEach(x => x.classList.remove('alerta', 'pensando'));
+                // En pantallas pequeñas el mensaje se esconde solo para no tapar el contenido
+                if (innerWidth < 640) { comp.classList.add('min'); cbot.setAttribute('aria-expanded', 'false') }
+            }, 5000);
         }
     };
 })();
