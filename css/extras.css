@@ -689,3 +689,13 @@ html.hc .charla-e {
     color: var(--ink);
     font: 700 .95rem var(--font)
 }
+
+/* Boca del robot de la ruleta mientras dice el nombre */
+.show-bot .mouth {
+    transform-box: fill-box;
+    transform-origin: center
+}
+
+.show-bot.hablando .mouth {
+    animation: boca .22s ease-in-out infinite alternate
+}

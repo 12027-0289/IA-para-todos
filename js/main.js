@@ -19,6 +19,33 @@ const fiesta = el => window.confeti && confeti(el);
     apply(); setHc(store.get('hc') === '1');
 })();
 
+/* ---------- Voz del robot (compartida por «Pregúntele al robot» y la ruleta) ---------- */
+const Voz = (() => {
+    const tts = 'speechSynthesis' in window ? speechSynthesis : null;
+    // Elegir la voz más natural y masculina disponible (depende del navegador y del sistema)
+    const HOMBRE = /\b(juan|jorge|pablo|ra[uú]l|[aá]lvaro|diego|carlos|enrique|gonzalo|andr[eé]s|tom[aá]s|gerardo|federico|alonso|liberto|jos[eé]|antonio|emilio|sergio|rodrigo|luciano|yago|arnau|dar[ií]o|sebasti[aá]n|javier|lorenzo|mateo|manuel|nicol[aá]s|pedro|ricardo|roberto|santiago|alex|alejandro|mario|hugo|luis|gabriel)\b/i;
+    const MUJER = /\b(sabina|helena|laura|elvira|dalia|paloma|m[oó]nica|paulina|mar[ií]a|lupe|isabela|esperanza|marisol|francisca|camila|elena|luc[ií]a|soledad|abril|catalina|ximena|irene|salome|ver[oó]nica|valentina|andrea|carla|beatriz|estrella|marta|sara|tatiana|teresa|yolanda|renata|elsa|karla|paola)\b/i;
+    const NATURAL = /natural|neural|online|premium|enhanced|mejorad|siri/i;
+    function puntaje(v) {
+        const l = v.lang.replace('_', '-');
+        return (HOMBRE.test(v.name) ? 40 : 0) - (MUJER.test(v.name) ? 40 : 0) + (NATURAL.test(v.name) ? 25 : 0) + (v.localService ? 0 : 3) +
+            ({ 'es-CR': 8, 'es-MX': 6, 'es-419': 6, 'es-US': 5, 'es-CO': 5, 'es-ES': 4 }[l] || 0);
+    }
+    const vocesEs = () => tts.getVoices().filter(v => /^es/i.test(v.lang)).sort((a, b) => puntaje(b) - puntaje(a));
+    function vozEspanol() { const vs = vocesEs(), elegida = store.get('vozNombre'); return vs.find(v => v.name === elegida) || vs[0] }
+    let actual = 0;
+    // Dice un texto con la voz elegida; alTerminar se llama al acabar (o enseguida si no hay voz)
+    function decir(texto, alTerminar) {
+        const t = ++actual, fin = () => { if (t === actual && alTerminar) alTerminar() };
+        if (!tts) { setTimeout(fin, Math.min(6000, 600 + texto.length * 45)); return }
+        tts.cancel();
+        const u = new SpeechSynthesisUtterance(texto), v = vozEspanol();
+        u.lang = v ? v.lang : 'es-ES'; if (v) u.voice = v; u.rate = .95; u.pitch = 1;
+        u.onend = u.onerror = fin; tts.speak(u);
+    }
+    return { tts, voces: () => tts ? vocesEs() : [], elegida: () => tts ? vozEspanol() : null, decir, callar: () => { actual++; tts && tts.cancel() } };
+})();
+
 /* ---------- Pregúntele al robot: responde por escrito y en voz alta ---------- */
 (() => {
     const PREGUNTAS = [
@@ -83,26 +110,15 @@ const fiesta = el => window.confeti && confeti(el);
     const ojos = bot && bot.querySelector('#q-eyes');
     if (ojos) { ojos.style.transformBox = 'fill-box'; ojos.style.transformOrigin = 'center'; ojos.style.transition = 'transform .35s ease' }
     const mirar = (x, y) => { if (ojos) ojos.style.transform = `translate(${x}px,${y}px)` };
-    const tts = 'speechSynthesis' in window ? speechSynthesis : null;
+    const tts = Voz.tts;
     let voz = store.get('voz') !== '0', actual = null, turno = 0;
     const quieto = () => calm || document.documentElement.classList.contains('no-anim');
     const espera = ms => new Promise(ok => setTimeout(ok, ms));
     function pintarVoz() { vozBtn.textContent = voz ? '🔊 Voz: sí' : '🔇 Voz: no'; vozBtn.setAttribute('aria-pressed', voz); vozBtn.hidden = !tts }
-    // Elegir la voz más natural y masculina disponible (depende del navegador y del sistema)
-    const HOMBRE = /\b(juan|jorge|pablo|ra[uú]l|[aá]lvaro|diego|carlos|enrique|gonzalo|andr[eé]s|tom[aá]s|gerardo|federico|alonso|liberto|jos[eé]|antonio|emilio|sergio|rodrigo|luciano|yago|arnau|dar[ií]o|sebasti[aá]n|javier|lorenzo|mateo|manuel|nicol[aá]s|pedro|ricardo|roberto|santiago|alex|alejandro|mario|hugo|luis|gabriel)\b/i;
-    const MUJER = /\b(sabina|helena|laura|elvira|dalia|paloma|m[oó]nica|paulina|mar[ií]a|lupe|isabela|esperanza|marisol|francisca|camila|elena|luc[ií]a|soledad|abril|catalina|ximena|irene|salome|ver[oó]nica|valentina|andrea|carla|beatriz|estrella|marta|sara|tatiana|teresa|yolanda|renata|elsa|karla|paola)\b/i;
-    const NATURAL = /natural|neural|online|premium|enhanced|mejorad|siri/i;
-    function puntaje(v) {
-        const l = v.lang.replace('_', '-');
-        return (HOMBRE.test(v.name) ? 40 : 0) - (MUJER.test(v.name) ? 40 : 0) + (NATURAL.test(v.name) ? 25 : 0) + (v.localService ? 0 : 3) +
-            ({ 'es-CR': 8, 'es-MX': 6, 'es-419': 6, 'es-US': 5, 'es-CO': 5, 'es-ES': 4 }[l] || 0);
-    }
-    const vocesEs = () => tts.getVoices().filter(v => /^es/i.test(v.lang)).sort((a, b) => puntaje(b) - puntaje(a));
-    function vozEspanol() { const vs = vocesEs(), elegida = store.get('vozNombre'); return vs.find(v => v.name === elegida) || vs[0] }
     const sel = $('#charlaVozSel');
     function llenarVoces() {
-        if (!tts) return; const vs = vocesEs(); $('#charlaVozCaja').hidden = !vs.length; if (!vs.length) return;
-        const elegida = vozEspanol(); sel.replaceChildren();
+        if (!tts) return; const vs = Voz.voces(); $('#charlaVozCaja').hidden = !vs.length; if (!vs.length) return;
+        const elegida = Voz.elegida(); sel.replaceChildren();
         vs.forEach((v, i) => { const o = el('option', null, v.name.replace(/^(Microsoft|Google)\s+/, '').replace(/\s+Online \(Natural\)/, ' (natural)') + (i === 0 ? ' ⭐ recomendada' : '')); o.value = v.name; o.selected = v === elegida; sel.append(o) });
     }
     // Mueve la boca mientras habla; termina cuando acaba la voz (o un tiempo prudente si no hay voz)
@@ -110,16 +126,13 @@ const fiesta = el => window.confeti && confeti(el);
         escena.classList.add('hablando');
         const fin = () => { if (t === turno) escena.classList.remove('hablando') };
         if (!voz || !tts) { setTimeout(fin, Math.min(6000, 600 + texto.length * 45)); return }
-        tts.cancel();
-        const u = new SpeechSynthesisUtterance(texto), v = vozEspanol();
-        u.lang = v ? v.lang : 'es-ES'; if (v) u.voice = v; u.rate = .95; u.pitch = 1;
-        u.onend = u.onerror = fin; tts.speak(u);
+        Voz.decir(texto, fin);
     }
     // Texto que lee la voz: la respuesta sin etiquetas y, si hay, el consejo
     function paraVoz(r, t) { const d = document.createElement('div'); d.innerHTML = r; return d.textContent.replace(/[.\s]+$/, '') + '.' + (t ? ' Un consejo: ' + t : '') }
     async function responder(i, boton) {
         const t = ++turno, p = PREGUNTAS[i]; actual = i;
-        if (tts) tts.cancel();
+        Voz.callar();
         caja.querySelectorAll('button').forEach(b => b.classList.toggle('activa', b === boton));
         qEl.hidden = false; qEl.textContent = p.e + ' ' + p.q;
         // 1. Piensa
@@ -150,7 +163,7 @@ const fiesta = el => window.confeti && confeti(el);
         caja.append(b);
     });
     otra.onclick = () => { if (actual !== null) { const p = PREGUNTAS[actual]; hablar(paraVoz(p.r, p.t), turno) } };
-    vozBtn.onclick = () => { voz = !voz; store.set('voz', voz ? '1' : '0'); if (!voz && tts) { tts.cancel(); escena.classList.remove('hablando') } pintarVoz() };
+    vozBtn.onclick = () => { voz = !voz; store.set('voz', voz ? '1' : '0'); if (!voz) { Voz.callar(); escena.classList.remove('hablando') } pintarVoz() };
     sel.onchange = () => { store.set('vozNombre', sel.value); if (voz) hablar('Hola, así suena mi voz. ¿Qué le gustaría preguntarme?', ++turno) };
     if (tts) { llenarVoces(); tts.addEventListener ? tts.addEventListener('voiceschanged', llenarVoces) : (tts.onvoiceschanged = llenarVoces) }
     pintarVoz();
@@ -378,7 +391,7 @@ const fiesta = el => window.confeti && confeti(el);
     function girar() {
         if (girando) return;
         sacar(); if (!nombres.length) return;
-        girando = true; res.hidden = true; pintarLista();
+        Voz.callar(); girando = true; res.hidden = true; pintarLista();
         const n = nombres.length, paso = Math.PI * 2 / n, gana = Math.floor(Math.random() * n);
         // Ángulo final: el centro del sector ganador queda bajo la flecha (arriba)
         const base = -(gana * paso + paso / 2), vueltas = quieto() ? 1 : 6 + Math.floor(Math.random() * 3);
@@ -409,8 +422,10 @@ const fiesta = el => window.confeti && confeti(el);
             el('p', 'small', '✔ ' + nm + ' sale de la ruleta automáticamente para que no se repita.'));
         res.hidden = false; pintarLista();
         fanfarria(); fiesta(res);
-        if (window.Robot && Robot.presentar && !quieto()) Robot.presentar(nm).then(() => fiesta(res));
-        else robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
+        // El robot dice el nombre en voz alta (si el sonido de la ruleta está encendido)
+        const decir = (txt, alTerminar) => sonar() ? Voz.decir(txt, alTerminar) : alTerminar && alTerminar();
+        if (window.Robot && Robot.presentar && !quieto()) Robot.presentar(nm, { decir }).then(() => fiesta(res));
+        else { robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz'); decir('¡Le toca a ' + nm + '! Cuéntenos su experiencia.') }
         pendiente = nm; tSacar = setTimeout(sacar, quieto() ? 800 : 2500);
     }
     botones.forEach(b => b.onclick = girar);

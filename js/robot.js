@@ -87,7 +87,7 @@
 
         // Escena de la ruleta: el robot entra, mira el nombre y luego se acerca a la pantalla
         // como si mirara al público desde el otro lado del vidrio (romper la cuarta pared).
-        presentar(nombre) {
+        presentar(nombre, op = {}) {
             if (quieto()) return Promise.resolve();
             document.querySelector('.show')?.remove();
             const E = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e };
@@ -109,6 +109,8 @@
             const fin = new Promise(ok => listo = ok);
             const salir = () => { if (fuera) return; fuera = true; show.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 400, fill: 'forwards' }).finished.then(() => { show.remove(); comp.style.visibility = ''; listo() }) };
             cerrar.onclick = salir; show.addEventListener('keydown', e => { if (e.key === 'Escape') salir() });
+            // Dice en voz alta (si la ruleta lo permite) moviendo la boca
+            function hablaEnVoz(txt) { if (!op.decir) return; bot.classList.add('hablando'); op.decir(txt, () => bot.classList.remove('hablando')) }
             const LADO = 'translate(calc(-50% - 26vw), 0) scale(.62)', CERCA = 'translate(-50%, 34%) scale(2.3)';
             (async () => {
                 show.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, fill: 'forwards' }); cerrar.focus();
@@ -116,7 +118,7 @@
                 mirar(16, -12, 1, 7);
                 await mover('translate(calc(-50% - 80vw), 0) scale(.62)', LADO, 900); if (fuera) return;
                 // 2. Lee el nombre
-                habla('Mmm… veamos…'); parpadeo(); await espera(900); if (fuera) return;
+                hablaEnVoz('Veamos… ¡' + nombre + '!'); habla('Mmm… veamos…'); parpadeo(); await espera(900); if (fuera) return;
                 mirar(20, -14, 1.15, 9); habla('¡' + nombre + '!'); await espera(1000); if (fuera) return;
                 // 3. Voltea hacia el público y se acerca a la pantalla
                 calla(); mirar(0, 0, 1, 0); await espera(350);
@@ -129,7 +131,7 @@
                 vaho.animate([{ opacity: 0, transform: 'translate(-50%,-50%) scale(.5)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)', offset: .25 }, { opacity: .8, transform: 'translate(-50%,-50%) scale(1.05)', offset: .7 }, { opacity: 0, transform: 'translate(-50%,-50%) scale(1.15)' }], { duration: 3600, easing: 'ease-out', fill: 'forwards' });
                 toc.textContent = 'toc, toc'; toc.animate([{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1)', offset: .2 }, { opacity: 0, transform: 'scale(1.3)' }], { duration: 1400, fill: 'forwards' });
                 parpadeo(); await espera(250); parpadeo();
-                dice.classList.add('cerca'); habla('¡Le toca a usted, ' + nombre + '! 👀');
+                dice.classList.add('cerca'); habla('¡Le toca a usted, ' + nombre + '! 👀'); hablaEnVoz('¡Le toca a usted, ' + nombre + '! Cuéntenos su experiencia.');
                 mirar(-8, 2, 1.35, -3); await espera(700); mirar(8, 2, 1.35, 3); await espera(700); mirar(0, 4, 1.35, 0);
                 await espera(1300); if (fuera) return;
                 // 5. Se despide y vuelve a su lugar
