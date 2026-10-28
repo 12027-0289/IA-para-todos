@@ -16,9 +16,9 @@
     // Red de puntos conectados en la portada
     const cv = document.getElementById('red'), cx = cv && cv.getContext && cv.getContext('2d');
     let W, H, pts = [], raf = 0;
-    const COL = ['47,94,200', '47,94,200', '31,138,122', '47,94,200'];
+    const COL = ['103,232,249', '127,224,200', '182,168,255', '103,232,249'];
     function size() {
-        if (!cx) return; const r = cv.parentElement.getBoundingClientRect(), d = devicePixelRatio || 1;
+        if (!cx) return; const fija = getComputedStyle(cv).position === 'fixed', r = fija ? { width: innerWidth, height: innerHeight } : cv.parentElement.getBoundingClientRect(), d = devicePixelRatio || 1;
         W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0);
         pts = Array.from({ length: W < 700 ? 22 : 48 }, (_, i) => ({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4, c: COL[i % 4] }));
     }
@@ -27,7 +27,7 @@
         cx.clearRect(0, 0, W, H);
         for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
             const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.12 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
+            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.28 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
         }
         for (const p of pts) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; cx.fillStyle = 'rgba(' + p.c + ',.55)'; cx.beginPath(); cx.arc(p.x, p.y, 2.6, 0, 6.3); cx.fill() }
         raf = requestAnimationFrame(frame);

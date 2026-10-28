@@ -1,0 +1,633 @@
+/* IA para todos · tema "ADEP amable": el estilo de ADEP Aprende (fondo oscuro cálido, red de luces,
+   tarjetas translúcidas, título con degradado) pero en azul petróleo con menta y lavanda en lugar de rojo vino.
+   Texto claro con buen contraste y botones grandes. Todo dentro de html:not(.hc) para respetar «Contraste». */
+
+html:not(.hc) {
+    --bg: #1d2b3a;
+    --surface: rgba(255, 255, 255, .07);
+    --soft: rgba(255, 255, 255, .06);
+    --ink: #f2f6f8;
+    --muted: #c4d0da;
+    --line: rgba(190, 220, 235, .2);
+    --primary: #8fb4ff;
+    --primary-soft: rgba(143, 180, 255, .14);
+    --violet: #b6a8ff;
+    --violet-soft: rgba(182, 168, 255, .14);
+    --teal: #7fe0c8;
+    --teal-soft: rgba(127, 224, 200, .13);
+    --coral: #ffb199;
+    --coral-soft: rgba(255, 177, 153, .13);
+    --pink: #f5a3c7;
+    --pink-soft: rgba(245, 163, 199, .13);
+    --sky: #67e8f9;
+    --sky-soft: rgba(103, 232, 249, .12);
+    --sun: #ffd27a;
+    --sun-soft: rgba(255, 210, 122, .12);
+    --ok: #6ee7b7;
+    --ok-soft: rgba(110, 231, 183, .13);
+    --bad: #fca5a5;
+    --bad-soft: rgba(252, 165, 165, .13);
+    --boton: #23887f;
+    --boton-hover: #1d766e;
+    --focus: #ffd27a;
+    --shadow: 0 18px 40px -20px rgba(0, 0, 0, .55);
+    color-scheme: dark
+}
+
+/* ---------- Fondo cálido con luces suaves ---------- */
+html:not(.hc) body {
+    background:
+        radial-gradient(900px 600px at 0% 0%, rgba(42, 120, 130, .45), transparent 60%),
+        radial-gradient(900px 700px at 100% 40%, rgba(90, 80, 160, .35), transparent 60%),
+        linear-gradient(160deg, #213447, #1b2a3a 55%, #22283f);
+    background-attachment: fixed
+}
+
+/* Red de puntos de luz en toda la página, como en ADEP Aprende */
+html:not(.hc) #red {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    opacity: .9
+}
+
+html:not(.hc) .hero-bg {
+    background: radial-gradient(700px 420px at 75% 45%, rgba(103, 232, 249, .12), transparent 65%)
+}
+
+html:not(.hc) .blob {
+    opacity: .15
+}
+
+/* Secciones transparentes para que se vea la red */
+html:not(.hc) .video-band,
+html:not(.hc) .preguntas,
+html:not(.hc) #actividades,
+html:not(.hc) .block-dark {
+    background: transparent;
+    border: 0
+}
+
+html:not(.hc) .ola {
+    display: none
+}
+
+html:not(.hc) a {
+    color: var(--sky)
+}
+
+/* ---------- Tarjetas translúcidas ---------- */
+html:not(.hc) .panel,
+html:not(.hc) .idea,
+html:not(.hc) .activity,
+html:not(.hc) .reto,
+html:not(.hc) .video-card,
+html:not(.hc) .charla-burbuja,
+html:not(.hc) .charla-robot,
+html:not(.hc) .nombres,
+html:not(.hc) .tips,
+html:not(.hc) .chat,
+html:not(.hc) .rule {
+    background: rgba(255, 255, 255, .07);
+    background-image: none;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px)
+}
+
+html:not(.hc) .idea:hover,
+html:not(.hc) .rule:hover {
+    border-color: rgba(127, 224, 200, .45)
+}
+
+/* ---------- Encabezado ---------- */
+html:not(.hc) .top {
+    background: rgba(24, 36, 50, .88);
+    border-bottom: 1px solid var(--line)
+}
+
+html:not(.hc) .brand {
+    color: var(--ink)
+}
+
+html:not(.hc) .brand-mark {
+    background: linear-gradient(135deg, #2a9d8f, #6a7fdb)
+}
+
+html:not(.hc) .nav a {
+    color: #e3ebf0
+}
+
+html:not(.hc) .nav a:hover {
+    background: rgba(127, 224, 200, .14);
+    color: #fff
+}
+
+html:not(.hc) .tools button {
+    background: rgba(127, 224, 200, .12);
+    border: 1.5px solid rgba(127, 224, 200, .45);
+    color: var(--ink)
+}
+
+html:not(.hc) #sbar {
+    background: linear-gradient(90deg, var(--teal), var(--sky), var(--violet))
+}
+
+/* ---------- Botones: verde azulado amable ---------- */
+html:not(.hc) .btn:not(.ghost) {
+    background: var(--boton);
+    border-color: var(--boton);
+    color: #fff;
+    box-shadow: none
+}
+
+html:not(.hc) .btn:not(.ghost):hover {
+    background: var(--boton-hover);
+    box-shadow: 0 8px 20px -8px rgba(35, 136, 127, .8)
+}
+
+html:not(.hc) .btn.ghost {
+    background: transparent;
+    border: 1.5px solid rgba(220, 235, 240, .55);
+    color: var(--ink)
+}
+
+html:not(.hc) .btn.ghost:hover {
+    background: rgba(255, 255, 255, .08)
+}
+
+/* ---------- Títulos ---------- */
+html:not(.hc) h1,
+html:not(.hc) h2,
+html:not(.hc) h3 {
+    color: #fff
+}
+
+html:not(.hc) .grad {
+    background: linear-gradient(100deg, #ffffff 0%, #9be8d6 45%, #c3b8ff 85%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: none
+}
+
+html:not(.hc) .lead {
+    color: var(--muted)
+}
+
+html:not(.hc) .kicker,
+html:not(.hc) .block-dark .kicker {
+    background: rgba(127, 224, 200, .14);
+    color: var(--teal)
+}
+
+html:not(.hc) .sec-head h2::after {
+    background: linear-gradient(90deg, var(--teal), var(--violet), transparent)
+}
+
+/* ---------- Portada ---------- */
+html:not(.hc) .eyebrow {
+    background: rgba(255, 255, 255, .08);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .eyebrow .dot {
+    background: var(--teal);
+    box-shadow: 0 0 0 4px rgba(127, 224, 200, .2)
+}
+
+html:not(.hc) .hero-points li {
+    background: rgba(255, 255, 255, .07);
+    border-color: var(--line);
+    color: var(--muted);
+    box-shadow: none
+}
+
+html:not(.hc) .hero-points .hp1 b {
+    color: var(--teal)
+}
+
+html:not(.hc) .hero-points .hp2 b {
+    color: var(--violet)
+}
+
+html:not(.hc) .robot-wrap::before {
+    background: radial-gradient(circle, rgba(103, 232, 249, .3), rgba(127, 224, 200, .1) 45%, transparent 70%)
+}
+
+html:not(.hc) .robot-wrap::after {
+    border: 2px dashed rgba(182, 168, 255, .45)
+}
+
+html:not(.hc) .bubble {
+    background: #2a3a4d;
+    background-image: none;
+    border: 1px solid var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .bubble::after {
+    background: #2a3a4d;
+    border-color: var(--line)
+}
+
+html:not(.hc) .fchip {
+    background: rgba(255, 255, 255, .1) !important;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    box-shadow: none
+}
+
+/* ---------- Ideas ---------- */
+html:not(.hc) .idea::before {
+    width: 5px
+}
+
+html:not(.hc) .idea:nth-of-type(1) {
+    --c: var(--teal)
+}
+
+html:not(.hc) .idea:nth-of-type(2) {
+    --c: var(--sky)
+}
+
+html:not(.hc) .idea:nth-of-type(3) {
+    --c: var(--violet)
+}
+
+html:not(.hc) .idea-num {
+    background: var(--c);
+    color: #16303a;
+    box-shadow: none
+}
+
+html:not(.hc) .idea h3 {
+    color: #fff
+}
+
+html:not(.hc) .analogy {
+    background: rgba(255, 210, 122, .1);
+    border: 1px solid rgba(255, 210, 122, .35)
+}
+
+html:not(.hc) .uses li {
+    background: rgba(255, 255, 255, .05) !important;
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .uses li span {
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid var(--line);
+    box-shadow: none
+}
+
+html:not(.hc) .can {
+    border-color: rgba(110, 231, 183, .35)
+}
+
+html:not(.hc) .cant {
+    border-color: rgba(252, 165, 165, .35)
+}
+
+html:not(.hc) .illu-pantalla {
+    background: rgba(10, 20, 35, .55);
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .illu figcaption {
+    color: var(--muted)
+}
+
+html:not(.hc) .deco {
+    opacity: .6
+}
+
+/* ---------- Pregúntele al robot ---------- */
+html:not(.hc) .charla-burbuja::before {
+    background: #2b3b4e;
+    border-color: var(--line)
+}
+
+html:not(.hc) .charla-q {
+    color: var(--teal)
+}
+
+html:not(.hc) .charla-p {
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .charla-p:hover,
+html:not(.hc) .charla-p.activa {
+    border-color: var(--teal);
+    background: rgba(127, 224, 200, .12);
+    box-shadow: none
+}
+
+html:not(.hc) .charla-e {
+    background: rgba(255, 255, 255, .1)
+}
+
+html:not(.hc) .charla-tip {
+    background: rgba(255, 210, 122, .1)
+}
+
+html:not(.hc) .charla-vozsel select {
+    background: #263649;
+    border-color: rgba(127, 224, 200, .5);
+    color: var(--ink)
+}
+
+html:not(.hc) .d-q {
+    color: rgba(182, 168, 255, .15)
+}
+
+/* ---------- Seguridad ---------- */
+html:not(.hc) .rule p {
+    color: var(--muted)
+}
+
+html:not(.hc) .rule-ico,
+html:not(.hc) .rule:nth-child(n) .rule-ico {
+    box-shadow: none
+}
+
+html:not(.hc) .voice-tip {
+    background: rgba(255, 210, 122, .1);
+    border-color: rgba(255, 210, 122, .4)
+}
+
+html:not(.hc) .illu-shield figcaption {
+    color: var(--muted)
+}
+
+/* ---------- Actividades ---------- */
+html:not(.hc) .act-index a {
+    background: rgba(255, 255, 255, .07);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .act-index span {
+    color: #16303a
+}
+
+html:not(.hc) .act-index li:nth-child(1) span {
+    background: var(--teal)
+}
+
+html:not(.hc) .act-index li:nth-child(2) span {
+    background: var(--sky)
+}
+
+html:not(.hc) .act-index li:nth-child(3) span {
+    background: var(--violet)
+}
+
+html:not(.hc) #act1 {
+    --ac1: var(--teal);
+    --ac2: var(--sky)
+}
+
+html:not(.hc) #act2 {
+    --ac1: var(--sky);
+    --ac2: var(--violet)
+}
+
+html:not(.hc) #act3 {
+    --ac1: var(--violet);
+    --ac2: var(--teal)
+}
+
+html:not(.hc) .act-badge,
+html:not(.hc) #act1 .act-badge,
+html:not(.hc) #act2 .act-badge {
+    background: rgba(127, 224, 200, .14);
+    color: var(--teal)
+}
+
+html:not(.hc) .a1-card {
+    background: rgba(255, 255, 255, .06);
+    border-color: var(--line)
+}
+
+html:not(.hc) .bar {
+    background: rgba(255, 255, 255, .08)
+}
+
+html:not(.hc) .bar i {
+    background: linear-gradient(90deg, var(--teal), var(--sky))
+}
+
+html:not(.hc) .choice {
+    background: rgba(255, 255, 255, .06);
+    border: 1.5px solid var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .choice:hover:not(:disabled),
+html:not(.hc) .choice.yes:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: rgba(127, 224, 200, .12)
+}
+
+html:not(.hc) .choice.right {
+    border-color: var(--ok);
+    background: var(--ok-soft)
+}
+
+html:not(.hc) .choice.wrong {
+    border-color: var(--bad);
+    background: var(--bad-soft)
+}
+
+html:not(.hc) .feedback {
+    border-color: var(--line)
+}
+
+html:not(.hc) .chat-top,
+html:not(.hc) .chat-form {
+    background: rgba(255, 255, 255, .05);
+    border-color: var(--line)
+}
+
+html:not(.hc) .chat-log {
+    background: none
+}
+
+html:not(.hc) .msg.bot {
+    background: rgba(255, 255, 255, .09);
+    border-color: var(--line)
+}
+
+html:not(.hc) .msg.me {
+    background: var(--boton)
+}
+
+html:not(.hc) .msg.alert {
+    background: rgba(255, 210, 122, .14);
+    border-color: rgba(255, 210, 122, .55)
+}
+
+html:not(.hc) .chips button {
+    background: transparent;
+    border-color: rgba(127, 224, 200, .55);
+    color: var(--teal)
+}
+
+html:not(.hc) .chips button:hover {
+    background: rgba(127, 224, 200, .12)
+}
+
+html:not(.hc) .chat-form input,
+html:not(.hc) .nombre-form input,
+html:not(.hc) .qwrap input {
+    background: rgba(0, 0, 0, .2);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .chat-form input:focus,
+html:not(.hc) .nombre-form input:focus,
+html:not(.hc) .qwrap input:focus {
+    border-color: var(--teal)
+}
+
+html:not(.hc) .warn {
+    background: rgba(255, 255, 255, .06)
+}
+
+html:not(.hc) .ex {
+    color: var(--teal)
+}
+
+html:not(.hc) .ruleta {
+    box-shadow: 0 20px 50px -18px rgba(0, 0, 0, .6)
+}
+
+html:not(.hc) .ruleta canvas {
+    background: #22324a
+}
+
+html:not(.hc) .ruleta-flecha {
+    border-top-color: #fff
+}
+
+html:not(.hc) .ruleta-centro {
+    background: #1d2b3a;
+    border-color: #fff;
+    color: #fff
+}
+
+html:not(.hc) .ruleta-res {
+    background: rgba(255, 255, 255, .08);
+    border-color: rgba(127, 224, 200, .4)
+}
+
+html:not(.hc) .res-nombre {
+    background: linear-gradient(90deg, #ffffff, #9be8d6, #c3b8ff);
+    -webkit-background-clip: text;
+    background-clip: text
+}
+
+html:not(.hc) .res-preg {
+    background: rgba(255, 255, 255, .08)
+}
+
+html:not(.hc) .cuenta {
+    background: var(--teal);
+    color: #16303a
+}
+
+html:not(.hc) .check input {
+    accent-color: var(--teal)
+}
+
+/* ---------- Reto IA ---------- */
+html:not(.hc) .reto .small {
+    color: var(--muted)
+}
+
+/* ---------- Robot guía y escena ---------- */
+html:not(.hc) .companion-bubble {
+    background: #2a3a4d;
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .show-nombre,
+html:not(.hc) .show-burbuja,
+html:not(.hc) .show-burbuja.cerca {
+    background: #ffffff;
+    color: #1d2b3a
+}
+
+html:not(.hc) .show-nombre small {
+    color: #4d5768
+}
+
+html:not(.hc) .show-nombre b {
+    background: linear-gradient(90deg, #23887f, #4c6fd6, #7b62d9);
+    -webkit-background-clip: text;
+    background-clip: text
+}
+
+html:not(.hc) .foot {
+    background: rgba(0, 0, 0, .15);
+    border-top: 1px solid var(--line)
+}
+
+/* ---------- Pantallas del Reto IA ---------- */
+html:not(.hc) body.quiz {
+    background: linear-gradient(160deg, #213447, #1b2a3a 55%, #22283f);
+    background-attachment: fixed
+}
+
+html:not(.hc) .ans>* {
+    background: rgba(255, 255, 255, .06);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .ans button:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: rgba(127, 224, 200, .12)
+}
+
+html:not(.hc) .ans .right,
+html:not(.hc) .ans button.right:disabled {
+    border-color: var(--ok);
+    background: var(--ok-soft)
+}
+
+html:not(.hc) .code {
+    background: #fff;
+    color: #1d2b3a
+}
+
+html:not(.hc) .names span,
+html:not(.hc) .pod>div,
+html:not(.hc) .qwrap table {
+    background: rgba(255, 255, 255, .07);
+    border-color: var(--line)
+}
+
+html:not(.hc) .modo,
+html:not(.hc) .fb {
+    background: rgba(127, 224, 200, .12);
+    border-color: rgba(127, 224, 200, .35)
+}
+
+html:not(.hc) .conn {
+    background: rgba(127, 224, 200, .15);
+    color: var(--teal)
+}
+
+html:not(.hc) .timer {
+    background: rgba(255, 210, 122, .15);
+    color: var(--sun)
+}
