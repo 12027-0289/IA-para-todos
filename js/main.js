@@ -19,6 +19,14 @@ const fiesta = el => window.confeti && confeti(el);
     apply(); setHc(store.get('hc') === '1');
 })();
 
+/* ---------- Preguntas frecuentes: abrir o cerrar todas ---------- */
+(() => {
+    const b = $('#faqTodas'), todas = [...document.querySelectorAll('.faq')];
+    const pintar = () => { const abiertas = todas.every(d => d.open); b.textContent = abiertas ? 'Cerrar todas' : 'Abrir todas'; b.setAttribute('aria-pressed', abiertas) };
+    b.onclick = () => { const abrir = !todas.every(d => d.open); todas.forEach(d => d.open = abrir); pintar() };
+    todas.forEach(d => d.addEventListener('toggle', pintar));
+})();
+
 /* ---------- Actividad 1: ¿Dónde hay IA? ---------- */
 (() => {
     const ITEMS = [

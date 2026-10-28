@@ -2,6 +2,7 @@
 
 /* ---------- Decoración flotante en el fondo de las secciones ---------- */
 #basico,
+#preguntas,
 #actividades,
 #reto {
     position: relative;
@@ -378,12 +379,243 @@ html.hc .deco {
     display: none
 }
 
+/* ---------- Preguntas frecuentes ---------- */
+.preguntas {
+    background: linear-gradient(180deg, var(--bg), #eef1ff 25%, #e9f7f4 80%, var(--bg))
+}
+
+html.hc .preguntas {
+    background: #fff
+}
+
+.faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.9fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start
+}
+
+.faq-head {
+    position: sticky;
+    top: 110px
+}
+
+.faq-burbuja {
+    display: flex;
+    gap: .6rem;
+    margin: .4rem 0 .6rem
+}
+
+.faq-burbuja span {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    border-radius: 24px 24px 24px 6px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    font-size: 2.4rem;
+    animation: chip 4s ease-in-out infinite
+}
+
+.faq-burbuja span:last-child {
+    border-radius: 24px 24px 6px 24px;
+    background: var(--primary-soft);
+    animation-delay: -2s
+}
+
+.faq-lista {
+    display: grid;
+    gap: .9rem
+}
+
+.faq {
+    --fc: var(--primary);
+    --fs: var(--primary-soft);
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow .25s ease, transform .25s ease
+}
+
+.faq:nth-child(5n+2) {
+    --fc: var(--violet);
+    --fs: var(--violet-soft)
+}
+
+.faq:nth-child(5n+3) {
+    --fc: var(--teal);
+    --fs: var(--teal-soft)
+}
+
+.faq:nth-child(5n+4) {
+    --fc: var(--coral);
+    --fs: var(--coral-soft)
+}
+
+.faq:nth-child(5n+5) {
+    --fc: var(--sky);
+    --fs: var(--sky-soft)
+}
+
+.faq:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px -14px rgba(20, 33, 61, .28)
+}
+
+.faq[open] {
+    border-color: var(--fc);
+    box-shadow: 0 0 0 2px var(--fc), 0 16px 34px -16px rgba(20, 33, 61, .3)
+}
+
+.faq summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 76px;
+    padding: .8rem 1.2rem;
+    cursor: pointer;
+    list-style: none
+}
+
+.faq summary::-webkit-details-marker {
+    display: none
+}
+
+.faq summary:hover .faq-q {
+    color: var(--fc)
+}
+
+.faq-ico {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: var(--fs);
+    font-size: 1.6rem
+}
+
+.faq-q {
+    flex: 1;
+    font: 600 1.12rem/1.35 var(--font-head);
+    transition: color .2s
+}
+
+.faq-mas {
+    position: relative;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--fs);
+    transition: transform .3s ease, background .3s ease
+}
+
+.faq-mas::before,
+.faq-mas::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 16px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--fc);
+    transform: translate(-50%, -50%)
+}
+
+.faq-mas::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform .3s ease
+}
+
+.faq[open] .faq-mas {
+    background: var(--fc);
+    transform: rotate(180deg)
+}
+
+.faq[open] .faq-mas::before,
+.faq[open] .faq-mas::after {
+    background: #fff
+}
+
+.faq[open] .faq-mas::after {
+    transform: translate(-50%, -50%) rotate(0deg)
+}
+
+.faq-r {
+    padding: 0 1.4rem 1.3rem calc(1.2rem + 52px + 1rem);
+    font-size: 1.05rem
+}
+
+.faq[open] .faq-r {
+    animation: abre .35s ease
+}
+
+@keyframes abre {
+    from {
+        opacity: 0;
+        transform: translateY(-8px)
+    }
+}
+
+.faq-r p {
+    margin: 0 0 .7rem
+}
+
+.faq-r p:last-child {
+    margin-bottom: 0
+}
+
+.faq-ojo {
+    padding: .7rem 1rem;
+    border-radius: 14px;
+    background: var(--fs);
+    font-size: .98rem
+}
+
+.d-q {
+    font: 700 5rem/1 var(--font-head);
+    color: rgba(124, 77, 255, .16);
+    animation: deriva 9s ease-in-out infinite alternate
+}
+
+.d-q.q2 {
+    font-size: 7rem;
+    color: rgba(11, 138, 124, .14);
+    animation-delay: -3s
+}
+
+.d-q.q3 {
+    font-size: 4rem;
+    color: rgba(36, 73, 184, .14);
+    animation-delay: -6s
+}
+
+html.hc .faq-burbuja span,
+html.hc .faq-ico,
+html.hc .faq-mas,
+html.hc .faq-ojo {
+    background: #fff;
+    border: 2px solid #000
+}
+
 /* ---------- Adaptable ---------- */
 @media (max-width: 900px) {
 
+    .faq-grid,
     .idea-split,
     .sec-split {
         grid-template-columns: 1fr
+    }
+
+    .faq-head {
+        position: static
     }
 
     .uses-wrap {
@@ -402,6 +634,29 @@ html.hc .deco {
 @media (max-width: 640px) {
     .uses-wrap .uses {
         grid-template-columns: 1fr
+    }
+
+    .faq-head {
+        position: static
+    }
+
+    .faq-burbuja {
+        display: none
+    }
+
+    .faq summary {
+        gap: .7rem;
+        padding: .8rem .9rem
+    }
+
+    .faq-ico {
+        width: 44px;
+        height: 44px;
+        font-size: 1.35rem
+    }
+
+    .faq-r {
+        padding: 0 1rem 1.1rem
     }
 
     .d-circ,

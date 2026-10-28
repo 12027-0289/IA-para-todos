@@ -52,13 +52,16 @@
     const SECC = [
         ['video', '¡Dele play cuando esté listo! 🎬'],
         ['basico', 'Tres ideas y ya sabe lo más importante. 💡'],
+        ['preguntas', '¿Tiene una duda? Toque una pregunta y vea la respuesta. 🙋'],
         ['seguridad', 'Recuerde: deténgase, verifique y después decida. ✋'],
         ['actividades', '¡Ahora a practicar! Toque los botones grandes. 👆'],
         ['act2', 'Pregúnteme lo que quiera. No escriba datos privados. 🔒'],
         ['act3', '¡Gire la ruleta y compartamos experiencias! 🎡'],
         ['reto', '¡Llegó el reto final! Mucha suerte. 🏆']
     ];
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const m = SECC.find(x => x[0] === e.target.id); if (m && !cmsg.dataset.busy) cambiar(cmsg, m[1]) } }), { threshold: .3 });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const m = SECC.find(x => x[0] === e.target.id); if (m && !cmsg.dataset.busy) { cambiar(cmsg, m[1]); enCelular() } } }), { threshold: .3 });
+    // En el celular el mensaje de cada sección se muestra unos segundos y luego se esconde para no tapar el contenido
+    let tc; function enCelular() { if (innerWidth >= 640) return; comp.classList.remove('min'); clearTimeout(tc); tc = setTimeout(() => { if (!cmsg.dataset.busy) comp.classList.add('min') }, 4000) }
     SECC.forEach(([id]) => { const s = document.getElementById(id); if (s) io.observe(s) });
     const hero = document.getElementById('inicio');
     new IntersectionObserver(([e]) => comp.classList.toggle('on', !e.isIntersecting), { threshold: .15 }).observe(hero);
