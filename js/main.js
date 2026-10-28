@@ -189,13 +189,53 @@ const fiesta = el => window.confeti && confeti(el);
         if (!nombres.length) robot('¡Todos participaron! Gracias por compartir. 💙', 'feliz');
     }
 
+    // Sonidos creados con el navegador (sin archivos): tic al girar, redoble de suspenso y fanfarria final
+    const sonar = () => $('#sonido').checked;
+    function ac() { audio = audio || new (window.AudioContext || window.webkitAudioContext)(); if (audio.state === 'suspended') audio.resume(); return audio }
+    function ruido(seg) { const a = ac(), b = a.createBuffer(1, a.sampleRate * seg, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; const n = a.createBufferSource(); n.buffer = b; return n }
     function tic() {
-        if (!$('#sonido').checked) return;
+        if (!sonar()) return;
         try {
-            audio = audio || new (window.AudioContext || window.webkitAudioContext)();
-            const o = audio.createOscillator(), g = audio.createGain();
-            o.frequency.value = 900; g.gain.setValueAtTime(.08, audio.currentTime); g.gain.exponentialRampToValueAtTime(.001, audio.currentTime + .05);
-            o.connect(g).connect(audio.destination); o.start(); o.stop(audio.currentTime + .06);
+            const a = ac(), o = a.createOscillator(), g = a.createGain();
+            o.frequency.value = 900; g.gain.setValueAtTime(.08, a.currentTime); g.gain.exponentialRampToValueAtTime(.001, a.currentTime + .05);
+            o.connect(g).connect(a.destination); o.start(a.currentTime); o.stop(a.currentTime + .06);
+        } catch { }
+    }
+    function redoble(seg) {
+        if (!sonar()) return;
+        try {
+            const a = ac(), t0 = a.currentTime, f = a.createBiquadFilter(), g = a.createGain();
+            f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = .7; f.connect(g).connect(a.destination);
+            g.gain.setValueAtTime(.05, t0); g.gain.linearRampToValueAtTime(.32, t0 + seg);
+            for (let t = 0; t < seg; t += .045) {
+                const n = ruido(.04), e = a.createGain(); n.connect(e).connect(f);
+                e.gain.setValueAtTime(1, t0 + t); e.gain.exponentialRampToValueAtTime(.01, t0 + t + .04); n.start(t0 + t);
+            }
+        } catch { }
+    }
+    function fanfarria() {
+        if (!sonar()) return;
+        try {
+            const a = ac(), t0 = a.currentTime + .02, sal = a.createGain(); sal.gain.value = .5; sal.connect(a.destination);
+            const trompeta = (hz, ini, dur, vol = .16) => {
+                const f = a.createBiquadFilter(), g = a.createGain(); f.type = 'lowpass'; f.frequency.value = 2600; f.connect(g).connect(sal);
+                g.gain.setValueAtTime(0, t0 + ini); g.gain.linearRampToValueAtTime(vol, t0 + ini + .03);
+                g.gain.setValueAtTime(vol * .8, t0 + ini + dur * .7); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + dur);
+                [-6, 6].forEach(cents => { const o = a.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz; o.detune.value = cents; o.connect(f); o.start(t0 + ini); o.stop(t0 + ini + dur + .05) });
+            };
+            const platillo = (ini, dur, vol) => {
+                const n = ruido(dur), f = a.createBiquadFilter(), g = a.createGain(); f.type = 'highpass'; f.frequency.value = 5500;
+                n.connect(f).connect(g).connect(sal); g.gain.setValueAtTime(vol, t0 + ini); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + dur); n.start(t0 + ini);
+            };
+            const timbal = ini => {
+                const o = a.createOscillator(), g = a.createGain(); o.frequency.setValueAtTime(140, t0 + ini); o.frequency.exponentialRampToValueAtTime(55, t0 + ini + .5);
+                g.gain.setValueAtTime(.7, t0 + ini); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + .6); o.connect(g).connect(sal); o.start(t0 + ini); o.stop(t0 + ini + .65);
+            };
+            // Ta-ta-ta-táaa… y acorde final
+            [[392, 0, .13], [523, .14, .13], [659, .28, .13], [784, .42, .42]].forEach(([hz, i, d]) => trompeta(hz, i, d));
+            timbal(0); timbal(.42); platillo(.42, .5, .25);
+            [523, 659, 784, 1047].forEach(hz => trompeta(hz, .9, 1.5, .11));
+            timbal(.9); platillo(.9, 1.6, .35);
         } catch { }
     }
     function girar() {
@@ -207,12 +247,15 @@ const fiesta = el => window.confeti && confeti(el);
         const base = -(gana * paso + paso / 2), vueltas = quieto() ? 1 : 6 + Math.floor(Math.random() * 3);
         const desde = ang, hasta = base + Math.PI * 2 * (Math.ceil((desde - base) / (Math.PI * 2)) + vueltas) + (Math.random() - .5) * paso * .6;
         const dur = quieto() ? 600 : 5200, t0 = performance.now();
+        try { if (sonar()) ac() } catch { }
+        let redoblando = quieto();
         let ult = Math.floor(desde / paso);
         robot('¡Girando! ¿A quién le tocará? 🎡');
         (function f(t) {
             const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
             ang = desde + (hasta - desde) * e; dibujar();
-            const s = Math.floor(ang / paso); if (s !== ult) { ult = s; tic() }
+            const s = Math.floor(ang / paso); if (s !== ult) { ult = s; if (!redoblando) tic() }
+            if (!redoblando && t - t0 > dur - 1500) { redoblando = true; redoble(1.45) }
             if (k < 1) requestAnimationFrame(f); else fin(gana);
         })(t0);
     }
@@ -228,7 +271,7 @@ const fiesta = el => window.confeti && confeti(el);
         res.append(el('p', 'res-le', '🎤 ¡Le toca a…'), el('p', 'res-nombre', nm), el('p', 'small', 'Cuéntenos una experiencia con la tecnología o la IA. Por ejemplo:'), q, b,
             el('p', 'small', '✔ ' + nm + ' sale de la ruleta automáticamente para que no se repita.'));
         res.hidden = false; pintarLista();
-        fiesta(res); robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
+        fanfarria(); fiesta(res); robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
         pendiente = nm; tSacar = setTimeout(sacar, quieto() ? 800 : 2500);
     }
     botones.forEach(b => b.onclick = girar);
