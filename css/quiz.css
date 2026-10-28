@@ -862,3 +862,158 @@ html.no-anim .rq-op,
 html.no-anim .rq-tarjeta {
     animation: none
 }
+
+/* =========================================================
+   Presentador (modo proyector y concurso en vivo)
+   ========================================================= */
+.rq-inicio-pres {
+    align-items: flex-start
+}
+
+.rq-opciones {
+    margin: 1rem 0 0
+}
+
+.rq-opt-t {
+    margin: 0 0 .4rem;
+    font-weight: 700
+}
+
+.rq-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem
+}
+
+.rq-chip-b {
+    min-height: 50px;
+    padding: .4rem 1.1rem;
+    border-radius: 999px;
+    border: 2px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font: 700 1rem var(--font);
+    cursor: pointer;
+    transition: border-color .2s, background .2s
+}
+
+.rq-chip-b:hover {
+    border-color: var(--primary)
+}
+
+.rq-chip-b.on {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff
+}
+
+.rq-puntos li.hecha {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+    color: var(--primary)
+}
+
+.rq-reloj {
+    --p: 100;
+    display: grid;
+    place-items: center;
+    min-width: 120px;
+    height: 48px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary-soft) calc(var(--p) * 1%), #fff 0);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font: 700 1.1rem var(--font-head);
+    transition: background .9s linear
+}
+
+.rq-reloj.poco {
+    border-color: #c9573c;
+    color: #c9573c;
+    background: linear-gradient(90deg, #fbece6 calc(var(--p) * 1%), #fff 0);
+    animation: rq-salta .5s ease infinite
+}
+
+.rq-nota {
+    color: var(--muted);
+    font-size: .98rem
+}
+
+.ans .rq-op.elegida {
+    outline: 5px solid var(--oc);
+    outline-offset: 3px;
+    transform: scale(1.02)
+}
+
+.ans .rq-op.elegida:not(.right):not(.wrong)::before {
+    content: "👥";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.6rem
+}
+
+.ans.suspenso .rq-op {
+    animation: rq-suspenso .5s ease-in-out infinite alternate
+}
+
+.ans.suspenso .rq-op:nth-child(2) {
+    animation-delay: .12s
+}
+
+.ans.suspenso .rq-op:nth-child(3) {
+    animation-delay: .24s
+}
+
+.ans.suspenso .rq-op:nth-child(4) {
+    animation-delay: .36s
+}
+
+@keyframes rq-suspenso {
+    to {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 6px var(--os)
+    }
+}
+
+.btn.llama {
+    animation: rq-salta .8s ease infinite
+}
+
+.qwrap.wide .rq-preg {
+    font-size: clamp(1.6rem, 3.6vw, 2.5rem)
+}
+
+.qwrap.wide .rq-op {
+    min-height: 104px !important;
+    font-size: 1.25rem !important
+}
+
+.qwrap.wide .rq-fig {
+    width: 56px;
+    height: 56px;
+    font-size: 1.5rem
+}
+
+/* Barras de votos con el color de cada respuesta */
+.bars .bar2 i {
+    height: 24px
+}
+
+.bars .bar2:nth-child(1) i {
+    background: #2f5ec8
+}
+
+.bars .bar2:nth-child(2) i {
+    background: #1f8a7a
+}
+
+.bars .bar2:nth-child(3) i {
+    background: #c98a12
+}
+
+.bars .bar2:nth-child(4) i {
+    background: #7c5ce0
+}

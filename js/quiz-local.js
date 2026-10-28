@@ -156,35 +156,133 @@ function jugador(box) {
 }
 
 // ---------- Presentador: modo proyector, el público responde levantando la mano ----------
+// Opción de respuesta con figura y letra grandes (la usa también la pantalla del concurso en vivo)
+function opcion(k, texto, tag = 'div') {
+    const b = h(tag, 'rq-op'); if (tag === 'button') b.type = 'button'; b.style.animationDelay = (k * 90) + 'ms';
+    b.append(h('span', 'rq-fig', FIG[k]), h('span', 'rq-letra', 'ABCD'[k]), h('span', 'rq-txt', texto)); return b;
+}
+const sonidoRedoble = () => tono(Array.from({ length: 10 }, (_, k) => [180 + k * 12, k * .11, .09]));
+const sonidoTic = () => tono([[880, 0, .06]]);
+function aplausos() {
+    try {
+        _audio = _audio || new (window.AudioContext || window.webkitAudioContext)(); const a = _audio;
+        for (let k = 0; k < 40; k++) {
+            const t = a.currentTime + Math.random() * 2.2, b = a.createBuffer(1, a.sampleRate * .05, a.sampleRate), d = b.getChannelData(0);
+            for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+            const n = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain(); n.buffer = b; f.type = 'bandpass'; f.frequency.value = 1200 + Math.random() * 1500; g.gain.value = .25;
+            n.connect(f).connect(g).connect(a.destination); n.start(t);
+        }
+    } catch { }
+}
+
 function proyector(box) {
-    let qs, i;
-    function inicio() {
-        box.replaceChildren(aviso('No hay servidor para que el público responda desde el teléfono. Use el modo proyector: usted muestra cada pregunta en pantalla grande y el público responde en voz alta o levantando la mano por la figura (▲ ◆ ● ■).'));
-        const p = h('div', 'panel'); const l = h('label', null, 'Número de preguntas (3 a 30)'); l.htmlFor = 'nLocal';
-        const n = h('input'); Object.assign(n, { id: 'nLocal', type: 'number', min: 3, max: 30, value: 10 });
-        const b = h('button', 'btn', 'Comenzar el Reto IA'); b.onclick = () => { qs = mezclar(Math.min(30, Math.max(3, +n.value || 10))); i = 0; pregunta() };
-        const d = h('div', 'btns'); d.append(b, Object.assign(h('a', 'btn ghost', 'Practicar en este dispositivo'), { href: 'quiz.html' }));
-        p.append(l, n, d); box.append(p);
+    let qs, i, n = 10, pensar = 0, leer = true, grupoOk, grupoResp, hechas, reloj;
+    try { leer = localStorage.getItem('rqLeer') !== '0' } catch { }
+    document.querySelector('main > h1').hidden = true;
+    const robot = () => { const d = h('div', 'rq-robot'); d.innerHTML = ROBOT_SVG; return d };
+    function dice(rb, txt, animo) {
+        const b = rb.querySelector('.rq-dice') || h('div', 'rq-dice'); b.textContent = txt; rb.append(b);
+        b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop');
+        rb.classList.remove('feliz', 'triste'); void rb.offsetWidth; if (animo) rb.classList.add(animo);
     }
+    function grupo(titulo, opciones, valor, alElegir) {
+        const g = h('div', 'rq-opciones'); g.append(h('p', 'rq-opt-t', titulo));
+        const fila = h('div', 'rq-chips'); g.append(fila);
+        opciones.forEach(([v, txt]) => { const b = h('button', 'rq-chip-b' + (v === valor ? ' on' : ''), txt); b.type = 'button'; b.setAttribute('aria-pressed', v === valor); b.onclick = () => { fila.querySelectorAll('button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b) }); alElegir(v) }; fila.append(b) });
+        return g;
+    }
+
+    function inicio() {
+        clearInterval(reloj); box.replaceChildren();
+        const c = h('div', 'rq-inicio rq-inicio-pres'), rb = robot(), t = h('div', 'rq-inicio-txt');
+        t.append(h('p', 'rq-chip', '🎯 Reto IA · Modo proyector'), h('h2', null, '¡A jugar en grupo!'),
+            h('p', null, 'Proyecte esta pantalla. El público responde levantando la mano o diciendo el color o la figura: ▲ azul, ◆ verde, ● amarillo, ■ morado.'));
+        t.append(grupo('¿Cuántas preguntas?', [[5, '5'], [10, '10'], [15, '15'], [30, 'Todas (30)']], n, v => n = v),
+            grupo('Tiempo para pensar', [[0, 'Sin reloj'], [20, '20 segundos'], [30, '30 segundos']], pensar, v => pensar = v),
+            grupo('Leer las preguntas en voz alta', [[true, '🔊 Sí'], [false, '🔇 No']], leer, v => { leer = v; try { localStorage.setItem('rqLeer', v ? '1' : '0') } catch { } }));
+        const b = h('button', 'btn rq-grande', '¡Comenzar! 🚀'); b.onclick = () => { qs = mezclar(n); i = 0; grupoOk = 0; grupoResp = 0; hechas = []; pregunta() };
+        const d = h('div', 'btns'); d.append(b, Object.assign(h('a', 'btn ghost', 'Practicar en este dispositivo'), { href: 'quiz.html' })); t.append(d);
+        c.append(rb, t); box.append(c); dice(rb, '¡Hola a todos! 👋'); b.focus();
+    }
+
+    function hud() {
+        const top = h('div', 'rq-hud'), puntos = h('ol', 'rq-puntos'); puntos.setAttribute('aria-label', 'Avance');
+        qs.forEach((_, k) => { const m = hechas[k], li = h('li', m === undefined ? (k === i ? 'ahora' : null) : m === true ? 'bien' : m === false ? 'mal' : 'hecha'); li.textContent = m === undefined ? k + 1 : m === true ? '✓' : m === false ? '✗' : '•'; puntos.append(li) });
+        const marc = h('div', 'rq-marcador'); marc.append(h('span', null, '❓ ' + (i + 1 > qs.length ? qs.length : i + 1) + ' de ' + qs.length));
+        if (grupoResp) marc.append(h('span', 'rq-estrella', '👥 El grupo: ' + grupoOk + ' de ' + grupoResp));
+        top.append(puntos, marc); return top;
+    }
+
     function pregunta() {
-        const q = qs[i]; box.replaceChildren();
-        box.append(h('p', 'small', 'Pregunta ' + (i + 1) + ' de ' + qs.length + ' · ' + q.cat), h('p', 'qtxt', q.q));
-        const ans = h('div', 'ans'); q.opts.forEach((o, k) => ans.append(h('div', null, MARK[k] + '  ' + o))); box.append(ans);
-        const zona = h('div'), d = h('div', 'btns');
-        const ver = h('button', 'btn', 'Mostrar la respuesta');
-        ver.onclick = () => {
-            [...ans.children].forEach((x, j) => x.classList.add(j === q.a ? 'right' : 'wrong'));
-            zona.replaceChildren(h('p', 'fb', 'Respuesta correcta: ' + MARK[q.a] + '  ' + q.opts[q.a]), h('p', null, q.e));
-            const sig = h('button', 'btn', i < qs.length - 1 ? 'Siguiente pregunta' : 'Terminar el reto'); sig.onclick = () => { i++; i < qs.length ? pregunta() : fin() };
-            d.replaceChildren(sig, salir()); sig.focus();
-        };
-        d.append(ver, salir()); box.append(zona, d); ver.focus();
+        clearInterval(reloj);
+        const q = qs[i]; let elegida = null, revelada = false;
+        box.replaceChildren(hud());
+        const zona = h('div', 'rq-zona'), rb = robot(), tarjeta = h('div', 'rq-tarjeta');
+        tarjeta.append(h('p', 'rq-cat', (CAT_ICO[q.cat] || '💡') + ' ' + q.cat), h('p', 'rq-preg', q.q));
+        const fila = h('div', 'rq-voz');
+        if (vozLeer.hay) { const oir = h('button', 'rq-oir', '🔊 Leer la pregunta'); oir.type = 'button'; oir.onclick = () => vozLeer.decir(q.q + ' ' + q.opts.map((o, k) => 'Opción ' + 'ABCD'[k] + ': ' + o).join('. ')); fila.append(oir) }
+        const rl = h('div', 'rq-reloj'); if (pensar) fila.append(rl);
+        tarjeta.append(fila); zona.append(rb, tarjeta); box.append(zona);
+        const ans = h('div', 'ans rq-ans'); box.append(ans);
+        q.opts.forEach((o, k) => {
+            const b = opcion(k, o, 'button'); b.title = 'Marcar como la respuesta del grupo';
+            b.onclick = () => { if (revelada) return; elegida = elegida === k ? null : k; ans.querySelectorAll('.rq-op').forEach((x, j) => x.classList.toggle('elegida', j === elegida)); nota.textContent = elegida === null ? nota.dataset.base : '👥 Respuesta del grupo: ' + FIG[k] + ' ' + 'ABCD'[k] + '. Toque «Mostrar la respuesta» cuando estén listos.' };
+            ans.append(b);
+        });
+        const nota = h('p', 'rq-nota'); nota.dataset.base = 'Opcional: toque la opción que eligió la mayoría para llevar el puntaje del grupo.'; nota.textContent = nota.dataset.base;
+        const zonaR = h('div', 'rq-fb'), d = h('div', 'btns');
+        const ver = h('button', 'btn rq-grande', '🥁 Mostrar la respuesta'); ver.onclick = revelar;
+        d.append(ver, salir()); box.append(nota, zonaR, d);
+        dice(rb, ['¿Qué opinan? 🤔', '¡Levanten la mano! ✋', 'Piénsenlo con calma 😊', '¿Azul, verde, amarillo o morado?'][i % 4]);
+        if (leer && vozLeer.hay) setTimeout(() => vozLeer.decir(q.q), 350);
+        if (pensar) {
+            let resta = pensar; const pinta = () => { rl.style.setProperty('--p', resta / pensar * 100); rl.textContent = resta > 0 ? '⏱ ' + resta : '⏰ ¡Tiempo!'; rl.classList.toggle('poco', resta <= 5) };
+            pinta(); reloj = setInterval(() => { resta--; pinta(); if (resta > 0 && resta <= 5) sonidoTic(); if (resta <= 0) { clearInterval(reloj); dice(rb, '¡Se acabó el tiempo! ⏰'); ver.classList.add('llama') } }, 1000);
+        }
+        ver.focus();
+
+        async function revelar() {
+            if (revelada) return; revelada = true; clearInterval(reloj); rl.remove(); vozLeer.callar();
+            ver.disabled = true; ver.textContent = '🥁 Y la respuesta es…'; dice(rb, 'Y la respuesta es… 🥁'); sonidoRedoble();
+            ans.classList.add('suspenso');
+            await new Promise(ok => setTimeout(ok, quieto() ? 100 : 1300));
+            ans.classList.remove('suspenso');
+            const ops = [...ans.children];
+            ops.forEach((x, j) => { x.disabled = true; x.classList.add(j === q.a ? 'right' : 'wrong') });
+            if (elegida !== null) { ops[elegida].classList.add('mine'); grupoResp++; if (elegida === q.a) grupoOk++ }
+            hechas[i] = elegida === null ? 'hecha' : elegida === q.a;
+            box.querySelector('.rq-hud').replaceWith(hud());
+            sonidoBien(); confeti(ops[q.a]);
+            const titulo = elegida === null ? '¡Esta es la correcta! 🎉' : elegida === q.a ? '¡El grupo acertó! 🎉' : '¡Casi! Esta vez no, pero ya aprendimos algo 💙';
+            zonaR.className = 'rq-fb ' + (elegida === null || elegida === q.a ? 'bien' : 'mal');
+            zonaR.replaceChildren(h('p', 'rq-fb-t', titulo), h('p', null, 'Respuesta correcta: ' + FIG[q.a] + ' ' + 'ABCD'[q.a] + ' — ' + q.opts[q.a]), h('p', 'rq-porque', '💡 ' + q.e));
+            nota.remove();
+            dice(rb, elegida === null || elegida === q.a ? ['¡Excelente! 🎉', '¡Muy bien! 👏', '¡Así se hace! ✨'][i % 3] : 'No pasa nada, así se aprende 💙', elegida === null || elegida === q.a ? 'feliz' : 'triste');
+            if (leer && vozLeer.hay) vozLeer.decir('La respuesta correcta es: ' + q.opts[q.a] + '. ' + q.e);
+            const sig = h('button', 'btn rq-grande', i < qs.length - 1 ? 'Siguiente pregunta →' : 'Ver el final 🏆'); sig.onclick = () => { vozLeer.callar(); i++; i < qs.length ? pregunta() : fin() };
+            d.replaceChildren(sig, salir()); sig.focus({ preventScroll: true });
+            zonaR.scrollIntoView({ behavior: quieto() ? 'auto' : 'smooth', block: 'nearest' });
+        }
     }
     function salir() { const e = h('button', 'btn ghost', 'Finalizar el concurso'); e.onclick = () => { if (confirm('¿Finalizar el concurso ahora?')) fin() }; return e }
+
     function fin() {
-        box.replaceChildren(h('p', 'qtxt', '¡Terminamos el Reto IA! 🎉'), h('p', null, '¡Gracias a todas las personas participantes! Aprender juntos es lo más importante.'));
-        const otra = h('button', 'btn', 'Jugar otra vez'); otra.onclick = inicio;
-        const d = h('div', 'btns'); d.append(otra, Object.assign(h('a', 'btn ghost', 'Regresar a la charla'), { href: 'index.html' })); box.append(d);
+        clearInterval(reloj); vozLeer.callar(); i = qs.length;
+        box.replaceChildren(hud());
+        const c = h('div', 'rq-final'), rb = robot(), conPuntaje = grupoResp > 0;
+        const pct = conPuntaje ? Math.round(grupoOk / grupoResp * 100) : 100;
+        const anillo = h('div', 'rq-anillo'); anillo.style.setProperty('--p', 0);
+        anillo.append(h('span', 'rq-medalla', '🏆'), h('b', null, conPuntaje ? grupoOk + ' / ' + grupoResp : '¡Listo!'));
+        const t = h('div'); t.append(h('h2', null, '¡Terminamos el Reto IA!'));
+        if (conPuntaje) { const est = h('p', 'rq-estrellas'), e = pct >= 85 ? 3 : pct >= 55 ? 2 : pct >= 25 ? 1 : 0; for (let k = 0; k < 3; k++) { const s = h('span', k < e ? 'llena' : null, '★'); s.style.animationDelay = (600 + k * 250) + 'ms'; est.append(s) } t.append(est) }
+        t.append(h('p', 'rq-msg', '¡Gracias a todas las personas participantes! Aprender juntos es lo más importante. 👏'));
+        const otra = h('button', 'btn rq-grande', 'Jugar otra vez 🔄'); otra.onclick = inicio;
+        const d = h('div', 'btns'); d.append(otra, Object.assign(h('a', 'btn ghost', 'Regresar a la charla'), { href: 'index.html' })); t.append(d);
+        c.append(anillo, t, rb); box.append(c);
+        requestAnimationFrame(() => anillo.style.setProperty('--p', pct));
+        dice(rb, '¡Bravo, equipo! 👏🎉', 'feliz'); sonidoFin(); aplausos(); setTimeout(() => confeti(anillo), 400);
+        if (leer && vozLeer.hay) vozLeer.decir('¡Terminamos el Reto IA! ' + (conPuntaje ? 'El grupo acertó ' + grupoOk + ' de ' + grupoResp + '. ' : '') + '¡Gracias a todos por participar!');
+        otra.focus();
     }
     inicio();
 }

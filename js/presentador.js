@@ -1,5 +1,5 @@
 // Pantalla del presentador (ADEP Reto IA)
-const S = sessionStorage; let es = null, last = null;
+const S = sessionStorage; let es = null, last = null, festejo = null;
 // Dirección que verán los teléfonos. Si la página se abre como "localhost", se pide al servidor la IP de la red.
 let BASE = location.origin, NOLAN = false;
 async function resolveBase() {
@@ -36,8 +36,10 @@ function render(s) {
     if (s.state === 'lobby') return lobby(s);
     const v = $('#view'); v.replaceChildren();
     if (s.state === 'question' || s.state === 'results') {
-        v.append(h('p', 'small', s.q.cat), h('p', 'qtxt', s.q.q)); const box = h('div', 'ans');
-        s.q.opts.forEach((o, i) => { const b = h('div', s.state === 'results' ? (i === s.correct ? 'right' : 'wrong') : null, MARK[i] + '  ' + o); box.append(b) }); v.append(box);
+        v.append(h('p', 'small', (typeof CAT_ICO !== 'undefined' && CAT_ICO[s.q.cat] || '') + ' ' + s.q.cat), h('p', 'qtxt', s.q.q)); const box = h('div', 'ans rq-ans');
+        s.q.opts.forEach((o, i) => { const b = window.opcion ? opcion(i, o) : h('div', null, MARK[i] + '  ' + o); if (s.state === 'results') b.classList.add(i === s.correct ? 'right' : 'wrong'); box.append(b) }); v.append(box);
+        // Al revelar la respuesta (una sola vez por pregunta): sonido y confeti
+        if (s.state === 'results' && festejo !== s.idx && window.tono) { festejo = s.idx; sonidoBien(); setTimeout(() => confeti(box.children[s.correct]), 60) }
         v.append(h('p', null, 'Respondieron ' + s.answered + ' de ' + s.count + (s.state === 'question' ? '. Faltan ' + (s.count - s.answered) + '.' : '.')));
         const db = h('div', 'bars'); v.append(db); dist(db, s.dist);
         if (s.order && s.order.length) { const o = h('div', 'panel'); o.append(h('b', null, 'Orden en que llegaron las respuestas')); const ol = h('ol'); s.order.slice(0, 8).forEach((x, i) => ol.append(h('li', null, x.name + ' — ' + ['primero', 'segundo', 'tercero'][i] + ' (' + (x.ms / 1000).toFixed(1) + ' s)' + (x.ok === undefined ? '' : x.ok ? ' ✔ acertó' : ' ✖ no acertó')))); o.append(ol); v.append(o) }
@@ -50,7 +52,8 @@ function render(s) {
         const e = h('button', 'btn ghost', 'Finalizar el concurso'); e.onclick = () => { if (confirm('¿Finalizar el concurso ahora?')) act('end') }; ctl.append(e); v.append(ctl);
     }
     if (s.state === 'ended') {
-        v.append(h('p', 'qtxt', '¡Podio final!')); const pd = h('div', 'pod'); v.append(pd); podium(pd, s.podium || []); v.append(h('p', null, '¡Gracias a todas las personas participantes! Aprender juntos es lo más importante.'));
+        if (festejo !== 'fin' && window.tono) { festejo = 'fin'; sonidoFin(); aplausos(); setTimeout(() => confeti(v), 200) }
+        v.append(h('p', 'qtxt', '¡Podio final! 🏆')); const pd = h('div', 'pod'); v.append(pd); podium(pd, s.podium || []); v.append(h('p', null, '¡Gracias a todas las personas participantes! Aprender juntos es lo más importante.'));
         const b = h('div', 'btns'); const again = h('button', 'btn', 'Crear otra partida'); again.onclick = () => { S.clear(); location.reload() }; b.append(again, Object.assign(h('a', 'btn ghost', 'Regresar a la charla'), { href: 'index.html' })); v.append(b)
     }
 }
