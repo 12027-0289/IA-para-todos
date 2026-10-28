@@ -921,11 +921,6 @@
     transition: opacity .3s
 }
 
-.show-burbuja.centro {
-    left: 50%;
-    bottom: calc(var(--bw) * 1.13 * 1.03 + 18px)
-}
-
 .show-burbuja.cerca {
     left: 4%;
     top: 36%;
@@ -1009,51 +1004,6 @@
         top: 6%;
         translate: -50% 0;
         max-width: 88vw
-    }
-}
-
-/* Baile: luces de discoteca y notas musicales */
-.show::before {
-    content: "";
-    position: absolute;
-    inset: -50%;
-    opacity: 0;
-    pointer-events: none;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(124, 77, 255, .35) 0 8%, transparent 8% 17%, rgba(34, 211, 238, .3) 17% 25%, transparent 25% 34%, rgba(224, 69, 123, .32) 34% 42%, transparent 42% 50%, rgba(242, 184, 75, .3) 50% 58%, transparent 58% 67%, rgba(34, 197, 94, .28) 67% 75%, transparent 75% 84%, rgba(14, 165, 233, .3) 84% 92%, transparent 92%);
-    transition: opacity .4s
-}
-
-.show.baila::before {
-    opacity: 1;
-    animation: gira 6s linear infinite
-}
-
-.show.baila .show-bot svg {
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, .45)) drop-shadow(0 0 24px rgba(124, 77, 255, .6))
-}
-
-.show-notas span {
-    position: absolute;
-    bottom: -40px;
-    color: #fff;
-    font-size: clamp(1.8rem, 4vw, 3rem);
-    text-shadow: 0 0 16px rgba(124, 77, 255, .9);
-    opacity: 0;
-    animation: nota 2.6s ease-out forwards
-}
-
-.show-notas span:nth-child(even) {
-    color: #7fe0d3
-}
-
-@keyframes nota {
-    15% {
-        opacity: 1
-    }
-
-    to {
-        opacity: 0;
-        transform: translate(30px, -75vh) rotate(25deg)
     }
 }
 
