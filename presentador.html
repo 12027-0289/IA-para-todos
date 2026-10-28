@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reto IA · Presentador</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+
+<body class="quiz">
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="index.html">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2.2" /><circle cx="18" cy="7" r="2.2" /><circle cx="12" cy="17" r="2.6" /><path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" /></svg></span>
+                <span>IA para todos<small>Reto IA</small></span>
+            </a>
+        </div>
+    </header>
+    <main class="qwrap wide big">
+        <h1>Reto IA · Presentador</h1>
+        <section id="setup" class="panel">
+            <p>Cree una partida y proyecte esta pantalla. Las personas entrarán desde su teléfono con un código o con el
+                código QR.</p>
+            <label for="n">Número de preguntas (3 a 30)</label><input id="n" type="number" min="3" max="30" value="10">
+            <label for="secs">Segundos por pregunta (10 a 90)</label><input id="secs" type="number" min="10" max="90"
+                value="30">
+            <div class="btns"><button class="btn" id="create">Crear una partida</button><a class="btn ghost"
+                    href="quiz.html">Unirme a una partida</a></div>
+        </section>
+        <section id="stage" hidden>
+            <p><span class="conn" id="conn">Conectando…</span> <span id="prog"></span> <span class="timer"
+                    id="timer"></span></p>
+            <div id="view" aria-live="polite"></div>
+        </section>
+        <div id="err" class="err" role="alert"></div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/quiz-client.js"></script>
+    <script src="js/presentador.js"></script>
+</body>
+
+</html>

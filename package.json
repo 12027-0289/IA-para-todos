@@ -1,0 +1,12 @@
+{
+  "name": "ia-para-todos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IA para todos: charla de inteligencia artificial para personas adultas mayores, con actividades y el Reto IA en tiempo real",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

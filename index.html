@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IA para todos · ADEP</title>
+    <meta name="description"
+        content="Charla para personas adultas mayores: qué es la inteligencia artificial, dónde la encontramos, cómo usarla con seguridad y tres actividades para practicar.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/site.css">
+</head>
+
+<body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="#inicio">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <circle cx="6" cy="7" r="2.2" />
+                        <circle cx="18" cy="7" r="2.2" />
+                        <circle cx="12" cy="17" r="2.6" />
+                        <path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" />
+                    </svg>
+                </span>
+                <span>IA para todos<small>Charla ADEP · Adultos mayores</small></span>
+            </a>
+            <nav class="nav" aria-label="Principal">
+                <a href="#video">Video</a>
+                <a href="#basico">Lo básico</a>
+                <a href="#seguridad">Seguridad</a>
+                <a href="#actividades">Actividades</a>
+                <a href="#reto">Reto IA</a>
+            </nav>
+            <div class="tools" role="group" aria-label="Opciones de lectura">
+                <button id="aMenos" aria-label="Letra más pequeña">A−</button>
+                <button id="aMas" aria-label="Letra más grande">A+</button>
+                <button id="contraste" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><span class="hc-label">Contraste</span></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="contenido">
+
+        <!-- PORTADA + VIDEO -->
+        <section id="inicio" class="hero">
+            <div class="hero-bg" aria-hidden="true"></div>
+            <div class="wrap hero-grid">
+                <div class="hero-txt">
+                    <p class="eyebrow"><span class="dot"></span> Charla para personas adultas mayores</p>
+                    <h1>La inteligencia artificial, <span class="grad">explicada con calma</span></h1>
+                    <p class="lead">No hace falta saber de tecnología. En esta charla vamos a entender qué es la IA,
+                        dónde ya la usamos todos los días y cómo aprovecharla <b>con seguridad</b>.</p>
+                    <div class="btns">
+                        <a class="btn" href="#basico">Empezar
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14M13 6l6 6-6 6" />
+                            </svg></a>
+                        <a class="btn ghost" href="#actividades">Ir a las actividades</a>
+                    </div>
+                    <ul class="hero-points">
+                        <li><b>4</b> ideas básicas</li>
+                        <li><b>3</b> actividades prácticas</li>
+                        <li><b>1</b> reto final en grupo</li>
+                    </ul>
+                </div>
+
+                <div id="video" class="video-card">
+                    <div class="video-head">
+                        <span class="pill">▶ Video introductorio</span>
+                        <span class="small">33 segundos</span>
+                    </div>
+                    <video controls preload="metadata" playsinline
+                        aria-label="Video introductorio sobre la inteligencia artificial">
+                        <source src="video/video_final.mp4" type="video/mp4">
+                        Su navegador no puede reproducir este video.
+                    </video>
+                    <p class="small">El video no empieza solo: usted decide cuándo verlo. Puede pausarlo cuando
+                        quiera.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LO BÁSICO -->
+        <section id="basico" class="block">
+            <div class="wrap">
+                <header class="sec-head">
+                    <p class="kicker">Parte 1 · Lo básico</p>
+                    <h2>Cuatro ideas para entender la IA</h2>
+                    <p class="lead">Si se queda con estas cuatro ideas, ya sabe lo más importante.</p>
+                </header>
+
+                <!-- Idea 1 -->
+                <article class="idea">
+                    <span class="idea-num" aria-hidden="true">1</span>
+                    <div>
+                        <h3>¿Qué es la inteligencia artificial?</h3>
+                        <p>Es un <b>programa de computadora que aprende a partir de muchísimos ejemplos</b>. Con esos
+                            ejemplos encuentra patrones y los usa para responder, recomendar o reconocer cosas.</p>
+                        <div class="analogy">
+                            <span class="analogy-ico" aria-hidden="true">💡</span>
+                            <p><b>Piénselo así:</b> un niño aprende qué es un perro después de ver muchos perros. Nadie
+                                le da una definición perfecta; simplemente ve ejemplos. La IA aprende de forma
+                                parecida, pero con millones de ejemplos y <b>sin entender ni sentir</b> como una
+                                persona.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Idea 2 -->
+                <article class="idea">
+                    <span class="idea-num" aria-hidden="true">2</span>
+                    <div>
+                        <h3>¿Cómo aprende?</h3>
+                        <p>Siempre sigue los mismos tres pasos:</p>
+                        <ol class="flow">
+                            <li>
+                                <span class="flow-ico" aria-hidden="true">📚</span>
+                                <b>Ejemplos</b>
+                                <span>Recibe miles de textos, fotos o sonidos.</span>
+                            </li>
+                            <li>
+                                <span class="flow-ico" aria-hidden="true">🔍</span>
+                                <b>Patrones</b>
+                                <span>Busca lo que se repite en esos ejemplos.</span>
+                            </li>
+                            <li>
+                                <span class="flow-ico" aria-hidden="true">💬</span>
+                                <b>Respuesta</b>
+                                <span>Usa lo aprendido para darle una respuesta nueva.</span>
+                            </li>
+                        </ol>
+                        <p class="note">Por eso, si aprendió de ejemplos equivocados, <b>también puede equivocarse</b>.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Idea 3 -->
+                <article class="idea">
+                    <span class="idea-num" aria-hidden="true">3</span>
+                    <div>
+                        <h3>¿Dónde ya la usa sin darse cuenta?</h3>
+                        <p>Probablemente ya usa inteligencia artificial todos los días:</p>
+                        <ul class="uses">
+                            <li><span aria-hidden="true">🗺️</span><b>Mapas</b>Le avisan del tráfico y le sugieren la
+                                mejor ruta.</li>
+                            <li><span aria-hidden="true">🎙️</span><b>Asistentes de voz</b>“¿Qué clima hace hoy?” y el
+                                teléfono le responde.</li>
+                            <li><span aria-hidden="true">🎬</span><b>Recomendaciones</b>Películas, música o videos “que
+                                le podrían gustar”.</li>
+                            <li><span aria-hidden="true">🌎</span><b>Traductores</b>Traducen un letrero con solo
+                                apuntar la cámara.</li>
+                            <li><span aria-hidden="true">📷</span><b>Cámara del celular</b>Mejora la luz de las fotos y
+                                reconoce rostros.</li>
+                            <li><span aria-hidden="true">📧</span><b>Correo</b>Separa los mensajes basura de los
+                                importantes.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Idea 4 -->
+                <article class="idea">
+                    <span class="idea-num" aria-hidden="true">4</span>
+                    <div>
+                        <h3>Lo que puede y lo que no puede hacer</h3>
+                        <div class="cando">
+                            <div class="can">
+                                <h4><span aria-hidden="true">✔</span> Sí puede</h4>
+                                <ul>
+                                    <li>Ayudarle a escribir un mensaje o una carta.</li>
+                                    <li>Explicarle algo paso a paso, con paciencia.</li>
+                                    <li>Darle ideas: recetas, paseos, regalos.</li>
+                                    <li>Leerle un texto en voz alta o traducirlo.</li>
+                                </ul>
+                            </div>
+                            <div class="cant">
+                                <h4><span aria-hidden="true">✖</span> No puede</h4>
+                                <ul>
+                                    <li>Pensar ni sentir como una persona.</li>
+                                    <li>Garantizar que todo lo que dice es cierto.</li>
+                                    <li>Reemplazar a su médico, abogado o banco.</li>
+                                    <li>Tomar decisiones por usted: <b>usted decide</b>.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Glosario -->
+                <div class="glossary panel">
+                    <h3>Palabras que va a escuchar</h3>
+                    <dl>
+                        <div>
+                            <dt>Chatbot</dt>
+                            <dd>Un programa con el que se “conversa” escribiendo, como ChatGPT, Gemini o Claude.</dd>
+                        </div>
+                        <div>
+                            <dt>Asistente de voz</dt>
+                            <dd>Una IA a la que se le habla, como Siri, Google Assistant o Alexa.</dd>
+                        </div>
+                        <div>
+                            <dt>Algoritmo</dt>
+                            <dd>La lista de instrucciones que sigue una computadora, como una receta de cocina.</dd>
+                        </div>
+                        <div>
+                            <dt>Datos</dt>
+                            <dd>Los ejemplos con los que aprende la IA: textos, fotos, sonidos.</dd>
+                        </div>
+                        <div>
+                            <dt>Deepfake</dt>
+                            <dd>Un video o audio falso hecho con IA que imita a una persona real.</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEGURIDAD -->
+        <section id="seguridad" class="block block-dark">
+            <div class="wrap">
+                <header class="sec-head">
+                    <p class="kicker">Parte 2 · Úsela con confianza</p>
+                    <h2>Tres reglas de oro</h2>
+                    <p class="lead">La IA es una herramienta útil. Estas reglas le ayudan a usarla sin riesgos.</p>
+                </header>
+                <div class="rules">
+                    <div class="rule">
+                        <span class="rule-ico" aria-hidden="true">✋</span>
+                        <h3>Deténgase, verifique y después decida</h3>
+                        <p>Si un mensaje, llamada o video le pide <b>prisa, dinero o secreto</b>, pare. Llame usted a
+                            la persona o a la institución a un número que ya conoce.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-ico" aria-hidden="true">🔒</span>
+                        <h3>Sus datos son suyos</h3>
+                        <p>Nunca escriba en una IA su <b>cédula, contraseñas, PIN, números de tarjeta ni códigos</b>
+                            que le lleguen por mensaje.</p>
+                    </div>
+                    <div class="rule">
+                        <span class="rule-ico" aria-hidden="true">🤝</span>
+                        <h3>Confirme lo importante</h3>
+                        <p>La IA puede equivocarse aunque suene muy segura. Para salud, dinero o trámites, confirme
+                            con una persona de confianza o una fuente oficial.</p>
+                    </div>
+                </div>
+                <p class="voice-tip"><span aria-hidden="true">📞</span> <b>Dato importante:</b> hoy la IA puede
+                    imitar la voz de un familiar. Acuerde con su familia una <b>palabra clave</b> para emergencias.</p>
+            </div>
+        </section>
+
+        <!-- ACTIVIDADES -->
+        <section id="actividades" class="block">
+            <div class="wrap">
+                <header class="sec-head">
+                    <p class="kicker">Parte 3 · Manos a la obra</p>
+                    <h2>Tres actividades para practicar</h2>
+                    <p class="lead">Aquí no hay respuestas malas: equivocarse también es aprender. Toque los botones
+                        grandes para participar.</p>
+                </header>
+
+                <ol class="act-index" aria-label="Lista de actividades">
+                    <li><a href="#act1"><span>1</span> ¿Dónde hay IA?</a></li>
+                    <li><a href="#act2"><span>2</span> Converse con un asistente</a></li>
+                    <li><a href="#act3"><span>3</span> Enséñele a la máquina</a></li>
+                </ol>
+
+                <!-- ACTIVIDAD 1 -->
+                <article id="act1" class="activity panel">
+                    <header class="act-head">
+                        <span class="act-badge">Actividad 1 de 3</span>
+                        <h3>¿Dónde hay IA?</h3>
+                        <p>Le mostraremos objetos y servicios de todos los días. Decida si usan inteligencia
+                            artificial o no.</p>
+                    </header>
+                    <div class="a1" id="a1" aria-live="polite">
+                        <div class="a1-progress"><span id="a1Prog">1 de 9</span>
+                            <div class="bar" aria-hidden="true"><i id="a1Bar"></i></div>
+                            <span id="a1Score">Aciertos: 0</span>
+                        </div>
+                        <div class="a1-card" id="a1Card">
+                            <span class="a1-emoji" id="a1Emoji" aria-hidden="true"></span>
+                            <p class="a1-name" id="a1Name"></p>
+                            <p class="a1-desc" id="a1Desc"></p>
+                        </div>
+                        <div class="a1-choices" id="a1Choices">
+                            <button class="choice yes" data-v="1">🤖 Sí usa IA</button>
+                            <button class="choice no" data-v="0">⚙️ No usa IA</button>
+                        </div>
+                        <div class="feedback" id="a1Fb" hidden></div>
+                        <div class="btns"><button class="btn" id="a1Next" hidden>Siguiente</button></div>
+                    </div>
+                </article>
+
+                <!-- ACTIVIDAD 2 -->
+                <article id="act2" class="activity panel">
+                    <header class="act-head">
+                        <span class="act-badge">Actividad 2 de 3</span>
+                        <h3>Converse con un asistente</h3>
+                        <p>Practique cómo hacerle preguntas a una IA. Toque una sugerencia o escriba la suya.
+                            <b>Es una práctica:</b> las respuestas están preparadas para esta charla.</p>
+                    </header>
+                    <div class="a2">
+                        <div class="chat">
+                            <div class="chat-top">
+                                <span class="avatar" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round">
+                                        <circle cx="6" cy="7" r="2.2" />
+                                        <circle cx="18" cy="7" r="2.2" />
+                                        <circle cx="12" cy="17" r="2.6" />
+                                        <path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" />
+                                    </svg>
+                                </span>
+                                <div><b>Asistente de práctica</b><span class="small"> · en línea</span></div>
+                            </div>
+                            <div class="chat-log" id="chatLog" aria-live="polite" role="log"></div>
+                            <div class="chips" id="chips" aria-label="Preguntas sugeridas"></div>
+                            <form class="chat-form" id="chatForm">
+                                <label class="sr" for="chatIn">Escriba su pregunta</label>
+                                <input id="chatIn" autocomplete="off" maxlength="200"
+                                    placeholder="Escriba aquí su pregunta…">
+                                <button class="btn" type="submit" aria-label="Enviar">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M5 12h14M13 6l6 6-6 6" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                        <aside class="tips">
+                            <h4>Cómo hacer una buena pregunta</h4>
+                            <ol>
+                                <li><b>Sea claro:</b> diga qué necesita.<br><span class="ex">“Quiero una receta…”</span>
+                                </li>
+                                <li><b>Dé detalles:</b> qué tiene, para quién, cuánto tiempo.<br><span class="ex">“…con
+                                        arroz y pollo, para 2 personas”</span></li>
+                                <li><b>Pida cómo lo quiere:</b><br><span class="ex">“…en pasos cortos y con letra
+                                        sencilla”</span></li>
+                            </ol>
+                            <p class="warn"><b>Recuerde:</b> no escriba contraseñas, PIN, cédula ni números de
+                                tarjeta. Pruebe a escribir “mi clave es 1234” y vea qué pasa.</p>
+                        </aside>
+                    </div>
+                </article>
+
+                <!-- ACTIVIDAD 3 -->
+                <article id="act3" class="activity panel">
+                    <header class="act-head">
+                        <span class="act-badge">Actividad 3 de 3</span>
+                        <h3>Enséñele a la máquina</h3>
+                        <p>Ahora <b>usted</b> es quien entrena a la IA. Marque cada mensaje como <b>seguro</b> o
+                            <b>sospechoso</b>. Después, la máquina intentará clasificar mensajes nuevos con lo que
+                            aprendió de usted.</p>
+                    </header>
+                    <div class="a3">
+                        <ol class="steps3" aria-label="Pasos">
+                            <li id="s3a" class="on">Enseñar</li>
+                            <li id="s3b">Entrenar</li>
+                            <li id="s3c">Probar</li>
+                        </ol>
+                        <div id="a3Train">
+                            <ul class="msgs" id="trainList"></ul>
+                            <div class="btns"><button class="btn" id="trainBtn" disabled>Entrenar a la máquina
+                                    (faltan 6)</button></div>
+                        </div>
+                        <div id="a3Learn" hidden>
+                            <div class="learned panel">
+                                <h4>Esto fue lo que la máquina aprendió de sus ejemplos</h4>
+                                <p class="small">Encontró estas “señales” en los mensajes que usted marcó:</p>
+                                <div class="signals" id="signals"></div>
+                            </div>
+                            <h4 class="mt">Mensajes nuevos que la máquina nunca había visto</h4>
+                            <ul class="msgs" id="testList"></ul>
+                            <div class="feedback info" id="a3Lesson"></div>
+                            <div class="btns"><button class="btn ghost" id="a3Reset">Volver a empezar</button></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- RETO IA -->
+        <section id="reto" class="block">
+            <div class="wrap">
+                <div class="reto panel">
+                    <div class="reto-txt">
+                        <p class="kicker">Parte 4 · Cierre</p>
+                        <h2>Reto IA: ¡a jugar en grupo!</h2>
+                        <p>Un concurso de preguntas en vivo para repasar todo lo aprendido. Cada persona responde
+                            desde su propio teléfono.</p>
+                        <ol class="reto-steps">
+                            <li>La persona que presenta crea la partida y la proyecta.</li>
+                            <li>Usted escanea el código QR o escribe el código de 6 letras.</li>
+                            <li>Escribe su nombre o apodo y responde cada pregunta.</li>
+                        </ol>
+                        <div class="btns">
+                            <a class="btn" href="quiz.html">Unirme al Reto IA</a>
+                            <a class="btn ghost" href="presentador.html">Soy presentador: crear partida</a>
+                        </div>
+                    </div>
+                    <div class="reto-art" aria-hidden="true">
+                        <div class="phone">
+                            <div class="phone-q">¿La IA puede equivocarse?</div>
+                            <div class="phone-a a">▲ Nunca</div>
+                            <div class="phone-a ok">◆ Sí, y a veces suena muy segura</div>
+                            <div class="phone-a c">● Solo sin internet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        <div class="wrap">
+            <p><b>IA para todos</b> · Charla ADEP para personas adultas mayores.</p>
+            <p class="small">Este sitio no guarda datos personales. Las actividades funcionan dentro de su navegador.
+            </p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

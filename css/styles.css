@@ -1,0 +1,336 @@
+/* IA para todos · ADEP — estilos base compartidos (sitio y Reto IA) */
+:root {
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --soft: #eef3fb;
+    --ink: #14213d;
+    --muted: #4a5672;
+    --line: #dbe3f0;
+    --primary: #2449b8;
+    --primary-ink: #ffffff;
+    --primary-soft: #e3eaff;
+    --teal: #0b8a7c;
+    --teal-soft: #dff5f1;
+    --coral: #d9573b;
+    --coral-soft: #fdebe5;
+    --sun: #f2b84b;
+    --ok: #0b7a4b;
+    --ok-soft: #e1f5ea;
+    --bad: #b3261e;
+    --bad-soft: #fbe7e5;
+    --focus: #f2b84b;
+    --fs: 20px;
+    --radius: 22px;
+    --shadow: 0 1px 2px rgba(20, 33, 61, .06), 0 12px 32px rgba(20, 33, 61, .08);
+    --font: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-head: "Lexend", "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+
+html.hc {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --soft: #ffffff;
+    --ink: #000000;
+    --muted: #111111;
+    --line: #000000;
+    --primary: #002a8f;
+    --primary-soft: #ffffff;
+    --teal: #00574d;
+    --teal-soft: #ffffff;
+    --coral: #8f1c00;
+    --coral-soft: #ffffff;
+    --shadow: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box
+}
+
+html {
+    font-size: var(--fs);
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    margin: 0;
+    font-family: var(--font);
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    overflow-x: hidden
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-head);
+    line-height: 1.2;
+    letter-spacing: -.01em;
+    margin: 0 0 .6rem;
+    text-wrap: balance
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.3rem);
+    font-weight: 700
+}
+
+h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+    font-weight: 700
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 600
+}
+
+p {
+    margin: 0 0 1rem
+}
+
+a {
+    color: var(--primary);
+    text-underline-offset: 3px
+}
+
+img,
+video,
+svg {
+    max-width: 100%
+}
+
+:focus-visible {
+    outline: 4px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 8px
+}
+
+.skip {
+    position: absolute;
+    left: 1rem;
+    top: -100px;
+    z-index: 100;
+    background: var(--ink);
+    color: #fff;
+    padding: .7rem 1rem;
+    border-radius: 12px
+}
+
+.skip:focus {
+    top: 1rem
+}
+
+.wrap {
+    width: min(1160px, calc(100% - 32px));
+    margin-inline: auto
+}
+
+.small {
+    font-size: .88rem;
+    color: var(--muted)
+}
+
+/* Botones grandes y claros */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    min-height: 56px;
+    padding: .7rem 1.4rem;
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    background: var(--primary);
+    color: var(--primary-ink);
+    font: 700 1rem/1.25 var(--font);
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(36, 73, 184, .25)
+}
+
+.btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none
+}
+
+.btn.ghost {
+    background: var(--surface);
+    color: var(--primary)
+}
+
+.btn.ghost:hover {
+    background: var(--primary-soft)
+}
+
+.btn svg {
+    width: 1.2em;
+    height: 1.2em;
+    flex: none
+}
+
+.btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin: 1rem 0
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow)
+}
+
+/* Encabezado */
+.top {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(245, 247, 251, .88);
+    backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--line)
+}
+
+html.hc .top {
+    background: #fff
+}
+
+.top .wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 76px
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font: 700 1.05rem var(--font-head);
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, var(--primary), var(--teal));
+    color: #fff
+}
+
+.brand-mark svg {
+    width: 24px;
+    height: 24px
+}
+
+.brand small {
+    display: block;
+    font: 400 .72rem var(--font);
+    color: var(--muted)
+}
+
+.nav {
+    display: flex;
+    gap: .25rem;
+    margin-left: auto
+}
+
+.nav a {
+    padding: .55rem .75rem;
+    white-space: nowrap;
+    border-radius: 12px;
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none
+}
+
+.nav a:hover {
+    background: var(--primary-soft);
+    color: var(--primary)
+}
+
+.tools {
+    display: flex;
+    gap: .35rem
+}
+
+.tools button {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0 .7rem;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font: 700 .9rem var(--font);
+    cursor: pointer
+}
+
+.tools svg {
+    width: 20px;
+    height: 20px
+}
+
+.tools button[aria-pressed="true"] {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink)
+}
+
+@media (max-width: 1180px) {
+    .nav {
+        display: none
+    }
+
+    .tools {
+        margin-left: auto
+    }
+}
+
+@media (max-width: 520px) {
+    .brand small {
+        display: none
+    }
+
+    .tools button {
+        min-width: 44px;
+        padding: 0 .5rem;
+        font-size: .8rem
+    }
+
+    .tools .hc-label {
+        display: none
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important
+    }
+}

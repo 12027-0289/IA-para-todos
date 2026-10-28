@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reto IA · Participar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/quiz.css">
+</head>
+
+<body class="quiz">
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="index.html">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2.2" /><circle cx="18" cy="7" r="2.2" /><circle cx="12" cy="17" r="2.6" /><path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" /></svg></span>
+                <span>IA para todos<small>Reto IA</small></span>
+            </a>
+        </div>
+    </header>
+    <main class="qwrap" id="player">
+        <h1>Reto IA</h1>
+        <section id="join" class="panel" style="padding:1.5rem">
+            <p>Concurso de preguntas sobre inteligencia artificial. Escriba el código que ve en la pantalla grande y su
+                nombre o apodo. No escriba datos personales.</p>
+            <label for="code">Código de la partida</label><input id="code" maxlength="6" autocomplete="off"
+                autocapitalize="characters">
+            <label for="name">Su nombre o apodo (hasta 20 letras)</label><input id="name" maxlength="20"
+                autocomplete="off">
+            <div class="btns"><button class="btn" id="joinBtn">Unirme a la partida</button><a class="btn ghost"
+                    href="presentador.html">Soy presentador: crear partida</a></div>
+            <div id="err" class="err" role="alert"></div>
+        </section>
+        <section id="game" hidden>
+            <p><span class="conn" id="conn">Conectando…</span> <span id="prog"></span> <span class="timer"
+                    id="timer"></span></p>
+            <div id="view" aria-live="polite"></div>
+            <div id="errG" class="err" role="alert"></div>
+        </section>
+        <p><a href="index.html">← Volver a la charla</a></p>
+    </main>
+    <script src="js/quiz-client.js"></script>
+</body>
+
+</html>
