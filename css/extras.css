@@ -1,0 +1,527 @@
+/* IA para todos · ilustraciones animadas, datos curiosos y decoración */
+
+/* ---------- Decoración flotante en el fondo de las secciones ---------- */
+#basico,
+#curiosos,
+#actividades,
+#reto {
+    position: relative;
+    overflow-x: clip
+}
+
+.deco {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none
+}
+
+.block>.wrap {
+    position: relative;
+    z-index: 1
+}
+
+.deco span {
+    position: absolute;
+    display: block
+}
+
+.d-circ {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(124, 77, 255, .22), rgba(36, 73, 184, .12) 55%, transparent 72%);
+    animation: deriva 12s ease-in-out infinite alternate
+}
+
+.d-circ.c2 {
+    background: radial-gradient(circle at 35% 35%, rgba(11, 138, 124, .22), rgba(14, 165, 233, .12) 55%, transparent 72%)
+}
+
+.d-ring {
+    width: 130px;
+    height: 130px;
+    border: 3px dashed rgba(124, 77, 255, .3);
+    border-radius: 50%;
+    animation: gira 30s linear infinite
+}
+
+.d-ring.s2 {
+    width: 170px;
+    height: 170px;
+    border-color: rgba(11, 138, 124, .3);
+    animation-direction: reverse
+}
+
+.d-dots {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(11, 138, 124, .35) 2.5px, transparent 3px) 0 0 / 20px 20px;
+    border-radius: 16px;
+    animation: deriva 10s ease-in-out infinite alternate-reverse
+}
+
+.d-spark {
+    color: var(--sun);
+    font-size: 2.6rem;
+    line-height: 1;
+    text-shadow: 0 0 18px rgba(242, 184, 75, .6);
+    animation: titila 3.2s ease-in-out infinite
+}
+
+.d-spark.s2 {
+    color: var(--violet);
+    font-size: 2rem;
+    text-shadow: 0 0 18px rgba(124, 77, 255, .5);
+    animation-delay: -1.6s
+}
+
+.d-plus {
+    color: rgba(217, 87, 59, .45);
+    font: 700 3.4rem/1 var(--font-head);
+    animation: gira 18s linear infinite
+}
+
+@keyframes deriva {
+    to {
+        transform: translate(26px, -22px) scale(1.06)
+    }
+}
+
+@keyframes titila {
+    50% {
+        transform: scale(.65) rotate(45deg);
+        opacity: .45
+    }
+}
+
+/* ---------- Ilustraciones animadas ---------- */
+.illu {
+    margin: 0;
+    text-align: center
+}
+
+.illu svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-inline: auto;
+    overflow: visible
+}
+
+.illu text {
+    fill: #e8f0ff;
+    font: 700 14px var(--font)
+}
+
+.illu figcaption {
+    margin-top: .7rem;
+    color: var(--muted);
+    font-size: .9rem
+}
+
+.illu-pantalla {
+    padding: 1.1rem 1rem .6rem;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, .06) 1px, transparent 0) 0 0 / 18px 18px,
+        radial-gradient(400px 220px at 50% 0%, rgba(124, 77, 255, .35), transparent 70%),
+        #0d1838;
+    box-shadow: 0 18px 40px -16px rgba(13, 24, 56, .6)
+}
+
+.idea-split {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 1.6rem;
+    align-items: center
+}
+
+/* Red neuronal */
+.nd {
+    stroke: #fff;
+    stroke-width: 2;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: late 2.4s ease-in-out infinite
+}
+
+.nd.c0 {
+    fill: #22d3ee
+}
+
+.nd.c1 {
+    fill: #a78bfa
+}
+
+.nd.c2 {
+    fill: #34d399
+}
+
+.ln {
+    stroke: #67e8f9;
+    stroke-opacity: .5;
+    stroke-width: 1.6;
+    stroke-dasharray: 6 8;
+    animation: corre 3s linear infinite
+}
+
+@keyframes late {
+    50% {
+        transform: scale(1.3);
+        fill: #f2b84b
+    }
+}
+
+@keyframes corre {
+    to {
+        stroke-dashoffset: -56
+    }
+}
+
+/* Celular */
+.uses-wrap {
+    display: grid;
+    grid-template-columns: 230px 1fr;
+    gap: 1.4rem;
+    align-items: center
+}
+
+.uses-wrap .uses {
+    grid-template-columns: repeat(2, 1fr)
+}
+
+.illu-phone svg {
+    max-width: 230px;
+    filter: drop-shadow(0 18px 24px rgba(13, 24, 56, .35))
+}
+
+.ph {
+    fill: #13204a;
+    stroke: #67e8f9;
+    stroke-width: 3
+}
+
+.sc {
+    fill: #06122e
+}
+
+.cam {
+    fill: #2a3b78
+}
+
+.hb {
+    fill: none;
+    stroke: #67e8f9;
+    stroke-width: 2
+}
+
+.b rect {
+    fill: #16358a;
+    stroke: #67e8f9;
+    stroke-width: 1.5
+}
+
+.b text {
+    fill: #fff;
+    font-size: 11px
+}
+
+.b {
+    transform-box: fill-box;
+    animation: aparece 6s ease-in-out infinite
+}
+
+.b2 {
+    animation-delay: .6s
+}
+
+.b3 {
+    animation-delay: 1.2s
+}
+
+@keyframes aparece {
+    0% {
+        opacity: 0;
+        transform: translateY(12px)
+    }
+
+    8%,
+    85% {
+        opacity: 1;
+        transform: none
+    }
+
+    100% {
+        opacity: 0
+    }
+}
+
+/* Escudo */
+.sec-split {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    margin-bottom: 2.2rem
+}
+
+.sec-split .sec-head {
+    margin-bottom: 0
+}
+
+.illu-shield svg {
+    max-width: 340px
+}
+
+.illu-shield figcaption {
+    color: #c7d2ee
+}
+
+.sh {
+    fill: rgba(34, 211, 238, .12);
+    stroke: url(#gEsc);
+    stroke-width: 5
+}
+
+.ck {
+    fill: none;
+    stroke: #7ee8a8;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 140;
+    animation: dibuja 4s ease infinite
+}
+
+@keyframes dibuja {
+    0% {
+        stroke-dashoffset: 140
+    }
+
+    40%,
+    85% {
+        stroke-dashoffset: 0
+    }
+
+    100% {
+        stroke-dashoffset: 140
+    }
+}
+
+.env {
+    animation: flota-sobre 3s ease-in-out infinite
+}
+
+.env rect {
+    fill: #3a2a0a;
+    stroke: #ffd27a;
+    stroke-width: 2
+}
+
+.env text {
+    fill: #fff;
+    font-size: 11px
+}
+
+@keyframes flota-sobre {
+    50% {
+        transform: translate(-8px, -6px) rotate(-3deg)
+    }
+}
+
+.scan {
+    stroke: #67e8f9;
+    stroke-width: 3;
+    opacity: .7;
+    animation: escanea 3.5s ease-in-out infinite
+}
+
+@keyframes escanea {
+
+    0%,
+    100% {
+        transform: translateY(50px)
+    }
+
+    50% {
+        transform: translateY(170px)
+    }
+}
+
+/* ---------- Ondas del bloque de seguridad ---------- */
+.block-dark {
+    padding-block: clamp(5rem, 9vw, 7rem)
+}
+
+.ola {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: clamp(36px, 5vw, 64px);
+    fill: var(--bg);
+    pointer-events: none
+}
+
+.ola-arriba {
+    top: -1px
+}
+
+.ola-abajo {
+    bottom: -1px
+}
+
+html.hc .ola {
+    fill: #fff
+}
+
+/* ---------- Datos curiosos ---------- */
+.curiosos {
+    background: linear-gradient(180deg, var(--bg), #f1ecff 22%, #e6f7f4 78%, var(--bg))
+}
+
+html.hc .curiosos {
+    background: #fff
+}
+
+.datos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    padding: 0;
+    margin: 0;
+    list-style: none
+}
+
+.dato {
+    --dc: var(--primary);
+    --ds: var(--primary-soft);
+    position: relative;
+    padding: 1.5rem 1.4rem 1.3rem;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease
+}
+
+.dato::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 7px;
+    background: var(--dc)
+}
+
+.dato:nth-child(2) {
+    --dc: var(--violet);
+    --ds: var(--violet-soft)
+}
+
+.dato:nth-child(3) {
+    --dc: var(--teal);
+    --ds: var(--teal-soft)
+}
+
+.dato:nth-child(4) {
+    --dc: var(--coral);
+    --ds: var(--coral-soft)
+}
+
+.dato:nth-child(5) {
+    --dc: var(--sky);
+    --ds: var(--sky-soft)
+}
+
+.dato:nth-child(6) {
+    --dc: var(--pink);
+    --ds: var(--pink-soft)
+}
+
+.dato:hover,
+.js .dato.rv.in:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -14px rgba(20, 33, 61, .28)
+}
+
+.dato:hover .dato-ico {
+    animation: saluda .6s ease
+}
+
+.dato-ico {
+    position: absolute;
+    top: 1.3rem;
+    right: 1.2rem;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 18px;
+    background: var(--ds);
+    font-size: 1.8rem
+}
+
+.dato-num {
+    display: block;
+    margin: .2rem 0 .3rem;
+    font: 700 clamp(2.2rem, 4vw, 2.8rem)/1 var(--font-head);
+    color: var(--dc);
+    font-variant-numeric: tabular-nums
+}
+
+.dato h3 {
+    margin-bottom: .4rem;
+    font-size: 1.15rem
+}
+
+.dato p {
+    margin: 0;
+    color: var(--muted)
+}
+
+html.hc .dato::before,
+html.hc .deco {
+    display: none
+}
+
+/* ---------- Adaptable ---------- */
+@media (max-width: 900px) {
+
+    .idea-split,
+    .sec-split {
+        grid-template-columns: 1fr
+    }
+
+    .datos {
+        grid-template-columns: repeat(2, 1fr)
+    }
+
+    .uses-wrap {
+        grid-template-columns: 1fr
+    }
+
+    .illu-phone svg {
+        max-width: 190px
+    }
+
+    .illu-shield svg {
+        max-width: 280px
+    }
+}
+
+@media (max-width: 640px) {
+    .datos {
+        grid-template-columns: 1fr
+    }
+
+    .uses-wrap .uses {
+        grid-template-columns: 1fr
+    }
+
+    .d-circ,
+    .d-ring,
+    .d-dots {
+        opacity: .6
+    }
+}

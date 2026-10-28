@@ -38,9 +38,18 @@
 
     // Aparición suave de los bloques al bajar
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }), { threshold: .12 });
-    document.querySelectorAll('.sec-head, .idea, .glossary, .rule, .voice-tip, .activity, .reto, .video-grid > *, .uses li, .flow li').forEach((e, i) => {
+    document.querySelectorAll('.sec-head, .idea, .glossary, .rule, .voice-tip, .activity, .reto, .video-grid > *, .uses li, .flow li, .dato, .illu').forEach((e, i) => {
         e.classList.add('rv'); e.style.transitionDelay = ((i % 3) * 90) + 'ms'; io.observe(e);
     });
+
+    // Los números de «¿Sabía que…?» cuentan hacia arriba al aparecer
+    const cuenta = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return; cuenta.unobserve(e.target);
+        const el = e.target, fin = +el.dataset.num, txt = el.textContent, desde = fin > 1000 ? fin - 80 : 0, t0 = performance.now();
+        if (!on) return;
+        (function paso(t) { const k = Math.min(1, (t - t0) / 1400), v = Math.round(desde + (fin - desde) * (1 - Math.pow(1 - k, 3))); el.textContent = k < 1 ? (txt.startsWith('+') ? '+' : '') + v : txt; if (k < 1) requestAnimationFrame(paso) })(t0);
+    }), { threshold: .6 });
+    document.querySelectorAll('.dato-num[data-num]').forEach(e => cuenta.observe(e));
 
     // Barra de progreso de lectura
     const sb = document.createElement('div'); sb.id = 'sbar'; sb.setAttribute('aria-hidden', 'true'); document.body.append(sb);
