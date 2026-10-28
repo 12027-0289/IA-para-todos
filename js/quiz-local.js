@@ -38,9 +38,12 @@ const vozLeer = (() => {
 
 // Sonidos suaves hechos con el navegador
 let _audio;
+// Contexto de sonido único; se reanuda si el navegador lo dejó en pausa
+function ctxAudio() { _audio = _audio || new (window.AudioContext || window.webkitAudioContext)(); if (_audio.state === 'suspended') _audio.resume(); return _audio }
+function ruidoBlanco(a, seg) { const b = a.createBuffer(1, Math.max(1, a.sampleRate * seg), a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; const n = a.createBufferSource(); n.buffer = b; return n }
 function tono(notas) {
     try {
-        _audio = _audio || new (window.AudioContext || window.webkitAudioContext)(); const a = _audio, t0 = a.currentTime;
+        const a = ctxAudio(), t0 = a.currentTime;
         notas.forEach(([hz, ini, dur]) => { const o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.value = hz; g.gain.setValueAtTime(0, t0 + ini); g.gain.linearRampToValueAtTime(.15, t0 + ini + .02); g.gain.exponentialRampToValueAtTime(.001, t0 + ini + dur); o.connect(g).connect(a.destination); o.start(t0 + ini); o.stop(t0 + ini + dur + .05) });
     } catch { }
 }
@@ -161,11 +164,26 @@ function opcion(k, texto, tag = 'div') {
     const b = h(tag, 'rq-op'); if (tag === 'button') b.type = 'button'; b.style.animationDelay = (k * 90) + 'ms';
     b.append(h('span', 'rq-fig', FIG[k]), h('span', 'rq-letra', 'ABCD'[k]), h('span', 'rq-txt', texto)); return b;
 }
-const sonidoRedoble = () => tono(Array.from({ length: 10 }, (_, k) => [180 + k * 12, k * .11, .09]));
+// Redoble de tambor: golpes rápidos de caja que suben de volumen y terminan con platillo y bombo
+function sonidoRedoble(seg = 1.25) {
+    try {
+        const a = ctxAudio(), t0 = a.currentTime + .03, sal = a.createGain(); sal.gain.value = .6; sal.connect(a.destination);
+        const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1900; f.Q.value = .8; f.connect(sal);
+        for (let t = 0; t < seg; t += .042) {
+            const n = ruidoBlanco(a, .04), g = a.createGain(), v = .6 + .6 * (t / seg);
+            n.connect(g).connect(f); g.gain.setValueAtTime(v, t0 + t); g.gain.exponentialRampToValueAtTime(.01, t0 + t + .038); n.start(t0 + t);
+        }
+        const fin = t0 + seg, pl = ruidoBlanco(a, 1), hp = a.createBiquadFilter(), gp = a.createGain();
+        hp.type = 'highpass'; hp.frequency.value = 5000; pl.connect(hp).connect(gp).connect(sal);
+        gp.gain.setValueAtTime(.6, fin); gp.gain.exponentialRampToValueAtTime(.001, fin + .9); pl.start(fin);
+        const o = a.createOscillator(), gb = a.createGain(); o.frequency.setValueAtTime(130, fin); o.frequency.exponentialRampToValueAtTime(50, fin + .35);
+        gb.gain.setValueAtTime(1, fin); gb.gain.exponentialRampToValueAtTime(.001, fin + .4); o.connect(gb).connect(sal); o.start(fin); o.stop(fin + .45);
+    } catch { }
+}
 const sonidoTic = () => tono([[880, 0, .06]]);
 function aplausos() {
     try {
-        _audio = _audio || new (window.AudioContext || window.webkitAudioContext)(); const a = _audio;
+        const a = ctxAudio();
         for (let k = 0; k < 40; k++) {
             const t = a.currentTime + Math.random() * 2.2, b = a.createBuffer(1, a.sampleRate * .05, a.sampleRate), d = b.getChannelData(0);
             for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
