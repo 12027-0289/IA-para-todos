@@ -127,18 +127,20 @@ const fiesta = el => window.confeti && confeti(el);
     const EJEMPLO = ['María', 'José', 'Ana', 'Carlos', 'Rosa', 'Luis', 'Carmen', 'Jorge'];
     const cv = $('#ruletaCv'), ctx = cv.getContext('2d'), lista = $('#listaNombres'), res = $('#ruletaRes');
     const botones = [$('#girar'), $('#girar2')];
-    let nombres = []; try { nombres = JSON.parse(store.get('ruleta') || '[]') } catch { }
-    let ang = 0, girando = false, audio = null;
-    const guardar = () => store.set('ruleta', JSON.stringify(nombres));
+    let nombres = [], hechos = [];
+    try { nombres = JSON.parse(store.get('ruleta') || '[]'); hechos = JSON.parse(store.get('ruletaHechos') || '[]') } catch { }
+    let ang = 0, girando = false, audio = null, pendiente = null, tSacar;
+    const guardar = () => { store.set('ruleta', JSON.stringify(nombres)); store.set('ruletaHechos', JSON.stringify(hechos)) };
     const quieto = () => calm || document.documentElement.classList.contains('no-anim');
 
     function dibujar() {
         const W = cv.width, c = W / 2, r = c - 8, n = nombres.length;
         ctx.clearRect(0, 0, W, W);
         if (!n) {
-            ctx.fillStyle = '#eef3fb'; ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.fill();
+            const listo = hechos.length > 0;
+            ctx.fillStyle = listo ? '#e1f5ea' : '#eef3fb'; ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.fill();
             ctx.fillStyle = '#4a5672'; ctx.font = '700 26px "Atkinson Hyperlegible", sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText('Agregue nombres', c, c - 70); ctx.fillText('para empezar ✍️', c, c - 38); return;
+            ctx.fillText(listo ? '¡Todos participaron!' : 'Agregue nombres', c, c - 70); ctx.fillText(listo ? 'Gracias 🎉' : 'para empezar ✍️', c, c - 38); return;
         }
         const paso = Math.PI * 2 / n, fs = Math.max(16, Math.min(34, 300 / n + 10));
         nombres.forEach((nm, i) => {
@@ -161,18 +163,31 @@ const fiesta = el => window.confeti && confeti(el);
             x.onclick = () => { nombres.splice(i, 1); cambio() };
             li.append(el('span', null, nm), x); lista.append(li);
         });
-        botones.forEach(b => b.disabled = girando || nombres.length < 2);
+        botones.forEach(b => b.disabled = girando || !nombres.length);
+        // Quienes ya participaron: salen solos de la ruleta y se pueden volver a poner
+        const hl = $('#listaHechos'); hl.replaceChildren(); $('#hechosBox').hidden = !hechos.length;
+        hechos.forEach(nm => hl.append(el('li', null, '✔ ' + nm)));
     }
     function cambio() { guardar(); pintarLista(); dibujar() }
     function agregar(txt) {
         txt.split(/[,;\n]+/).map(t => t.trim().replace(/\s+/g, ' ').slice(0, 24)).filter(Boolean).forEach(t => {
+            hechos = hechos.filter(x => x.toLowerCase() !== t.toLowerCase());
             if (nombres.length < 60 && !nombres.some(x => x.toLowerCase() === t.toLowerCase())) nombres.push(t);
         });
         cambio();
     }
     $('#nombreForm').onsubmit = e => { e.preventDefault(); agregar($('#nombreIn').value); $('#nombreIn').value = ''; $('#nombreIn').focus() };
     $('#ejemplo').onclick = () => agregar(EJEMPLO.join(','));
-    $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { nombres = []; res.hidden = true; cambio() } };
+    $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { clearTimeout(tSacar); pendiente = null; nombres = []; hechos = []; res.hidden = true; cambio() } };
+    $('#reiniciar').onclick = () => { sacar(); nombres = nombres.concat(hechos); hechos = []; res.hidden = true; cambio(); robot('¡Listo! Todos están de nuevo en la ruleta. 🎡') };
+    // Saca de la ruleta a la persona que acaba de salir
+    function sacar() {
+        clearTimeout(tSacar); if (!pendiente) return;
+        const k = nombres.indexOf(pendiente); if (k > -1) { nombres.splice(k, 1); hechos.push(pendiente) }
+        pendiente = null; cambio();
+        if (nombres.length === 1) robot('Solo falta ' + nombres[0] + '. ¡Su turno! 😊');
+        if (!nombres.length) robot('¡Todos participaron! Gracias por compartir. 💙', 'feliz');
+    }
 
     function tic() {
         if (!$('#sonido').checked) return;
@@ -184,7 +199,8 @@ const fiesta = el => window.confeti && confeti(el);
         } catch { }
     }
     function girar() {
-        if (girando || nombres.length < 2) return;
+        if (girando) return;
+        sacar(); if (!nombres.length) return;
         girando = true; res.hidden = true; pintarLista();
         const n = nombres.length, paso = Math.PI * 2 / n, gana = Math.floor(Math.random() * n);
         // Ángulo final: el centro del sector ganador queda bajo la flecha (arriba)
@@ -208,12 +224,12 @@ const fiesta = el => window.confeti && confeti(el);
         const q = el('p', 'res-preg', PREGUNTAS[pi]);
         const otra = el('button', 'btn ghost', '🔄 Otra pregunta'); otra.type = 'button';
         otra.onclick = () => { pi = (pi + 1 + Math.floor(Math.random() * (PREGUNTAS.length - 1))) % PREGUNTAS.length; q.textContent = PREGUNTAS[pi] };
-        const listo = el('button', 'btn', $('#quitar').checked ? '✔ Ya participó: seguir' : '✔ ¡Gracias! Seguir'); listo.type = 'button';
-        listo.onclick = () => { if ($('#quitar').checked) { const k = nombres.indexOf(nm); if (k > -1) nombres.splice(k, 1) } res.hidden = true; cambio(); if (nombres.length === 1) robot('Solo falta ' + nombres[0] + '. ¡Su turno! 😊'); if (!nombres.length) robot('¡Todos participaron! Gracias por compartir. 💙', 'feliz') };
-        const b = el('div', 'btns'); b.append(otra, listo);
-        res.append(el('p', 'res-le', '🎤 ¡Le toca a…'), el('p', 'res-nombre', nm), el('p', 'small', 'Cuéntenos una experiencia con la tecnología o la IA. Por ejemplo:'), q, b);
+        const b = el('div', 'btns'); b.append(otra);
+        res.append(el('p', 'res-le', '🎤 ¡Le toca a…'), el('p', 'res-nombre', nm), el('p', 'small', 'Cuéntenos una experiencia con la tecnología o la IA. Por ejemplo:'), q, b,
+            el('p', 'small', '✔ ' + nm + ' sale de la ruleta automáticamente para que no se repita.'));
         res.hidden = false; pintarLista();
         fiesta(res); robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
+        pendiente = nm; tSacar = setTimeout(sacar, quieto() ? 800 : 2500);
     }
     botones.forEach(b => b.onclick = girar);
     if (document.fonts) document.fonts.ready.then(dibujar);

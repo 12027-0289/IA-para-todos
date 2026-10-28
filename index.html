@@ -427,12 +427,16 @@
                             </form>
                             <p class="small">Consejo: puede pegar varios nombres separados por comas.</p>
                             <ul class="chips-nombres" id="listaNombres" aria-label="Nombres en la ruleta"></ul>
-                            <label class="check"><input type="checkbox" id="quitar" checked> Sacar de la ruleta a quien
-                                ya participó</label>
                             <label class="check"><input type="checkbox" id="sonido" checked> Sonido al girar</label>
                             <div class="btns">
                                 <button class="btn ghost" id="ejemplo" type="button">Usar nombres de ejemplo</button>
                                 <button class="btn ghost" id="vaciar" type="button">Borrar todos</button>
+                            </div>
+                            <div class="hechos" id="hechosBox" hidden>
+                                <h4>Ya participaron</h4>
+                                <p class="small">Salen solos de la ruleta para que nadie se repita.</p>
+                                <ul class="chips-hechos" id="listaHechos"></ul>
+                                <button class="btn ghost" id="reiniciar" type="button">↺ Volver a poner a todos</button>
                             </div>
                         </aside>
                     </div>
