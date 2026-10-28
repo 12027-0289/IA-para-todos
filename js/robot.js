@@ -51,8 +51,7 @@
 
     const SECC = [
         ['video', '¡Dele play cuando esté listo! 🎬'],
-        ['basico', 'Cuatro ideas y ya sabe lo más importante. 💡'],
-        ['curiosos', '¿Sabía que la palabra «robot» tiene más de 100 años? 🤓'],
+        ['basico', 'Tres ideas y ya sabe lo más importante. 💡'],
         ['seguridad', 'Recuerde: deténgase, verifique y después decida. ✋'],
         ['actividades', '¡Ahora a practicar! Toque los botones grandes. 👆'],
         ['act2', 'Pregúnteme lo que quiera. No escriba datos privados. 🔒'],

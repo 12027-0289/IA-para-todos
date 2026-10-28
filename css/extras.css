@@ -1,8 +1,7 @@
-/* IA para todos · ilustraciones animadas, datos curiosos y decoración */
+/* IA para todos · ilustraciones animadas y decoración */
 
 /* ---------- Decoración flotante en el fondo de las secciones ---------- */
 #basico,
-#curiosos,
 #actividades,
 #reto {
     position: relative;
@@ -375,112 +374,6 @@ html.hc .ola {
     fill: #fff
 }
 
-/* ---------- Datos curiosos ---------- */
-.curiosos {
-    background: linear-gradient(180deg, var(--bg), #f1ecff 22%, #e6f7f4 78%, var(--bg))
-}
-
-html.hc .curiosos {
-    background: #fff
-}
-
-.datos {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.2rem;
-    padding: 0;
-    margin: 0;
-    list-style: none
-}
-
-.dato {
-    --dc: var(--primary);
-    --ds: var(--primary-soft);
-    position: relative;
-    padding: 1.5rem 1.4rem 1.3rem;
-    border-radius: var(--radius);
-    background: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: transform .25s ease, box-shadow .25s ease
-}
-
-.dato::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto;
-    height: 7px;
-    background: var(--dc)
-}
-
-.dato:nth-child(2) {
-    --dc: var(--violet);
-    --ds: var(--violet-soft)
-}
-
-.dato:nth-child(3) {
-    --dc: var(--teal);
-    --ds: var(--teal-soft)
-}
-
-.dato:nth-child(4) {
-    --dc: var(--coral);
-    --ds: var(--coral-soft)
-}
-
-.dato:nth-child(5) {
-    --dc: var(--sky);
-    --ds: var(--sky-soft)
-}
-
-.dato:nth-child(6) {
-    --dc: var(--pink);
-    --ds: var(--pink-soft)
-}
-
-.dato:hover,
-.js .dato.rv.in:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 40px -14px rgba(20, 33, 61, .28)
-}
-
-.dato:hover .dato-ico {
-    animation: saluda .6s ease
-}
-
-.dato-ico {
-    position: absolute;
-    top: 1.3rem;
-    right: 1.2rem;
-    display: grid;
-    place-items: center;
-    width: 58px;
-    height: 58px;
-    border-radius: 18px;
-    background: var(--ds);
-    font-size: 1.8rem
-}
-
-.dato-num {
-    display: block;
-    margin: .2rem 0 .3rem;
-    font: 700 clamp(2.2rem, 4vw, 2.8rem)/1 var(--font-head);
-    color: var(--dc);
-    font-variant-numeric: tabular-nums
-}
-
-.dato h3 {
-    margin-bottom: .4rem;
-    font-size: 1.15rem
-}
-
-.dato p {
-    margin: 0;
-    color: var(--muted)
-}
-
-html.hc .dato::before,
 html.hc .deco {
     display: none
 }
@@ -491,10 +384,6 @@ html.hc .deco {
     .idea-split,
     .sec-split {
         grid-template-columns: 1fr
-    }
-
-    .datos {
-        grid-template-columns: repeat(2, 1fr)
     }
 
     .uses-wrap {
@@ -511,10 +400,6 @@ html.hc .deco {
 }
 
 @media (max-width: 640px) {
-    .datos {
-        grid-template-columns: 1fr
-    }
-
     .uses-wrap .uses {
         grid-template-columns: 1fr
     }
