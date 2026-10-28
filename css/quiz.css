@@ -293,11 +293,26 @@ body.quiz {
     margin: .5rem 0 1rem
 }
 
+.top .volver {
+    margin-left: auto;
+    min-height: 48px;
+    padding: .5rem 1.1rem
+}
+
 @media(max-width:650px) {
 
     .ans,
     .pod,
     .row {
         grid-template-columns: 1fr
+    }
+
+    .top .volver {
+        padding: .5rem .8rem;
+        font-size: .9rem
+    }
+
+    .top .brand small {
+        display: none
     }
 }
