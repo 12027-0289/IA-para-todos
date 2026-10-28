@@ -19,12 +19,124 @@ const fiesta = el => window.confeti && confeti(el);
     apply(); setHc(store.get('hc') === '1');
 })();
 
-/* ---------- Preguntas frecuentes: abrir o cerrar todas ---------- */
+/* ---------- Pregúntele al robot: responde por escrito y en voz alta ---------- */
 (() => {
-    const b = $('#faqTodas'), todas = [...document.querySelectorAll('.faq')];
-    const pintar = () => { const abiertas = todas.every(d => d.open); b.textContent = abiertas ? 'Cerrar todas' : 'Abrir todas'; b.setAttribute('aria-pressed', abiertas) };
-    b.onclick = () => { const abrir = !todas.every(d => d.open); todas.forEach(d => d.open = abrir); pintar() };
-    todas.forEach(d => d.addEventListener('toggle', pintar));
+    const PREGUNTAS = [
+            {
+                    "e": "💰",
+                    "q": "¿Es gratis usar la inteligencia artificial?",
+                    "r": "Muchas herramientas tienen una <b>versión gratuita</b>: el asistente de su celular, Gemini, ChatGPT o Meta AI en WhatsApp. Algunas cobran por funciones extra.",
+                    "t": "Nunca le pague a alguien que le ofrezca “activar” o “vender” la IA por mensaje o llamada."
+            },
+            {
+                    "e": "📶",
+                    "q": "¿Necesito internet?",
+                    "r": "Sí, casi siempre. La mayoría de estas herramientas funcionan <b>conectadas a internet</b>, por Wi‑Fi o con los datos del celular.",
+                    "t": null
+            },
+            {
+                    "e": "📱",
+                    "q": "¿Necesito un celular nuevo o caro?",
+                    "r": "No. Funciona en la mayoría de los celulares y computadoras de los últimos años. Solo necesita <b>una aplicación</b> o entrar desde el navegador.",
+                    "t": null
+            },
+            {
+                    "e": "👂",
+                    "q": "¿La IA me escucha todo el tiempo?",
+                    "r": "Los asistentes de voz quedan atentos solo a su <b>palabra de activación</b>, como “Oye Siri” u “Ok Google”, y ahí empiezan a escuchar.",
+                    "t": "Si prefiere, puede apagar esa función o el micrófono en la configuración del celular."
+            },
+            {
+                    "e": "🔒",
+                    "q": "¿Es seguro usarla?",
+                    "r": "Sí, si cuida lo que escribe. Pregunte <b>sin datos personales</b>: nunca escriba su cédula, contraseñas, PIN, números de tarjeta ni códigos que le lleguen por mensaje.",
+                    "t": null
+            },
+            {
+                    "e": "🔄",
+                    "q": "¿Qué pasa si me equivoco o si la IA se equivoca?",
+                    "r": "<b>No pasa nada.</b> Puede borrar y volver a preguntar, o decirle “eso no es correcto, explíquemelo de otra forma”. La IA también se equivoca, por eso conviene confirmar lo importante.",
+                    "t": null
+            },
+            {
+                    "e": "🎤",
+                    "q": "¿Puedo hablarle en lugar de escribir?",
+                    "r": "Sí. Casi todas tienen un botón de <b>micrófono</b> para hablarle, y muchas pueden <b>leerle la respuesta en voz alta</b>.",
+                    "t": null
+            },
+            {
+                    "e": "🤝",
+                    "q": "¿La IA va a reemplazar a las personas?",
+                    "r": "Es una herramienta que ayuda, como una calculadora o un mapa. No reemplaza el cariño de la familia, el criterio de cada persona ni a los profesionales. <b>Usted decide.</b>",
+                    "t": null
+            },
+            {
+                    "e": "🆘",
+                    "q": "¿Dónde pido ayuda si tengo dudas?",
+                    "r": "Pregunte a un familiar o a una persona de confianza, o a quienes organizan esta charla.",
+                    "t": "Si sospecha una estafa, llame a su banco al número oficial, el que aparece detrás de su tarjeta."
+            }
+    ];
+    const caja = $('#charlaPreguntas'), qEl = $('#charlaQ'), rEl = $('#charlaR'), otra = $('#charlaOtraVez'), vozBtn = $('#charlaVoz');
+    const escena = $('#charlaRobot'), bot = window.Robot && Robot.copiar ? Robot.copiar('q-') : null;
+    if (bot) escena.append(bot);
+    const ojos = bot && bot.querySelector('#q-eyes');
+    if (ojos) { ojos.style.transformBox = 'fill-box'; ojos.style.transformOrigin = 'center'; ojos.style.transition = 'transform .35s ease' }
+    const mirar = (x, y) => { if (ojos) ojos.style.transform = `translate(${x}px,${y}px)` };
+    const tts = 'speechSynthesis' in window ? speechSynthesis : null;
+    let voz = store.get('voz') !== '0', actual = null, turno = 0;
+    const quieto = () => calm || document.documentElement.classList.contains('no-anim');
+    const espera = ms => new Promise(ok => setTimeout(ok, ms));
+    function pintarVoz() { vozBtn.textContent = voz ? '🔊 Voz: sí' : '🔇 Voz: no'; vozBtn.setAttribute('aria-pressed', voz); vozBtn.hidden = !tts }
+    function vozEspanol() { const vs = tts.getVoices(); return ['es-CR', 'es-MX', 'es-US', 'es-419', 'es-ES'].map(l => vs.find(v => v.lang.replace('_', '-') === l)).find(Boolean) || vs.find(v => /^es/i.test(v.lang)) }
+    // Mueve la boca mientras habla; termina cuando acaba la voz (o un tiempo prudente si no hay voz)
+    function hablar(texto, t) {
+        escena.classList.add('hablando');
+        const fin = () => { if (t === turno) escena.classList.remove('hablando') };
+        if (!voz || !tts) { setTimeout(fin, Math.min(6000, 600 + texto.length * 45)); return }
+        tts.cancel();
+        const u = new SpeechSynthesisUtterance(texto), v = vozEspanol();
+        u.lang = v ? v.lang : 'es-ES'; if (v) u.voice = v; u.rate = .92; u.pitch = 1.1;
+        u.onend = u.onerror = fin; tts.speak(u);
+    }
+    // Texto que lee la voz: la respuesta sin etiquetas y, si hay, el consejo
+    function paraVoz(r, t) { const d = document.createElement('div'); d.innerHTML = r; return d.textContent.replace(/[.\s]+$/, '') + '.' + (t ? ' Un consejo: ' + t : '') }
+    async function responder(i, boton) {
+        const t = ++turno, p = PREGUNTAS[i]; actual = i;
+        if (tts) tts.cancel();
+        caja.querySelectorAll('button').forEach(b => b.classList.toggle('activa', b === boton));
+        qEl.hidden = false; qEl.textContent = p.e + ' ' + p.q;
+        // 1. Piensa
+        escena.classList.remove('hablando'); escena.classList.add('pensando'); mirar(10, -12);
+        const puntos = el('span', 'typing'); puntos.append(el('i'), el('i'), el('i')); rEl.replaceChildren(puntos);
+        await espera(quieto() ? 50 : 800); if (t !== turno) return;
+        escena.classList.remove('pensando'); mirar(0, 0);
+        // 2. Responde: escribe la respuesta y la dice en voz alta
+        const resp = document.createElement('p'); resp.innerHTML = p.r;
+        const tip = p.t ? el('p', 'charla-tip', '💡 ' + p.t) : null;
+        const leer = paraVoz(p.r, p.t);
+        rEl.replaceChildren(resp); if (tip) { tip.hidden = true; rEl.append(tip) }
+        hablar(leer, t);
+        if (!quieto()) {
+            const html = p.r; resp.textContent = ''; const total = resp.ownerDocument.createElement('div'); total.innerHTML = html;
+            const plano = total.textContent; for (let k = 1; k <= plano.length; k += 2) { if (t !== turno) return; resp.textContent = plano.slice(0, k); await espera(22) }
+            resp.innerHTML = html;
+        }
+        if (tip) tip.hidden = false;
+        otra.hidden = false;
+    }
+    PREGUNTAS.forEach((p, i) => {
+        const b = el('button', 'charla-p'); b.type = 'button';
+        b.append(el('span', 'charla-e', p.e), el('span', null, p.q)); b.querySelector('.charla-e').setAttribute('aria-hidden', 'true');
+        b.onclick = () => responder(i, b);
+        b.onmouseenter = () => { if (!escena.classList.contains('pensando')) mirar(14, 6) };
+        b.onmouseleave = () => mirar(0, 0);
+        caja.append(b);
+    });
+    otra.onclick = () => { if (actual !== null) { const p = PREGUNTAS[actual]; hablar(paraVoz(p.r, p.t), turno) } };
+    vozBtn.onclick = () => { voz = !voz; store.set('voz', voz ? '1' : '0'); if (!voz && tts) { tts.cancel(); escena.classList.remove('hablando') } pintarVoz() };
+    if (tts && tts.onvoiceschanged !== undefined) tts.onvoiceschanged = () => { };
+    pintarVoz();
 })();
 
 /* ---------- Actividad 1: ¿Dónde hay IA? ---------- */

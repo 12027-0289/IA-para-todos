@@ -388,195 +388,183 @@ html.hc .preguntas {
     background: #fff
 }
 
-.faq-grid {
+.charla {
     display: grid;
-    grid-template-columns: 1fr 1.9fr;
-    gap: clamp(1.5rem, 4vw, 3rem);
+    grid-template-columns: minmax(240px, 1fr) 2fr;
+    gap: clamp(1.2rem, 4vw, 3rem);
     align-items: start
 }
 
-.faq-head {
+.charla-robot {
     position: sticky;
-    top: 110px
-}
-
-.faq-burbuja {
-    display: flex;
-    gap: .6rem;
-    margin: .4rem 0 .6rem
-}
-
-.faq-burbuja span {
+    top: 110px;
     display: grid;
     place-items: center;
-    width: 78px;
-    height: 78px;
-    border-radius: 24px 24px 24px 6px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    font-size: 2.4rem;
-    animation: chip 4s ease-in-out infinite
+    padding: 1.5rem 1rem 1rem;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at 50% 40%, rgba(34, 211, 238, .28), rgba(124, 77, 255, .18) 45%, transparent 70%),
+        radial-gradient(circle at 1px 1px, rgba(36, 73, 184, .12) 1px, transparent 0) 0 0 / 20px 20px
 }
 
-.faq-burbuja span:last-child {
-    border-radius: 24px 24px 6px 24px;
-    background: var(--primary-soft);
-    animation-delay: -2s
+.charla-escena {
+    width: min(100%, 280px);
+    aspect-ratio: 300/340
 }
 
-.faq-lista {
-    display: grid;
-    gap: .9rem
+.charla-escena svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 22px 26px rgba(36, 73, 184, .28));
+    animation: respira 4s ease-in-out infinite
 }
 
-.faq {
-    --fc: var(--primary);
-    --fs: var(--primary-soft);
-    border-radius: 20px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: box-shadow .25s ease, transform .25s ease
+.charla-escena .mouth {
+    transform-box: fill-box;
+    transform-origin: center
 }
 
-.faq:nth-child(5n+2) {
-    --fc: var(--violet);
-    --fs: var(--violet-soft)
+.charla-escena.hablando .mouth {
+    animation: boca .22s ease-in-out infinite alternate
 }
 
-.faq:nth-child(5n+3) {
-    --fc: var(--teal);
-    --fs: var(--teal-soft)
-}
-
-.faq:nth-child(5n+4) {
-    --fc: var(--coral);
-    --fs: var(--coral-soft)
-}
-
-.faq:nth-child(5n+5) {
-    --fc: var(--sky);
-    --fs: var(--sky-soft)
-}
-
-.faq:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px -14px rgba(20, 33, 61, .28)
-}
-
-.faq[open] {
-    border-color: var(--fc);
-    box-shadow: 0 0 0 2px var(--fc), 0 16px 34px -16px rgba(20, 33, 61, .3)
-}
-
-.faq summary {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    min-height: 76px;
-    padding: .8rem 1.2rem;
-    cursor: pointer;
-    list-style: none
-}
-
-.faq summary::-webkit-details-marker {
-    display: none
-}
-
-.faq summary:hover .faq-q {
-    color: var(--fc)
-}
-
-.faq-ico {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    background: var(--fs);
-    font-size: 1.6rem
-}
-
-.faq-q {
-    flex: 1;
-    font: 600 1.12rem/1.35 var(--font-head);
-    transition: color .2s
-}
-
-.faq-mas {
-    position: relative;
-    flex: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--fs);
-    transition: transform .3s ease, background .3s ease
-}
-
-.faq-mas::before,
-.faq-mas::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 16px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--fc);
-    transform: translate(-50%, -50%)
-}
-
-.faq-mas::after {
-    transform: translate(-50%, -50%) rotate(90deg);
-    transition: transform .3s ease
-}
-
-.faq[open] .faq-mas {
-    background: var(--fc);
-    transform: rotate(180deg)
-}
-
-.faq[open] .faq-mas::before,
-.faq[open] .faq-mas::after {
-    background: #fff
-}
-
-.faq[open] .faq-mas::after {
-    transform: translate(-50%, -50%) rotate(0deg)
-}
-
-.faq-r {
-    padding: 0 1.4rem 1.3rem calc(1.2rem + 52px + 1rem);
-    font-size: 1.05rem
-}
-
-.faq[open] .faq-r {
-    animation: abre .35s ease
-}
-
-@keyframes abre {
+@keyframes boca {
     from {
-        opacity: 0;
-        transform: translateY(-8px)
+        transform: scaleY(.35)
+    }
+
+    to {
+        transform: scaleY(1.9)
     }
 }
 
-.faq-r p {
-    margin: 0 0 .7rem
+.charla-escena.pensando #q-head {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: piensa 1s ease-in-out infinite alternate
 }
 
-.faq-r p:last-child {
-    margin-bottom: 0
+@keyframes piensa {
+    from {
+        transform: rotate(-4deg)
+    }
+
+    to {
+        transform: rotate(5deg)
+    }
 }
 
-.faq-ojo {
+.charla-burbuja {
+    position: relative;
+    min-height: 210px;
+    padding: 1.4rem 1.6rem;
+    border-radius: 26px;
+    background: var(--surface);
+    border: 2px solid transparent;
+    background-image: linear-gradient(var(--surface), var(--surface)), linear-gradient(120deg, var(--sky), var(--violet));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: var(--shadow)
+}
+
+.charla-burbuja::before {
+    content: "";
+    position: absolute;
+    left: -13px;
+    top: 70px;
+    width: 24px;
+    height: 24px;
+    background: var(--surface);
+    border-left: 2px solid #8fa0ff;
+    border-bottom: 2px solid #8fa0ff;
+    transform: rotate(45deg)
+}
+
+.charla-q {
+    margin: 0 0 .6rem;
+    font: 600 1.05rem var(--font-head);
+    color: var(--violet)
+}
+
+.charla-r {
+    font-size: 1.2rem;
+    line-height: 1.55
+}
+
+.charla-r p {
+    margin: 0 0 .8rem
+}
+
+.charla-tip {
     padding: .7rem 1rem;
     border-radius: 14px;
-    background: var(--fs);
-    font-size: .98rem
+    background: var(--sun-soft);
+    font-size: 1.02rem;
+    animation: globo .4s ease
+}
+
+.charla-ctl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem;
+    margin-top: .8rem
+}
+
+.charla-ctl .btn {
+    min-height: 48px;
+    padding: .5rem 1rem;
+    font-size: .95rem
+}
+
+.charla-preguntas {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: .7rem;
+    margin-top: 1.4rem
+}
+
+.charla-p {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-height: 68px;
+    padding: .6rem 1rem;
+    border-radius: 18px;
+    border: 2px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font: 700 1rem/1.3 var(--font);
+    text-align: left;
+    cursor: pointer;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease
+}
+
+.charla-p:hover {
+    transform: translateY(-3px);
+    border-color: var(--violet);
+    box-shadow: 0 10px 22px -12px rgba(124, 77, 255, .5)
+}
+
+.charla-p.activa {
+    border-color: var(--violet);
+    background: var(--violet-soft);
+    box-shadow: 0 0 0 2px var(--violet)
+}
+
+.charla-e {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--soft);
+    font-size: 1.4rem
+}
+
+.charla-p.activa .charla-e {
+    background: #fff
 }
 
 .d-q {
@@ -597,10 +585,9 @@ html.hc .preguntas {
     animation-delay: -6s
 }
 
-html.hc .faq-burbuja span,
-html.hc .faq-ico,
-html.hc .faq-mas,
-html.hc .faq-ojo {
+html.hc .charla-robot,
+html.hc .charla-tip,
+html.hc .charla-e {
     background: #fff;
     border: 2px solid #000
 }
@@ -608,14 +595,27 @@ html.hc .faq-ojo {
 /* ---------- Adaptable ---------- */
 @media (max-width: 900px) {
 
-    .faq-grid,
+    .charla,
     .idea-split,
     .sec-split {
         grid-template-columns: 1fr
     }
 
-    .faq-head {
+    .charla-robot {
         position: static
+    }
+
+    .charla-escena {
+        width: 180px
+    }
+
+    .charla-burbuja::before {
+        left: 50%;
+        top: -13px;
+        border: 0;
+        border-left: 2px solid #8fa0ff;
+        border-top: 2px solid #8fa0ff;
+        transform: translateX(-50%) rotate(45deg)
     }
 
     .uses-wrap {
@@ -636,27 +636,12 @@ html.hc .faq-ojo {
         grid-template-columns: 1fr
     }
 
-    .faq-head {
-        position: static
+    .charla-burbuja {
+        padding: 1.1rem 1.1rem
     }
 
-    .faq-burbuja {
-        display: none
-    }
-
-    .faq summary {
-        gap: .7rem;
-        padding: .8rem .9rem
-    }
-
-    .faq-ico {
-        width: 44px;
-        height: 44px;
-        font-size: 1.35rem
-    }
-
-    .faq-r {
-        padding: 0 1rem 1.1rem
+    .charla-r {
+        font-size: 1.08rem
     }
 
     .d-circ,
@@ -664,4 +649,19 @@ html.hc .faq-ojo {
     .d-dots {
         opacity: .6
     }
+}
+
+.charla-ctl [hidden] {
+    display: none
+}
+
+/* El robot guía se aparta mientras se ve «Pregúntele al robot» */
+.companion.aparte {
+    opacity: 0;
+    transform: translateY(40px) scale(.85);
+    pointer-events: none
+}
+
+.companion.aparte>* {
+    pointer-events: none
 }

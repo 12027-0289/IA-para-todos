@@ -241,72 +241,30 @@
             </div>
         </section>
 
-        <!-- PREGUNTAS FRECUENTES -->
+        <!-- PREGÚNTELE AL ROBOT -->
         <section id="preguntas" class="block preguntas">
             <div class="deco" aria-hidden="true"><span class="d-q" style="left:3%;top:14%">?</span><span class="d-q q2" style="right:4%;top:30%">?</span><span class="d-q q3" style="left:6%;bottom:12%">?</span><span class="d-dots" style="right:3%;bottom:10%"></span></div>
-            <div class="wrap faq-grid">
-                <header class="sec-head faq-head">
+            <div class="wrap">
+                <header class="sec-head">
                     <p class="kicker">Sus dudas</p>
-                    <h2>Preguntas frecuentes</h2>
-                    <p class="lead">Las preguntas que más nos hacen. Toque una pregunta para ver la respuesta.</p>
-                    <div class="faq-burbuja" aria-hidden="true"><span>🙋</span><span>🤖</span></div>
-                    <div class="btns"><button class="btn ghost" id="faqTodas" type="button" aria-pressed="false">Abrir todas</button></div>
+                    <h2>Pregúntele al robot</h2>
+                    <p class="lead">Toque una pregunta y el robot le responde… ¡y hasta se lo dice en voz alta! 🔊</p>
                 </header>
-                <div class="faq-lista">
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">💰</span><span class="faq-q">¿Es gratis usar la inteligencia artificial?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Muchas herramientas tienen una <b>versión gratuita</b>: el asistente de su celular, Gemini, ChatGPT o Meta AI en WhatsApp. Algunas cobran por funciones extra.</p><p class="faq-ojo"><span aria-hidden="true">💡</span> Nunca le pague a alguien que le ofrezca “activar” o “vender” la IA por mensaje o llamada.</p>
+                <div class="charla">
+                    <div class="charla-robot">
+                        <div class="charla-escena" id="charlaRobot" aria-hidden="true"></div>
+                    </div>
+                    <div class="charla-lado">
+                        <div class="charla-burbuja" id="charlaBurbuja" aria-live="polite">
+                            <p class="charla-q" id="charlaQ" hidden></p>
+                            <div class="charla-r" id="charlaR"><p>¡Hola! Soy su asistente. Toque una de las preguntas de abajo y con mucho gusto le respondo. 😊</p></div>
+                            <div class="charla-ctl">
+                                <button class="btn ghost" id="charlaOtraVez" type="button" hidden>🔁 Escuchar otra vez</button>
+                                <button class="btn ghost" id="charlaVoz" type="button" aria-pressed="true">🔊 Voz: sí</button>
+                            </div>
                         </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">📶</span><span class="faq-q">¿Necesito internet?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Sí, casi siempre. La mayoría de estas herramientas funcionan <b>conectadas a internet</b>, por Wi‑Fi o con los datos del celular.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">📱</span><span class="faq-q">¿Necesito un celular nuevo o caro?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>No. Funciona en la mayoría de los celulares y computadoras de los últimos años. Solo necesita <b>una aplicación</b> o entrar desde el navegador.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">👂</span><span class="faq-q">¿La IA me escucha todo el tiempo?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Los asistentes de voz quedan atentos solo a su <b>palabra de activación</b>, como “Oye Siri” u “Ok Google”, y ahí empiezan a escuchar.</p><p class="faq-ojo"><span aria-hidden="true">💡</span> Si prefiere, puede apagar esa función o el micrófono en la configuración del celular.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">🔒</span><span class="faq-q">¿Es seguro usarla?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Sí, si cuida lo que escribe. Pregunte <b>sin datos personales</b>: nunca escriba su cédula, contraseñas, PIN, números de tarjeta ni códigos que le lleguen por mensaje.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">🔄</span><span class="faq-q">¿Qué pasa si me equivoco o si la IA se equivoca?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p><b>No pasa nada.</b> Puede borrar y volver a preguntar, o decirle “eso no es correcto, explíquemelo de otra forma”. La IA también se equivoca, por eso conviene confirmar lo importante.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">🎤</span><span class="faq-q">¿Puedo hablarle en lugar de escribir?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Sí. Casi todas tienen un botón de <b>micrófono</b> para hablarle, y muchas pueden <b>leerle la respuesta en voz alta</b>.</p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">🤝</span><span class="faq-q">¿La IA va a reemplazar a las personas?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Es una herramienta que ayuda, como una calculadora o un mapa. No reemplaza el cariño de la familia, el criterio de cada persona ni a los profesionales. <b>Usted decide.</b></p>
-                        </div>
-                    </details>
-                    <details class="faq">
-                        <summary><span class="faq-ico" aria-hidden="true">🆘</span><span class="faq-q">¿Dónde pido ayuda si tengo dudas?</span><span class="faq-mas" aria-hidden="true"></span></summary>
-                        <div class="faq-r">
-                            <p>Pregunte a un familiar o a una persona de confianza, o a quienes organizan esta charla.</p><p class="faq-ojo"><span aria-hidden="true">💡</span> Si sospecha una estafa, llame a su banco al número oficial, el que aparece detrás de su tarjeta.</p>
-                        </div>
-                    </details>
+                        <div class="charla-preguntas" id="charlaPreguntas" role="group" aria-label="Preguntas para el robot"></div>
+                    </div>
                 </div>
             </div>
         </section>

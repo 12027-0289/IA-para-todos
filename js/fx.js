@@ -38,7 +38,7 @@
 
     // Aparición suave de los bloques al bajar
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }), { threshold: .12 });
-    document.querySelectorAll('.sec-head, .idea, .rule, .voice-tip, .activity, .reto, .video-grid > *, .uses li, .illu, .faq').forEach((e, i) => {
+    document.querySelectorAll('.sec-head, .idea, .rule, .voice-tip, .activity, .reto, .video-grid > *, .uses li, .illu, .charla-robot, .charla-lado').forEach((e, i) => {
         e.classList.add('rv'); e.style.transitionDelay = ((i % 3) * 90) + 'ms'; io.observe(e);
     });
 

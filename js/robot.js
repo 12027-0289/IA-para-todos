@@ -52,7 +52,7 @@
     const SECC = [
         ['video', '¡Dele play cuando esté listo! 🎬'],
         ['basico', 'Tres ideas y ya sabe lo más importante. 💡'],
-        ['preguntas', '¿Tiene una duda? Toque una pregunta y vea la respuesta. 🙋'],
+        ['preguntas', '¡Mi compañero responde sus dudas y hasta habla! 🔊'],
         ['seguridad', 'Recuerde: deténgase, verifique y después decida. ✋'],
         ['actividades', '¡Ahora a practicar! Toque los botones grandes. 👆'],
         ['act2', 'Pregúnteme lo que quiera. No escriba datos privados. 🔒'],
@@ -63,12 +63,15 @@
     // En el celular el mensaje de cada sección se muestra unos segundos y luego se esconde para no tapar el contenido
     let tc; function enCelular() { if (innerWidth >= 640) return; comp.classList.remove('min'); clearTimeout(tc); tc = setTimeout(() => { if (!cmsg.dataset.busy) comp.classList.add('min') }, 4000) }
     SECC.forEach(([id]) => { const s = document.getElementById(id); if (s) io.observe(s) });
+    const charla = document.getElementById('preguntas');
+    if (charla) new IntersectionObserver(([e]) => comp.classList.toggle('aparte', e.isIntersecting), { threshold: .25 }).observe(charla);
     const hero = document.getElementById('inicio');
     new IntersectionObserver(([e]) => comp.classList.toggle('on', !e.isIntersecting), { threshold: .15 }).observe(hero);
 
     // Reacciones: Robot.say('texto', 'feliz' | 'alerta' | 'pensando')
     let tm;
     window.Robot = {
+        copiar,
         say(txt, mood) {
             const enHero = !comp.classList.contains('on'), b = enHero ? bubble : cmsg, st = enHero ? stage : cbot;
             comp.classList.remove('min'); cbot.setAttribute('aria-expanded', 'true');
