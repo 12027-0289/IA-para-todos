@@ -843,6 +843,170 @@
     pointer-events: none
 }
 
+/* ---------- Escena de la ruleta: el robot mira el nombre y se acerca al vidrio ---------- */
+.show {
+    --bw: min(300px, 58vw);
+    position: fixed;
+    inset: 0;
+    z-index: 75;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 110%, rgba(124, 77, 255, .55), transparent 60%),
+        radial-gradient(circle at 80% 10%, rgba(14, 165, 233, .35), transparent 50%),
+        rgba(13, 22, 52, .97);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px)
+}
+
+.show-nombre {
+    position: absolute;
+    top: 9%;
+    right: 6%;
+    max-width: 60vw;
+    padding: 1rem 1.6rem;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+    text-align: center;
+    animation: globo .6s cubic-bezier(.2, 1.5, .4, 1) both
+}
+
+.show-nombre small {
+    display: block;
+    color: var(--muted);
+    font-weight: 700
+}
+
+.show-nombre b {
+    display: block;
+    font: 700 clamp(2rem, 6vw, 4rem)/1.1 var(--font-head);
+    background: linear-gradient(90deg, var(--primary), var(--violet), var(--pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    overflow-wrap: anywhere
+}
+
+.show-bot {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: var(--bw);
+    aspect-ratio: 300/340;
+    transform-origin: 50% 100%;
+    transform: translate(calc(-50% - 80vw), 0) scale(.62)
+}
+
+.show-bot svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, .45))
+}
+
+.show-burbuja {
+    position: absolute;
+    left: calc(50% - 26vw);
+    bottom: calc(var(--bw) * 1.13 * .62 + 14px);
+    translate: -50% 0;
+    max-width: min(320px, 80vw);
+    padding: .8rem 1.2rem;
+    border-radius: 20px;
+    background: #fff;
+    color: var(--ink);
+    font: 700 1.15rem/1.3 var(--font-head);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+    opacity: 0;
+    transition: opacity .3s
+}
+
+.show-burbuja.cerca {
+    left: 4%;
+    top: 36%;
+    bottom: auto;
+    translate: 0 0;
+    max-width: min(300px, 28vw);
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    background: linear-gradient(135deg, #fff, #f1ecff)
+}
+
+.show-vaho {
+    position: absolute;
+    left: 50%;
+    top: 70%;
+    width: min(60vw, 520px);
+    aspect-ratio: 1.6;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(235, 245, 255, .85), rgba(220, 235, 255, .45) 55%, transparent);
+    filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2
+}
+
+.show-vidrio {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, .16) 22%, transparent 27%),
+        linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .09) 32%, transparent 35%),
+        linear-gradient(115deg, transparent 68%, rgba(255, 255, 255, .12) 72%, transparent 76%)
+}
+
+.show-toc {
+    position: absolute;
+    right: 12%;
+    top: 40%;
+    z-index: 3;
+    color: #fff;
+    font: 700 clamp(1.4rem, 4vw, 2.4rem) var(--font-head);
+    text-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+    opacity: 0;
+    transform: rotate(-8deg)
+}
+
+.show-cerrar {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 4;
+    min-height: 52px;
+    padding: .6rem 1.2rem;
+    border: 2px solid rgba(255, 255, 255, .6);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+    font: 700 1rem var(--font);
+    cursor: pointer
+}
+
+.show-cerrar:hover {
+    background: rgba(255, 255, 255, .25)
+}
+
+@media (max-width: 640px) {
+    .show-nombre {
+        right: 50%;
+        translate: 50% 0;
+        max-width: 86vw
+    }
+
+    .show-burbuja {
+        left: 44%
+    }
+
+    .show-burbuja.cerca {
+        left: 50%;
+        top: 6%;
+        translate: -50% 0;
+        max-width: 88vw
+    }
+}
+
 /* ---------- Sin animaciones (botón o preferencia del sistema) ---------- */
 html.no-anim *,
 html.no-anim *::before,

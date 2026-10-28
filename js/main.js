@@ -271,7 +271,9 @@ const fiesta = el => window.confeti && confeti(el);
         res.append(el('p', 'res-le', '🎤 ¡Le toca a…'), el('p', 'res-nombre', nm), el('p', 'small', 'Cuéntenos una experiencia con la tecnología o la IA. Por ejemplo:'), q, b,
             el('p', 'small', '✔ ' + nm + ' sale de la ruleta automáticamente para que no se repita.'));
         res.hidden = false; pintarLista();
-        fanfarria(); fiesta(res); robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
+        fanfarria(); fiesta(res);
+        if (window.Robot && Robot.presentar && !quieto()) Robot.presentar(nm).then(() => fiesta(res));
+        else robot('¡Le toca a ' + nm + '! Le escuchamos con atención. 👂', 'feliz');
         pendiente = nm; tSacar = setTimeout(sacar, quieto() ? 800 : 2500);
     }
     botones.forEach(b => b.onclick = girar);
