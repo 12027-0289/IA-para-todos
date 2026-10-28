@@ -88,7 +88,23 @@ const fiesta = el => window.confeti && confeti(el);
     const quieto = () => calm || document.documentElement.classList.contains('no-anim');
     const espera = ms => new Promise(ok => setTimeout(ok, ms));
     function pintarVoz() { vozBtn.textContent = voz ? '🔊 Voz: sí' : '🔇 Voz: no'; vozBtn.setAttribute('aria-pressed', voz); vozBtn.hidden = !tts }
-    function vozEspanol() { const vs = tts.getVoices(); return ['es-CR', 'es-MX', 'es-US', 'es-419', 'es-ES'].map(l => vs.find(v => v.lang.replace('_', '-') === l)).find(Boolean) || vs.find(v => /^es/i.test(v.lang)) }
+    // Elegir la voz más natural y masculina disponible (depende del navegador y del sistema)
+    const HOMBRE = /\b(juan|jorge|pablo|ra[uú]l|[aá]lvaro|diego|carlos|enrique|gonzalo|andr[eé]s|tom[aá]s|gerardo|federico|alonso|liberto|jos[eé]|antonio|emilio|sergio|rodrigo|luciano|yago|arnau|dar[ií]o|sebasti[aá]n|javier|lorenzo|mateo|manuel|nicol[aá]s|pedro|ricardo|roberto|santiago|alex|alejandro|mario|hugo|luis|gabriel)\b/i;
+    const MUJER = /\b(sabina|helena|laura|elvira|dalia|paloma|m[oó]nica|paulina|mar[ií]a|lupe|isabela|esperanza|marisol|francisca|camila|elena|luc[ií]a|soledad|abril|catalina|ximena|irene|salome|ver[oó]nica|valentina|andrea|carla|beatriz|estrella|marta|sara|tatiana|teresa|yolanda|renata|elsa|karla|paola)\b/i;
+    const NATURAL = /natural|neural|online|premium|enhanced|mejorad|siri/i;
+    function puntaje(v) {
+        const l = v.lang.replace('_', '-');
+        return (HOMBRE.test(v.name) ? 40 : 0) - (MUJER.test(v.name) ? 40 : 0) + (NATURAL.test(v.name) ? 25 : 0) + (v.localService ? 0 : 3) +
+            ({ 'es-CR': 8, 'es-MX': 6, 'es-419': 6, 'es-US': 5, 'es-CO': 5, 'es-ES': 4 }[l] || 0);
+    }
+    const vocesEs = () => tts.getVoices().filter(v => /^es/i.test(v.lang)).sort((a, b) => puntaje(b) - puntaje(a));
+    function vozEspanol() { const vs = vocesEs(), elegida = store.get('vozNombre'); return vs.find(v => v.name === elegida) || vs[0] }
+    const sel = $('#charlaVozSel');
+    function llenarVoces() {
+        if (!tts) return; const vs = vocesEs(); $('#charlaVozCaja').hidden = !vs.length; if (!vs.length) return;
+        const elegida = vozEspanol(); sel.replaceChildren();
+        vs.forEach((v, i) => { const o = el('option', null, v.name.replace(/^(Microsoft|Google)\s+/, '').replace(/\s+Online \(Natural\)/, ' (natural)') + (i === 0 ? ' ⭐ recomendada' : '')); o.value = v.name; o.selected = v === elegida; sel.append(o) });
+    }
     // Mueve la boca mientras habla; termina cuando acaba la voz (o un tiempo prudente si no hay voz)
     function hablar(texto, t) {
         escena.classList.add('hablando');
@@ -96,7 +112,7 @@ const fiesta = el => window.confeti && confeti(el);
         if (!voz || !tts) { setTimeout(fin, Math.min(6000, 600 + texto.length * 45)); return }
         tts.cancel();
         const u = new SpeechSynthesisUtterance(texto), v = vozEspanol();
-        u.lang = v ? v.lang : 'es-ES'; if (v) u.voice = v; u.rate = .92; u.pitch = 1.1;
+        u.lang = v ? v.lang : 'es-ES'; if (v) u.voice = v; u.rate = .95; u.pitch = 1;
         u.onend = u.onerror = fin; tts.speak(u);
     }
     // Texto que lee la voz: la respuesta sin etiquetas y, si hay, el consejo
@@ -135,7 +151,8 @@ const fiesta = el => window.confeti && confeti(el);
     });
     otra.onclick = () => { if (actual !== null) { const p = PREGUNTAS[actual]; hablar(paraVoz(p.r, p.t), turno) } };
     vozBtn.onclick = () => { voz = !voz; store.set('voz', voz ? '1' : '0'); if (!voz && tts) { tts.cancel(); escena.classList.remove('hablando') } pintarVoz() };
-    if (tts && tts.onvoiceschanged !== undefined) tts.onvoiceschanged = () => { };
+    sel.onchange = () => { store.set('vozNombre', sel.value); if (voz) hablar('Hola, así suena mi voz. ¿Qué le gustaría preguntarme?', ++turno) };
+    if (tts) { llenarVoces(); tts.addEventListener ? tts.addEventListener('voiceschanged', llenarVoces) : (tts.onvoiceschanged = llenarVoces) }
     pintarVoz();
 })();
 
