@@ -1,5 +1,6 @@
 /* Reto IA · pantallas de participante y presentador */
 body.quiz {
+    min-height: 100vh;
     background:
         radial-gradient(700px 380px at 90% 0%, rgba(11, 138, 124, .14), transparent 70%),
         radial-gradient(700px 420px at 0% 0%, rgba(36, 73, 184, .12), transparent 70%),
@@ -159,9 +160,12 @@ body.quiz {
     opacity: .75
 }
 
-.ans .right {
+.ans .right,
+.ans button.right:disabled {
     border-color: var(--ok);
-    background: var(--ok-soft)
+    background: var(--ok-soft);
+    color: var(--ink);
+    opacity: 1
 }
 
 .ans .wrong {
@@ -276,6 +280,17 @@ body.quiz {
 
 .qwrap a {
     font-weight: 700
+}
+
+.modo {
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    background: var(--primary-soft);
+    border-color: #c4d1fb
+}
+
+#local .code {
+    margin: .5rem 0 1rem
 }
 
 @media(max-width:650px) {

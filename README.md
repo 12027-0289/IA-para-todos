@@ -2,12 +2,15 @@
 
 Sitio de apoyo para una charla introductoria sobre inteligencia artificial: explica lo básico con calma, da tres reglas de seguridad y propone tres actividades prácticas. Cierra con el **Reto IA**, un concurso en vivo que se juega desde el teléfono.
 
-## Cómo ejecutar
-1. Instale Node.js 18 o superior.
-2. En esta carpeta, ejecute `npm start`.
-3. Abra `http://localhost:3000`.
+## Cómo abrirlo
 
-Para que el público se una al Reto IA desde sus teléfonos, la computadora y los teléfonos deben estar en la misma red Wi‑Fi (la pantalla del presentador muestra la dirección y un código QR), o bien publique el proyecto en un servidor con Node.js y defina `PUBLIC_URL`.
+**Sin instalar nada:** abra `index.html` con doble clic, con la extensión Live Server de Visual Studio Code o desde GitHub Pages. Funciona todo: la charla, el video, las actividades y el Reto IA en *modo sin servidor*:
+- `presentador.html` → **modo proyector**: cada pregunta se muestra en pantalla grande y el público responde levantando la mano por la figura (▲ ◆ ● ■).
+- `quiz.html` → **práctica individual**: cada persona responde 10 preguntas en su teléfono, a su ritmo.
+
+**Con Node.js 18+ (opcional):** ejecute `npm start` y abra `http://localhost:3000` para el concurso **en vivo**: cada persona entra desde su teléfono con un código o QR, con puntaje y podio. Los teléfonos deben estar en la misma Wi‑Fi, o publique el servidor y defina `PUBLIC_URL`.
+
+El Reto IA detecta solo si hay servidor y elige el modo adecuado.
 
 ## Contenido
 | Sección | Qué incluye |
@@ -22,7 +25,9 @@ Las tres actividades funcionan solo en el navegador; no se envía ni se guarda n
 
 ## Archivos
 - `index.html`, `css/styles.css`, `css/site.css`, `js/main.js`: la charla y las actividades.
-- `quiz.html`, `presentador.html`, `css/quiz.css`, `js/quiz-client.js`, `js/presentador.js`: Reto IA.
-- `server/server.js`, `server/questions.js`: servidor sin dependencias y banco de 30 preguntas (estado en memoria).
+- `quiz.html`, `presentador.html`, `css/quiz.css`, `js/quiz-client.js`, `js/presentador.js`: Reto IA en vivo.
+- `js/quiz-local.js`: Reto IA sin servidor (modo proyector y práctica individual).
+- `js/preguntas.js`: banco de 30 preguntas, compartido por ambos modos.
+- `server/server.js`: servidor opcional sin dependencias (estado en memoria).
 
 El quiz y el video provienen del proyecto ADEP Aprende.
