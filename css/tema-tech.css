@@ -1,0 +1,752 @@
+/* IA para todos · tema "Tecnológico": azul noche, vidrio y luces celestes.
+   Contraste alto (texto claro sobre fondo muy oscuro), letra grande y botones visibles.
+   Todo queda dentro de html:not(.hc) para que el modo «alto contraste» siga en blanco y negro. */
+
+html:not(.hc) {
+    --bg: #060b1a;
+    --surface: #0d1530;
+    --soft: #121c3a;
+    --ink: #eef3ff;
+    --muted: #aeb9d8;
+    --line: rgba(148, 170, 255, .2);
+    --primary: #6b8cff;
+    --primary-soft: rgba(107, 140, 255, .16);
+    --violet: #a48bff;
+    --violet-soft: rgba(164, 139, 255, .16);
+    --teal: #2dd4bf;
+    --teal-soft: rgba(45, 212, 191, .13);
+    --coral: #ff8a7a;
+    --coral-soft: rgba(255, 138, 122, .14);
+    --pink: #f472b6;
+    --pink-soft: rgba(244, 114, 182, .14);
+    --sky: #38bdf8;
+    --sky-soft: rgba(56, 189, 248, .13);
+    --sun: #fbbf24;
+    --sun-soft: rgba(251, 191, 36, .13);
+    --ok: #34d399;
+    --ok-soft: rgba(52, 211, 153, .13);
+    --bad: #f87171;
+    --bad-soft: rgba(248, 113, 113, .13);
+    --cyan: #22d3ee;
+    --focus: #22d3ee;
+    --shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 24px 48px -24px rgba(0, 0, 0, .75);
+    --font-head: "Space Grotesk", "Lexend", "Atkinson Hyperlegible", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+    color-scheme: dark
+}
+
+/* ---------- Fondo general: cuadrícula fina y luces ---------- */
+html:not(.hc) body {
+    background:
+        radial-gradient(900px 500px at 85% -5%, rgba(56, 189, 248, .14), transparent 60%),
+        radial-gradient(800px 600px at -10% 30%, rgba(124, 77, 255, .12), transparent 60%),
+        linear-gradient(rgba(148, 170, 255, .045) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(90deg, rgba(148, 170, 255, .045) 1px, transparent 1px) 0 0 / 48px 48px,
+        var(--bg);
+    background-attachment: fixed
+}
+
+html:not(.hc) h1,
+html:not(.hc) h2,
+html:not(.hc) h3 {
+    font-weight: 700;
+    letter-spacing: -.02em
+}
+
+html:not(.hc) a {
+    color: var(--cyan)
+}
+
+/* Vidrio: superficie translúcida con borde fino */
+html:not(.hc) .panel,
+html:not(.hc) .idea,
+html:not(.hc) .activity,
+html:not(.hc) .reto,
+html:not(.hc) .video-card,
+html:not(.hc) .charla-burbuja,
+html:not(.hc) .nombres,
+html:not(.hc) .tips,
+html:not(.hc) .chat {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .02)), var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px)
+}
+
+/* ---------- Encabezado ---------- */
+html:not(.hc) .top {
+    background: rgba(6, 11, 26, .78);
+    border-bottom: 1px solid var(--line)
+}
+
+html:not(.hc) .brand-mark {
+    background: linear-gradient(135deg, #2563eb, #22d3ee);
+    box-shadow: 0 0 18px rgba(34, 211, 238, .45)
+}
+
+html:not(.hc) .nav a {
+    color: #cfd8f5
+}
+
+html:not(.hc) .nav a:hover {
+    background: rgba(34, 211, 238, .12);
+    color: #fff
+}
+
+html:not(.hc) .tools button {
+    background: rgba(255, 255, 255, .04);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .tools button:hover {
+    border-color: var(--cyan)
+}
+
+html:not(.hc) #sbar {
+    background: linear-gradient(90deg, #22d3ee, #6b8cff, #a48bff);
+    box-shadow: 0 0 12px rgba(34, 211, 238, .7)
+}
+
+/* ---------- Botones ---------- */
+html:not(.hc) .btn:not(.ghost) {
+    background: linear-gradient(120deg, #2563eb, #7c3aed);
+    color: #fff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .08) inset, 0 10px 28px -10px rgba(59, 108, 255, .8)
+}
+
+html:not(.hc) .btn:not(.ghost):hover {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .14) inset, 0 14px 34px -10px rgba(34, 211, 238, .7)
+}
+
+html:not(.hc) .btn.ghost {
+    background: rgba(255, 255, 255, .03);
+    border: 1.5px solid rgba(34, 211, 238, .55);
+    color: var(--ink)
+}
+
+html:not(.hc) .btn.ghost:hover {
+    background: rgba(34, 211, 238, .1);
+    border-color: var(--cyan)
+}
+
+/* ---------- Etiquetas tipo código ---------- */
+html:not(.hc) .kicker,
+html:not(.hc) .block-dark .kicker {
+    padding: .35rem .85rem;
+    border: 1px solid rgba(34, 211, 238, .35);
+    background: rgba(34, 211, 238, .08);
+    color: var(--cyan);
+    font: 600 .82rem var(--mono);
+    letter-spacing: .06em
+}
+
+html:not(.hc) .kicker::before {
+    content: "▸ ";
+    color: var(--cyan)
+}
+
+html:not(.hc) .sec-head h2::after {
+    width: 96px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet), transparent);
+    box-shadow: 0 0 12px rgba(34, 211, 238, .6)
+}
+
+html:not(.hc) .lead {
+    color: var(--muted)
+}
+
+html:not(.hc) .act-badge,
+html:not(.hc) #act1 .act-badge,
+html:not(.hc) #act2 .act-badge,
+html:not(.hc) .pill,
+html:not(.hc) .eyebrow {
+    font-family: var(--mono);
+    letter-spacing: .03em;
+    font-size: .82rem
+}
+
+/* ---------- Portada ---------- */
+html:not(.hc) .hero-bg {
+    background:
+        radial-gradient(700px 420px at 75% 40%, rgba(34, 211, 238, .18), transparent 65%),
+        radial-gradient(600px 400px at 15% 10%, rgba(124, 77, 255, .22), transparent 65%)
+}
+
+html:not(.hc) .blob {
+    opacity: .18
+}
+
+html:not(.hc) .hero h1 {
+    color: #fff
+}
+
+html:not(.hc) .grad {
+    background: linear-gradient(90deg, #22d3ee, #6b8cff, #a48bff, #22d3ee);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent
+}
+
+html:not(.hc) .eyebrow {
+    background: rgba(34, 211, 238, .08);
+    border-color: rgba(34, 211, 238, .35);
+    color: var(--cyan)
+}
+
+html:not(.hc) .eyebrow .dot {
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan)
+}
+
+html:not(.hc) .hero-points li {
+    background: rgba(255, 255, 255, .04);
+    border-color: var(--line);
+    box-shadow: none;
+    color: var(--muted)
+}
+
+html:not(.hc) .hero-points b {
+    font-family: var(--mono)
+}
+
+html:not(.hc) .hero-points .hp1 b {
+    color: var(--cyan)
+}
+
+html:not(.hc) .robot-wrap::before {
+    background: radial-gradient(circle, rgba(34, 211, 238, .35), rgba(124, 77, 255, .22) 45%, transparent 70%)
+}
+
+html:not(.hc) .robot-wrap::after {
+    border: 1px solid rgba(34, 211, 238, .35);
+    box-shadow: 0 0 30px rgba(34, 211, 238, .15) inset
+}
+
+html:not(.hc) .bubble {
+    background: rgba(13, 21, 48, .92);
+    background-image: none;
+    border: 1px solid rgba(34, 211, 238, .5);
+    box-shadow: 0 0 24px rgba(34, 211, 238, .2);
+    color: var(--ink)
+}
+
+html:not(.hc) .bubble::after {
+    background: #0d1530;
+    border-color: rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .fchip {
+    background: rgba(13, 21, 48, .85) !important;
+    border: 1px solid rgba(34, 211, 238, .45);
+    color: var(--cyan);
+    font-family: var(--mono);
+    box-shadow: 0 0 18px rgba(34, 211, 238, .2)
+}
+
+/* ---------- Video ---------- */
+html:not(.hc) .video-band {
+    background: linear-gradient(180deg, transparent, rgba(34, 211, 238, .05) 40%, transparent);
+    border-block: 1px solid var(--line)
+}
+
+html:not(.hc) .video-card {
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, .25), 0 30px 70px -20px rgba(34, 211, 238, .35)
+}
+
+/* ---------- Ideas ---------- */
+html:not(.hc) .idea::before {
+    width: 3px;
+    box-shadow: 0 0 14px var(--c)
+}
+
+html:not(.hc) .idea:nth-of-type(1) {
+    --c: var(--cyan)
+}
+
+html:not(.hc) .idea:nth-of-type(2) {
+    --c: var(--violet)
+}
+
+html:not(.hc) .idea:nth-of-type(3) {
+    --c: var(--teal)
+}
+
+html:not(.hc) .idea-num {
+    background: transparent;
+    border: 1.5px solid var(--c);
+    color: var(--c);
+    font-family: var(--mono);
+    box-shadow: 0 0 18px -4px var(--c), inset 0 0 14px -6px var(--c)
+}
+
+html:not(.hc) .idea:hover {
+    border-color: color-mix(in srgb, var(--c) 55%, transparent)
+}
+
+html:not(.hc) .analogy {
+    background: var(--sun-soft);
+    border: 1px solid rgba(251, 191, 36, .3)
+}
+
+html:not(.hc) .uses li {
+    background: rgba(255, 255, 255, .03) !important;
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .uses li:hover {
+    border-color: rgba(34, 211, 238, .5);
+    box-shadow: 0 0 24px -8px rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .uses li span {
+    background: var(--soft);
+    border: 1px solid var(--line);
+    box-shadow: none
+}
+
+html:not(.hc) .can {
+    border-color: rgba(52, 211, 153, .3)
+}
+
+html:not(.hc) .cant {
+    border-color: rgba(248, 113, 113, .3)
+}
+
+html:not(.hc) .illu-pantalla {
+    border: 1px solid rgba(34, 211, 238, .25);
+    box-shadow: 0 0 40px -12px rgba(34, 211, 238, .35)
+}
+
+html:not(.hc) .illu figcaption {
+    color: var(--muted)
+}
+
+html:not(.hc) .d-circ,
+html:not(.hc) .d-dots,
+html:not(.hc) .d-plus {
+    opacity: .5
+}
+
+html:not(.hc) .d-ring {
+    border-color: rgba(34, 211, 238, .25)
+}
+
+html:not(.hc) .d-spark {
+    color: var(--cyan);
+    text-shadow: 0 0 18px rgba(34, 211, 238, .7)
+}
+
+/* ---------- Pregúntele al robot ---------- */
+html:not(.hc) .preguntas {
+    background: linear-gradient(180deg, transparent, rgba(124, 77, 255, .06) 30%, rgba(34, 211, 238, .04) 75%, transparent)
+}
+
+html:not(.hc) .d-q {
+    color: rgba(34, 211, 238, .12)
+}
+
+html:not(.hc) .charla-robot {
+    background:
+        radial-gradient(circle at 50% 40%, rgba(34, 211, 238, .25), rgba(124, 77, 255, .16) 45%, transparent 70%),
+        radial-gradient(circle at 1px 1px, rgba(148, 170, 255, .14) 1px, transparent 0) 0 0 / 20px 20px;
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .charla-burbuja {
+    border-color: rgba(34, 211, 238, .4);
+    background-image: none
+}
+
+html:not(.hc) .charla-burbuja::before {
+    background: #111a36;
+    border-color: rgba(34, 211, 238, .4)
+}
+
+html:not(.hc) .charla-q {
+    color: var(--cyan);
+    font-family: var(--font-head)
+}
+
+html:not(.hc) .charla-p {
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .charla-p:hover,
+html:not(.hc) .charla-p.activa {
+    border-color: var(--cyan);
+    background: rgba(34, 211, 238, .08);
+    box-shadow: 0 0 22px -6px rgba(34, 211, 238, .55)
+}
+
+html:not(.hc) .charla-p.activa .charla-e,
+html:not(.hc) .charla-e {
+    background: var(--soft)
+}
+
+html:not(.hc) .charla-vozsel select {
+    background: var(--soft);
+    border-color: rgba(34, 211, 238, .5);
+    color: var(--ink)
+}
+
+/* ---------- Seguridad ---------- */
+html:not(.hc) .block-dark {
+    background:
+        radial-gradient(600px 300px at 90% 0%, rgba(34, 211, 238, .16), transparent 70%),
+        radial-gradient(600px 340px at 0% 100%, rgba(124, 77, 255, .2), transparent 70%),
+        #081028;
+    border-block: 1px solid var(--line)
+}
+
+html:not(.hc) .ola {
+    display: none
+}
+
+html:not(.hc) .rule {
+    background: rgba(255, 255, 255, .035);
+    border: 1px solid var(--line)
+}
+
+html:not(.hc) .rule:hover {
+    border-color: rgba(34, 211, 238, .5);
+    box-shadow: 0 0 30px -10px rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .voice-tip {
+    background: rgba(251, 191, 36, .08)
+}
+
+/* ---------- Actividades ---------- */
+html:not(.hc) #actividades {
+    background: linear-gradient(180deg, transparent, rgba(56, 189, 248, .05) 40%, transparent)
+}
+
+html:not(.hc) .act-index a {
+    background: rgba(255, 255, 255, .04);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .act-index a:hover {
+    border-color: var(--cyan)
+}
+
+html:not(.hc) .act-index span {
+    font-family: var(--mono)
+}
+
+html:not(.hc) .activity::before {
+    height: 3px;
+    box-shadow: 0 0 16px var(--ac1)
+}
+
+html:not(.hc) #act1 {
+    --ac1: var(--cyan);
+    --ac2: var(--primary)
+}
+
+html:not(.hc) #act2 {
+    --ac1: var(--violet);
+    --ac2: var(--pink)
+}
+
+html:not(.hc) #act3 {
+    --ac1: var(--teal);
+    --ac2: var(--cyan)
+}
+
+html:not(.hc) .a1-card {
+    background: radial-gradient(400px 200px at 50% 0%, rgba(34, 211, 238, .12), transparent 70%), var(--soft);
+    border-color: var(--line)
+}
+
+html:not(.hc) .a1-progress,
+html:not(.hc) .a1-progress span {
+    font-family: var(--mono)
+}
+
+html:not(.hc) .bar {
+    background: var(--soft)
+}
+
+html:not(.hc) .bar i {
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    box-shadow: 0 0 10px var(--cyan)
+}
+
+html:not(.hc) .choice {
+    background: rgba(255, 255, 255, .03);
+    border: 1.5px solid var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .choice:hover:not(:disabled),
+html:not(.hc) .choice.yes:hover:not(:disabled) {
+    border-color: var(--cyan);
+    background: rgba(34, 211, 238, .08)
+}
+
+html:not(.hc) .choice.right {
+    border-color: var(--ok);
+    background: var(--ok-soft)
+}
+
+html:not(.hc) .choice.wrong {
+    border-color: var(--bad);
+    background: var(--bad-soft)
+}
+
+html:not(.hc) .feedback.ok {
+    border-color: rgba(52, 211, 153, .35)
+}
+
+html:not(.hc) .feedback.bad {
+    border-color: rgba(248, 113, 113, .35)
+}
+
+html:not(.hc) .feedback.info {
+    border-color: rgba(107, 140, 255, .35)
+}
+
+html:not(.hc) .chat-top,
+html:not(.hc) .chat-form {
+    background: rgba(255, 255, 255, .03);
+    border-color: var(--line)
+}
+
+html:not(.hc) .chat-log {
+    background: radial-gradient(circle at 1px 1px, rgba(148, 170, 255, .1) 1px, transparent 0) 0 0 / 20px 20px
+}
+
+html:not(.hc) .msg.bot {
+    background: var(--soft);
+    border-color: var(--line)
+}
+
+html:not(.hc) .msg.alert {
+    background: rgba(251, 191, 36, .12);
+    border-color: rgba(251, 191, 36, .5)
+}
+
+html:not(.hc) .chips button {
+    background: transparent;
+    border-color: rgba(34, 211, 238, .5);
+    color: var(--cyan)
+}
+
+html:not(.hc) .chips button:hover {
+    background: rgba(34, 211, 238, .1)
+}
+
+html:not(.hc) .chat-form input,
+html:not(.hc) .nombre-form input {
+    background: var(--soft);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .chat-form input:focus,
+html:not(.hc) .nombre-form input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, .2)
+}
+
+html:not(.hc) .tips {
+    border-color: rgba(45, 212, 191, .3)
+}
+
+html:not(.hc) .ex {
+    color: var(--teal)
+}
+
+html:not(.hc) .warn {
+    background: var(--soft)
+}
+
+html:not(.hc) .ruleta {
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, .3), 0 0 50px -10px rgba(34, 211, 238, .45)
+}
+
+html:not(.hc) .ruleta canvas {
+    background: var(--surface)
+}
+
+html:not(.hc) .ruleta-flecha {
+    border-top-color: var(--cyan);
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, .8))
+}
+
+html:not(.hc) .ruleta-centro {
+    background: #060b1a;
+    border-color: var(--cyan);
+    color: var(--cyan);
+    font-family: var(--mono);
+    box-shadow: 0 0 20px rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .ruleta-res {
+    background: radial-gradient(400px 200px at 50% 0%, rgba(124, 77, 255, .18), transparent 70%), var(--surface);
+    border-color: rgba(34, 211, 238, .35)
+}
+
+html:not(.hc) .res-nombre {
+    background: linear-gradient(90deg, #22d3ee, #6b8cff, #a48bff);
+    -webkit-background-clip: text;
+    background-clip: text
+}
+
+html:not(.hc) .res-preg {
+    background: var(--soft)
+}
+
+html:not(.hc) .cuenta {
+    background: var(--cyan);
+    color: #06202a;
+    font-family: var(--mono)
+}
+
+html:not(.hc) .chips-hechos li {
+    border-color: rgba(52, 211, 153, .35)
+}
+
+html:not(.hc) .check input {
+    accent-color: var(--cyan)
+}
+
+/* ---------- Reto IA ---------- */
+html:not(.hc) .reto {
+    background:
+        radial-gradient(500px 300px at 100% 100%, rgba(34, 211, 238, .16), transparent 70%),
+        radial-gradient(500px 300px at 0% 0%, rgba(124, 77, 255, .2), transparent 70%),
+        var(--surface)
+}
+
+html:not(.hc) .phone {
+    border-color: #1b2752;
+    box-shadow: 0 0 0 1px rgba(34, 211, 238, .3), 0 30px 60px -20px rgba(34, 211, 238, .4)
+}
+
+/* ---------- Pie y robot guía ---------- */
+html:not(.hc) .foot {
+    border-top: 1px solid var(--line)
+}
+
+html:not(.hc) .companion-bubble {
+    background: rgba(13, 21, 48, .95);
+    border: 1px solid rgba(34, 211, 238, .5);
+    box-shadow: 0 0 24px rgba(34, 211, 238, .25)
+}
+
+html:not(.hc) .show-nombre,
+html:not(.hc) .show-burbuja,
+html:not(.hc) .show-burbuja.cerca {
+    background: #0d1530;
+    color: var(--ink);
+    border: 1px solid rgba(34, 211, 238, .5);
+    box-shadow: 0 0 40px -6px rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .show-nombre small {
+    color: var(--muted)
+}
+
+/* ---------- Pantallas del Reto IA ---------- */
+html:not(.hc) body.quiz {
+    background:
+        radial-gradient(800px 500px at 85% -5%, rgba(56, 189, 248, .14), transparent 60%),
+        linear-gradient(rgba(148, 170, 255, .045) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(90deg, rgba(148, 170, 255, .045) 1px, transparent 1px) 0 0 / 48px 48px,
+        var(--bg)
+}
+
+html:not(.hc) .qwrap input {
+    background: var(--soft);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .qwrap input:focus {
+    border-color: var(--cyan)
+}
+
+html:not(.hc) .ans>* {
+    background: rgba(255, 255, 255, .03);
+    border-color: var(--line);
+    color: var(--ink)
+}
+
+html:not(.hc) .ans button:hover:not(:disabled) {
+    border-color: var(--cyan);
+    background: rgba(34, 211, 238, .08)
+}
+
+html:not(.hc) .code {
+    background: #060b1a;
+    color: var(--cyan);
+    border: 1px solid rgba(34, 211, 238, .5);
+    font-family: var(--mono);
+    box-shadow: 0 0 30px -6px rgba(34, 211, 238, .5)
+}
+
+html:not(.hc) .timer,
+html:not(.hc) .conn,
+html:not(.hc) #prog {
+    font-family: var(--mono)
+}
+
+html:not(.hc) .names span,
+html:not(.hc) .pod>div,
+html:not(.hc) .qwrap table {
+    background: var(--surface);
+    border-color: var(--line)
+}
+
+html:not(.hc) .modo {
+    background: var(--primary-soft);
+    border-color: rgba(107, 140, 255, .35)
+}
+
+/* ---------- Ajustes ---------- */
+html:not(.hc) .brand {
+    color: var(--ink)
+}
+
+html:not(.hc) .analogy {
+    background: rgba(164, 139, 255, .08);
+    border: 1px solid rgba(164, 139, 255, .3);
+    border-left: 4px solid var(--violet)
+}
+
+html:not(.hc) .msg.alert {
+    background: var(--soft);
+    border: 1.5px solid rgba(251, 191, 36, .7);
+    box-shadow: 0 0 22px -8px rgba(251, 191, 36, .6)
+}
+
+html:not(.hc) .charla-tip,
+html:not(.hc) .faq-ojo {
+    background: rgba(251, 191, 36, .07);
+    border-left: 4px solid var(--sun)
+}
+
+html:not(.hc) .voice-tip {
+    background: var(--soft);
+    border: 1px solid rgba(251, 191, 36, .45)
+}
+
+html:not(.hc) .ans .right,
+html:not(.hc) .ans button.right:disabled {
+    border-color: var(--ok);
+    background: var(--ok-soft);
+    box-shadow: 0 0 22px -6px rgba(52, 211, 153, .55)
+}
+
+html:not(.hc) .ans .mine {
+    outline-color: var(--cyan)
+}

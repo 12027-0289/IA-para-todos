@@ -288,9 +288,10 @@ const Voz = (() => {
         ctx.clearRect(0, 0, W, W);
         if (!n) {
             const listo = hechos.length > 0;
-            ctx.fillStyle = listo ? '#e1f5ea' : '#eef3fb'; ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.fill();
-            ctx.fillStyle = '#4a5672'; ctx.font = '700 26px "Atkinson Hyperlegible", sans-serif'; ctx.textAlign = 'center';
-            ctx.fillText(listo ? '¡Todos participaron!' : 'Agregue nombres', c, c - 70); ctx.fillText(listo ? 'Gracias 🎉' : 'para empezar ✍️', c, c - 38); return;
+            const css = getComputedStyle(document.documentElement), tok = n => css.getPropertyValue(n).trim();
+            ctx.fillStyle = tok(listo ? '--ok-soft' : '--soft') || '#eef3fb'; ctx.beginPath(); ctx.arc(c, c, r, 0, 7); ctx.fill();
+            ctx.fillStyle = tok('--muted') || '#4a5672'; ctx.font = '700 26px "Atkinson Hyperlegible", sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText(listo ? '¡Todos participaron!' : 'Agregue nombres', c, c - 135); ctx.fillText(listo ? 'Gracias 🎉' : 'para empezar ✍️', c, c - 100); return;
         }
         const paso = Math.PI * 2 / n, fs = Math.max(16, Math.min(34, 300 / n + 10));
         nombres.forEach((nm, i) => {

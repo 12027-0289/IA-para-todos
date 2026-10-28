@@ -16,7 +16,7 @@
     // Red de puntos conectados en la portada
     const cv = document.getElementById('red'), cx = cv && cv.getContext && cv.getContext('2d');
     let W, H, pts = [], raf = 0;
-    const COL = ['36,73,184', '11,138,124', '124,77,255', '217,87,59'];
+    const COL = ['34,211,238', '107,140,255', '164,139,255', '45,212,191'];
     function size() {
         if (!cx) return; const r = cv.parentElement.getBoundingClientRect(), d = devicePixelRatio || 1;
         W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; cx.setTransform(d, 0, 0, d, 0, 0);
@@ -27,7 +27,7 @@
         cx.clearRect(0, 0, W, H);
         for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
             const a = pts[i], b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.22 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
+            if (d < 140) { cx.strokeStyle = 'rgba(' + a.c + ',' + (.3 * (1 - d / 140)) + ')'; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke() }
         }
         for (const p of pts) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1; cx.fillStyle = 'rgba(' + p.c + ',.55)'; cx.beginPath(); cx.arc(p.x, p.y, 2.6, 0, 6.3); cx.fill() }
         raf = requestAnimationFrame(frame);
