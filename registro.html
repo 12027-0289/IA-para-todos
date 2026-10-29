@@ -47,6 +47,13 @@
             <div class="reg-ok" id="ok" aria-live="polite"></div>
         </form>
 
+        <section class="reg-subir panel" aria-labelledby="tSubir">
+            <h2 id="tSubir">¿Tiene la lista de asistentes en un archivo?</h2>
+            <p>Súbala aquí y todos los nombres pasan a la ruleta de una vez. Después puede seguir agregando a mano a
+                quien no esté en la lista.</p>
+            <div id="subirLista"></div>
+        </section>
+
         <section class="reg-lista panel" aria-labelledby="tLista">
             <h2 id="tLista">En la ruleta <span class="cuenta" id="cuenta">0</span></h2>
             <ul class="chips-nombres" id="lista"></ul>
@@ -57,6 +64,7 @@
             </div>
         </section>
     </main>
+    <script src="js/lista-nombres.js"></script>
     <script src="js/registro.js"></script>
 </body>
 

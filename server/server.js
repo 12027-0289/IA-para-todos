@@ -26,7 +26,7 @@ const rClientes = new Set();
 let rTimer = null;
 function rGuardar() { clearTimeout(rTimer); rTimer = setTimeout(() => { try { fs.mkdirSync(path.dirname(RFILE), { recursive: true }); fs.writeFileSync(RFILE, JSON.stringify({ nombres: ruleta.nombres, hechos: ruleta.hechos })) } catch { } }, 300) }
 function rEnviar() { ruleta.v++; rGuardar(); const d = 'data: ' + JSON.stringify(ruleta) + '\n\n'; for (const c of rClientes) c.write(d) }
-const rLimpio = t => String(t || '').normalize('NFC').replace(/[\u0000-\u001f\u007f-\u009f<>]/g, '').trim().replace(/\s+/g, ' ').slice(0, 24);
+const rLimpio = t => String(t || '').normalize('NFC').replace(/[\u0000-\u001f\u007f-\u009f<>]/g, '').trim().replace(/\s+/g, ' ').slice(0, 40);
 const rIgual = (a, b) => a.toLowerCase() === b.toLowerCase();
 function rAccion(b) {
     const n = rLimpio(b.nombre), quitar = (lista, x) => lista.filter(y => !rIgual(y, x));
@@ -83,7 +83,7 @@ function startQ(g) {
 function closeQ(g) { if (g.state !== 'question') return; clearTimeout(g.timer); g.state = 'results'; broadcast(g) }
 function endGame(g) { clearTimeout(g.timer); g.state = 'ended'; broadcast(g) }
 
-function body(req) { return new Promise(r => { let d = ''; req.on('data', c => { d += c; if (d.length > 8192) { req.destroy() } }); req.on('end', () => { try { r(JSON.parse(d || '{}')) } catch { r({}) } }) }) }
+function body(req) { return new Promise(r => { let d = ''; req.on('data', c => { d += c; if (d.length > 32768) { req.destroy() } }); req.on('end', () => { try { r(JSON.parse(d || '{}')) } catch { r({}) } }) }) }
 const send = (res, c, o) => { res.writeHead(c, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(o)) };
 const ip = req => (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
 

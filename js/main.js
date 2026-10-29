@@ -340,14 +340,20 @@ const Voz = (() => {
     }
     function cambio() { guardar(); pintarLista(); dibujar() }
     function agregar(txt) {
-        txt.split(/[,;\n]+/).map(t => t.trim().replace(/\s+/g, ' ').slice(0, 24)).filter(Boolean).forEach(t => {
+        agregarLista(txt.split(/[,;\n]+/));
+    }
+    // Agrega una lista de nombres (escritos a mano o leídos de un archivo)
+    function agregarLista(arr) {
+        const lista = arr.map(t => String(t).trim().replace(/\s+/g, ' ').slice(0, 40)).filter(Boolean);
+        lista.forEach(t => {
             hechos = hechos.filter(x => x.toLowerCase() !== t.toLowerCase());
             if (nombres.length < 200 && !nombres.some(x => x.toLowerCase() === t.toLowerCase())) nombres.push(t);
         });
-        cambio(); sync({ accion: 'agregar', nombres: txt.split(/[,;\n]+/).map(t => t.trim()).filter(Boolean) });
+        cambio(); sync({ accion: 'agregar', nombres: lista });
     }
     $('#nombreForm').onsubmit = e => { e.preventDefault(); agregar($('#nombreIn').value); $('#nombreIn').value = ''; $('#nombreIn').focus() };
     $('#ejemplo').onclick = () => agregar(EJEMPLO.join(','));
+    if (window.montarSubidaLista) montarSubidaLista($('#subirLista'), async nombres => { agregarLista(nombres); robot('¡Listo! Ya están los nombres de la lista. 📋', 'feliz') });
     $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { clearTimeout(tSacar); pendiente = null; nombres = []; hechos = []; res.hidden = true; cambio(); sync({ accion: 'vaciar' }) } };
     $('#reiniciar').onclick = () => { sacar(); nombres = nombres.concat(hechos); hechos = []; res.hidden = true; cambio(); sync({ accion: 'reiniciar' }); robot('¡Listo! Todos están de nuevo en la ruleta. 🎡') };
     // Saca de la ruleta a la persona que acaba de salir

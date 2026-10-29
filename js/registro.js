@@ -59,6 +59,11 @@
         sinServidor = true; $('#agregar').disabled = true; input.disabled = true;
         pintarEstado('🔴 Esta página necesita el servidor publicado en internet (por ejemplo, en Render). Abierta como archivo o en GitHub Pages no puede compartir nombres entre celulares.', 'mal');
     }
+    montarSubidaLista($('#subirLista'), async nombres => {
+        if (sinServidor) return;
+        const r = await enviar({ accion: 'agregar', nombres });
+        if (r) { ok.className = 'reg-ok bien'; ok.textContent = '✔ Se agregaron ' + (r.agregados || []).length + ' nombres nuevos desde el archivo.' }
+    });
     pintar(); conectar(); input.focus();
     setInterval(() => { if (!sinServidor) fetch('/api/info', { cache: 'no-store' }).catch(() => { }) }, 240000); // mantiene despierto el servidor gratuito
 })();

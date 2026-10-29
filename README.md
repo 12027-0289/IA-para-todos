@@ -12,7 +12,7 @@ Así funcionan **el quiz en vivo en cada celular** y **el registro de participan
 
 Páginas importantes (cambie la dirección por la suya):
 - `/` → la charla (proyéctela).
-- `/registro.html` → **registro de participantes**: sus compañeros lo abren en el celular y agregan los nombres al llegar. Aparecen al instante en la ruleta.
+- `/registro.html` → **registro de participantes**: suba la **lista de asistentes** (Excel .xlsx, Word .docx, CSV o texto) y todos los nombres pasan a la ruleta; luego sus compañeros pueden agregar a mano a quien no esté en la lista. Todo aparece al instante en la ruleta.
 - `/presentador.html` → crear el Reto IA en vivo (muestra un código y un QR).
 - `/quiz.html` → el público entra desde su celular con el código.
 - `/compartir.html` → los **enlaces** de la charla y del registro listos para copiar, y el **código QR** de la charla para proyectar, descargar o imprimir.
@@ -42,6 +42,7 @@ Las tres actividades funcionan solo en el navegador; no se envía ni se guarda n
 - `js/quiz-local.js`: Reto IA sin servidor (modo proyector y práctica individual).
 - `js/preguntas.js`: banco de 30 preguntas, compartido por ambos modos.
 - `registro.html`, `js/registro.js`, `css/registro.css`: registro de participantes en vivo para el equipo.
+- `js/lista-nombres.js`: lee listas de nombres desde Excel, Word, CSV o texto (en el navegador, sin librerías).
 - `server/server.js`: servidor sin dependencias (quiz en memoria; nombres de la ruleta en `data/ruleta.json`).
 - `render.yaml`: configuración para publicar en Render.
 
