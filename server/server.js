@@ -17,6 +17,35 @@ function lanUrls() {
     for (const arr of Object.values(os.networkInterfaces())) for (const i of arr || []) if ((i.family === 'IPv4' || i.family === 4) && !i.internal) list.push(i.address);
     return list.sort((a, b) => rank(a) - rank(b)).map(a => 'http://' + a + ':' + PORT);
 }
+// ---------- Ruleta compartida: el equipo registra nombres desde cualquier dispositivo ----------
+// Se guarda en data/ruleta.json para no perder los nombres si el servidor se reinicia.
+const RFILE = path.join(ROOT, 'data', 'ruleta.json');
+let ruleta = { nombres: [], hechos: [], v: 0 };
+try { const j = JSON.parse(fs.readFileSync(RFILE, 'utf8')); if (Array.isArray(j.nombres) && Array.isArray(j.hechos)) ruleta = { nombres: j.nombres, hechos: j.hechos, v: 0 } } catch { }
+const rClientes = new Set();
+let rTimer = null;
+function rGuardar() { clearTimeout(rTimer); rTimer = setTimeout(() => { try { fs.mkdirSync(path.dirname(RFILE), { recursive: true }); fs.writeFileSync(RFILE, JSON.stringify({ nombres: ruleta.nombres, hechos: ruleta.hechos })) } catch { } }, 300) }
+function rEnviar() { ruleta.v++; rGuardar(); const d = 'data: ' + JSON.stringify(ruleta) + '\n\n'; for (const c of rClientes) c.write(d) }
+const rLimpio = t => String(t || '').normalize('NFC').replace(/[\u0000-\u001f\u007f-\u009f<>]/g, '').trim().replace(/\s+/g, ' ').slice(0, 24);
+const rIgual = (a, b) => a.toLowerCase() === b.toLowerCase();
+function rAccion(b) {
+    const n = rLimpio(b.nombre), quitar = (lista, x) => lista.filter(y => !rIgual(y, x));
+    switch (b.accion) {
+        case 'agregar': {
+            const lista = (Array.isArray(b.nombres) ? b.nombres : [b.nombre]).map(rLimpio).filter(Boolean);
+            if (!lista.length) return 'Escriba un nombre.';
+            const nuevos = [];
+            for (const x of lista) { if (ruleta.nombres.length >= 200) break; ruleta.hechos = quitar(ruleta.hechos, x); if (!ruleta.nombres.some(y => rIgual(y, x))) { ruleta.nombres.push(x); nuevos.push(x) } }
+            return { agregados: nuevos };
+        }
+        case 'quitar': ruleta.nombres = quitar(ruleta.nombres, n); ruleta.hechos = quitar(ruleta.hechos, n); return {};
+        case 'participo': if (ruleta.nombres.some(y => rIgual(y, n))) { ruleta.nombres = quitar(ruleta.nombres, n); if (!ruleta.hechos.some(y => rIgual(y, n))) ruleta.hechos.push(n) } return {};
+        case 'reiniciar': ruleta.nombres = ruleta.nombres.concat(ruleta.hechos.filter(x => !ruleta.nombres.some(y => rIgual(y, x)))); ruleta.hechos = []; return {};
+        case 'vaciar': ruleta.nombres = []; ruleta.hechos = []; return {};
+        default: return 'Acción no válida.';
+    }
+}
+
 const clamp = (v, a, b, d) => Number.isFinite(+v) ? Math.min(b, Math.max(a, Math.round(+v))) : d;
 
 function newGame(n, secs) {
@@ -53,13 +82,24 @@ function startQ(g) {
 function closeQ(g) { if (g.state !== 'question') return; clearTimeout(g.timer); g.state = 'results'; broadcast(g) }
 function endGame(g) { clearTimeout(g.timer); g.state = 'ended'; broadcast(g) }
 
-function body(req) { return new Promise(r => { let d = ''; req.on('data', c => { d += c; if (d.length > 2048) { req.destroy() } }); req.on('end', () => { try { r(JSON.parse(d || '{}')) } catch { r({}) } }) }) }
+function body(req) { return new Promise(r => { let d = ''; req.on('data', c => { d += c; if (d.length > 8192) { req.destroy() } }); req.on('end', () => { try { r(JSON.parse(d || '{}')) } catch { r({}) } }) }) }
 const send = (res, c, o) => { res.writeHead(c, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(o)) };
 const ip = req => (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
 
 async function api(req, res, u) {
     const b = req.method === 'POST' ? await body(req) : {}, qs = u.searchParams, I = ip(req);
     if (u.pathname === '/api/info') return send(res, 200, { urls: lanUrls() });
+    if (u.pathname === '/api/ruleta/events') {
+        res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'Connection': 'keep-alive', 'X-Accel-Buffering': 'no' });
+        res.write('retry: 2000\n\ndata: ' + JSON.stringify(ruleta) + '\n\n'); rClientes.add(res);
+        const hb = setInterval(() => res.write(': ping\n\n'), 15000); req.on('close', () => { clearInterval(hb); rClientes.delete(res) }); return;
+    }
+    if (u.pathname === '/api/ruleta') {
+        if (req.method !== 'POST') return send(res, 200, ruleta);
+        if (limited(I + 'r', 120)) return send(res, 429, { error: 'Demasiados cambios seguidos. Espere un momento.' });
+        const r = rAccion(b); if (typeof r === 'string') return send(res, 400, { error: r });
+        rEnviar(); return send(res, 200, { ...r, ...ruleta });
+    }
     if (u.pathname === '/api/create') {
         if (limited(I + 'c', 10)) return send(res, 429, { error: 'Demasiados intentos. Espere un minuto.' });
         if (games.size >= 50) return send(res, 503, { error: 'El servidor está lleno. Intente más tarde.' });

@@ -1,0 +1,101 @@
+/* Página de registro de participantes */
+.reg {
+    width: min(760px, calc(100% - 32px))
+}
+
+.reg h1 {
+    margin-top: .6rem
+}
+
+.reg-estado {
+    padding: .7rem 1rem;
+    border-radius: 14px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    font-weight: 700
+}
+
+.reg-estado.bien {
+    background: #dcfce7;
+    border-color: #86efac
+}
+
+.reg-estado.espera {
+    background: #fff4e0;
+    border-color: #f5c770
+}
+
+.reg-estado.mal {
+    background: #fee2e2;
+    border-color: #fca5a5
+}
+
+.reg-form label {
+    margin-top: 0 !important;
+    font-size: 1.1rem
+}
+
+.reg-fila {
+    display: flex;
+    gap: .6rem
+}
+
+.reg-fila input {
+    flex: 1;
+    min-width: 0;
+    min-height: 64px !important;
+    font-size: 1.25rem !important
+}
+
+.reg-fila .btn {
+    flex: none
+}
+
+.reg-ok:not(:empty) {
+    margin-top: .8rem;
+    padding: .8rem 1rem;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 1.1rem
+}
+
+.reg-ok.bien {
+    background: #dcfce7;
+    border: 2px solid #86efac
+}
+
+.reg-ok.mal {
+    background: #fee2e2;
+    border: 2px solid #fca5a5
+}
+
+.reg-lista h2,
+.reg-lista h3 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.4rem
+}
+
+.reg-lista h3 {
+    margin-top: 1.4rem;
+    font-size: 1.15rem
+}
+
+.reg .chips-nombres {
+    max-height: none
+}
+
+.reg .chips-nombres li {
+    font-size: 1.1rem
+}
+
+.hechos-c {
+    background: #16a34a
+}
+
+@media (max-width: 520px) {
+    .reg-fila {
+        flex-direction: column
+    }
+}

@@ -14,6 +14,7 @@ async function open_() {
     es = connect(`code=${S.hcode}&role=host&token=${S.htoken}`, render, (ok, gone) => { $('#conn').textContent = gone ? 'La partida expiró' : ok ? 'Conectado' : 'Sin conexión. Reconectando…'; if (gone) S.clear() });
 }
 if (S.hcode) open_();
+setInterval(() => fetch('/api/info', { cache: 'no-store' }).catch(() => { }), 240000); // mantiene despierto el servidor gratuito
 const link = () => BASE + '/quiz.html?code=' + S.hcode;
 function lobby(s) {
     const v = $('#view');

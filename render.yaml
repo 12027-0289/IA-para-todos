@@ -1,0 +1,9 @@
+# Publicación en Render.com (gratis): Dashboard → New → Blueprint → elegir este repositorio.
+services:
+  - type: web
+    name: ia-para-todos
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/info

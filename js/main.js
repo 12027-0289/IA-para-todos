@@ -281,6 +281,25 @@ const Voz = (() => {
     try { nombres = JSON.parse(store.get('ruleta') || '[]'); hechos = JSON.parse(store.get('ruletaHechos') || '[]') } catch { }
     let ang = 0, girando = false, audio = null, pendiente = null, tSacar;
     const guardar = () => { store.set('ruleta', JSON.stringify(nombres)); store.set('ruletaHechos', JSON.stringify(hechos)) };
+    // Registro compartido: si hay servidor, los nombres que agrega el equipo (registro.html) llegan al instante
+    let compartida = false, remoto = null;
+    const sync = cuerpo => { if (compartida) fetch('/api/ruleta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo) }).catch(() => { }) };
+    function aplicar(d) { if (girando || pendiente) { remoto = d; return } nombres = d.nombres; hechos = d.hechos; cambio() }
+    function modo(txt, clase) { const m = $('#ruletaModo'); m.textContent = txt; m.className = 'ruleta-modo ' + clase }
+    (async () => {
+        if (location.protocol === 'file:' || !window.EventSource) return modo('💻 Modo local: los nombres se guardan solo en esta computadora.', 'local');
+        try { const r = await fetch('/api/ruleta', { cache: 'no-store' }); if (!r.ok) throw 0; await r.json() } catch { return modo('💻 Modo local: los nombres se guardan solo en esta computadora.', 'local') }
+        compartida = true; $('#registroLink').hidden = false;
+        setInterval(() => fetch('/api/info', { cache: 'no-store' }).catch(() => { }), 240000); // mantiene despierto el servidor gratuito
+        const es = new EventSource('/api/ruleta/events'); let primero = true;
+        es.onmessage = e => {
+            const d = JSON.parse(e.data); modo('🟢 Conectada al registro del equipo: los nombres llegan al instante.', 'en-linea');
+            // Si el servidor se reinició vacío, se le devuelven los nombres que esta computadora tenía guardados
+            if (primero && !d.nombres.length && !d.hechos.length && nombres.length) { primero = false; sync({ accion: 'agregar', nombres }); return }
+            primero = false; aplicar(d);
+        };
+        es.onerror = () => modo('🟡 Reconectando con el registro del equipo…', 'espera');
+    })();
     const quieto = () => calm || document.documentElement.classList.contains('no-anim');
 
     function dibujar() {
@@ -311,7 +330,7 @@ const Voz = (() => {
         nombres.forEach((nm, i) => {
             const li = el('li'); li.style.setProperty('--c', COLORES[i % COLORES.length]);
             const x = el('button', null, '×'); x.type = 'button'; x.setAttribute('aria-label', 'Quitar a ' + nm);
-            x.onclick = () => { nombres.splice(i, 1); cambio() };
+            x.onclick = () => { nombres.splice(i, 1); cambio(); sync({ accion: 'quitar', nombre: nm }) };
             li.append(el('span', null, nm), x); lista.append(li);
         });
         botones.forEach(b => b.disabled = girando || !nombres.length);
@@ -323,19 +342,21 @@ const Voz = (() => {
     function agregar(txt) {
         txt.split(/[,;\n]+/).map(t => t.trim().replace(/\s+/g, ' ').slice(0, 24)).filter(Boolean).forEach(t => {
             hechos = hechos.filter(x => x.toLowerCase() !== t.toLowerCase());
-            if (nombres.length < 60 && !nombres.some(x => x.toLowerCase() === t.toLowerCase())) nombres.push(t);
+            if (nombres.length < 200 && !nombres.some(x => x.toLowerCase() === t.toLowerCase())) nombres.push(t);
         });
-        cambio();
+        cambio(); sync({ accion: 'agregar', nombres: txt.split(/[,;\n]+/).map(t => t.trim()).filter(Boolean) });
     }
     $('#nombreForm').onsubmit = e => { e.preventDefault(); agregar($('#nombreIn').value); $('#nombreIn').value = ''; $('#nombreIn').focus() };
     $('#ejemplo').onclick = () => agregar(EJEMPLO.join(','));
-    $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { clearTimeout(tSacar); pendiente = null; nombres = []; hechos = []; res.hidden = true; cambio() } };
-    $('#reiniciar').onclick = () => { sacar(); nombres = nombres.concat(hechos); hechos = []; res.hidden = true; cambio(); robot('¡Listo! Todos están de nuevo en la ruleta. 🎡') };
+    $('#vaciar').onclick = () => { if (!nombres.length || confirm('¿Borrar todos los nombres de la ruleta?')) { clearTimeout(tSacar); pendiente = null; nombres = []; hechos = []; res.hidden = true; cambio(); sync({ accion: 'vaciar' }) } };
+    $('#reiniciar').onclick = () => { sacar(); nombres = nombres.concat(hechos); hechos = []; res.hidden = true; cambio(); sync({ accion: 'reiniciar' }); robot('¡Listo! Todos están de nuevo en la ruleta. 🎡') };
     // Saca de la ruleta a la persona que acaba de salir
     function sacar() {
         clearTimeout(tSacar); if (!pendiente) return;
         const k = nombres.indexOf(pendiente); if (k > -1) { nombres.splice(k, 1); hechos.push(pendiente) }
+        sync({ accion: 'participo', nombre: pendiente });
         pendiente = null; cambio();
+        if (remoto) { const d = remoto; remoto = null; aplicar(d) }
         if (nombres.length === 1) robot('Solo falta ' + nombres[0] + '. ¡Su turno! 😊');
         if (!nombres.length) robot('¡Todos participaron! Gracias por compartir. 💙', 'feliz');
     }

@@ -4,13 +4,25 @@ Sitio de apoyo para una charla introductoria sobre inteligencia artificial: expl
 
 ## Cómo abrirlo
 
-**Sin instalar nada:** abra `index.html` con doble clic, con la extensión Live Server de Visual Studio Code o desde GitHub Pages. Funciona todo: la charla, el video, las actividades y el Reto IA en *modo sin servidor*:
-- `presentador.html` → **modo proyector**: cada pregunta se muestra en pantalla grande y el público responde levantando la mano por la figura (▲ ◆ ● ■).
-- `quiz.html` → **práctica individual**: cada persona responde 10 preguntas en su teléfono, a su ritmo.
+### Para la charla: publicarlo en internet con Render (gratis, sin instalar nada)
+Así funcionan **el quiz en vivo en cada celular** y **el registro de participantes** de la ruleta.
+1. Entre a https://render.com y elija **Sign in with GitHub**.
+2. Toque **New → Blueprint** y elija el repositorio **IA-para-todos** (el archivo `render.yaml` ya trae la configuración).
+3. Toque **Apply** y espere unos minutos. Render le da una dirección como `https://ia-para-todos.onrender.com`.
 
-**Con Node.js 18+ (opcional):** ejecute `npm start` y abra `http://localhost:3000` para el concurso **en vivo**: cada persona entra desde su teléfono con un código o QR, con puntaje y podio. Los teléfonos deben estar en la misma Wi‑Fi, o publique el servidor y defina `PUBLIC_URL`.
+Páginas importantes (cambie la dirección por la suya):
+- `/` → la charla (proyéctela).
+- `/registro.html` → **registro de participantes**: sus compañeros lo abren en el celular y agregan los nombres al llegar. Aparecen al instante en la ruleta.
+- `/presentador.html` → crear el Reto IA en vivo (muestra un código y un QR).
+- `/quiz.html` → el público entra desde su celular con el código.
 
-El Reto IA detecta solo si hay servidor y elige el modo adecuado.
+Consejos: el plan gratuito "se duerme" tras 15 minutos sin uso; ábralo unos minutos antes de la charla (la primera carga tarda ~1 minuto). Mientras la ruleta, el registro o el presentador estén abiertos, la página lo mantiene despierto. Los nombres de la ruleta se guardan en el servidor, y si se borraran, la computadora de la ruleta los vuelve a enviar.
+
+### Sin internet ni servidor
+Abra `index.html` con doble clic o con Live Server. Funciona la charla completa; la ruleta guarda los nombres solo en esa computadora y el Reto IA cambia a **modo proyector** o **práctica individual**.
+
+### Con Node.js (opcional)
+`npm start` y abra `http://localhost:3000`. Los celulares deben estar en la misma Wi‑Fi.
 
 ## Contenido
 | Sección | Qué incluye |
@@ -28,6 +40,8 @@ Las tres actividades funcionan solo en el navegador; no se envía ni se guarda n
 - `quiz.html`, `presentador.html`, `css/quiz.css`, `js/quiz-client.js`, `js/presentador.js`: Reto IA en vivo.
 - `js/quiz-local.js`: Reto IA sin servidor (modo proyector y práctica individual).
 - `js/preguntas.js`: banco de 30 preguntas, compartido por ambos modos.
-- `server/server.js`: servidor opcional sin dependencias (estado en memoria).
+- `registro.html`, `js/registro.js`, `css/registro.css`: registro de participantes en vivo para el equipo.
+- `server/server.js`: servidor sin dependencias (quiz en memoria; nombres de la ruleta en `data/ruleta.json`).
+- `render.yaml`: configuración para publicar en Render.
 
 El quiz y el video provienen del proyecto ADEP Aprende.

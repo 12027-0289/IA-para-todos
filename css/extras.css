@@ -699,3 +699,61 @@ html.hc .charla-e {
 .show-bot.hablando .mouth {
     animation: boca .22s ease-in-out infinite alternate
 }
+
+/* «¿Qué es la IA?» en palabras sencillas */
+.def-simple {
+    font-size: 1.2rem
+}
+
+.lista-simple {
+    display: grid;
+    gap: .6rem;
+    padding: 0;
+    margin: 0 0 1rem;
+    list-style: none
+}
+
+.lista-simple li {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem 1rem;
+    border-radius: 16px;
+    background: var(--soft);
+    border: 1px solid var(--line)
+}
+
+.lista-simple li span {
+    flex: none;
+    font-size: 1.8rem
+}
+
+.lista-simple p {
+    margin: 0
+}
+
+/* Estado de la ruleta compartida */
+.ruleta-modo:not(:empty) {
+    margin: .6rem 0;
+    padding: .55rem .9rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: .92rem;
+    background: var(--soft);
+    border: 1px solid var(--line)
+}
+
+.ruleta-modo.en-linea {
+    background: #dcfce7;
+    border-color: #86efac
+}
+
+.ruleta-modo.espera {
+    background: #fff4e0;
+    border-color: #f5c770
+}
+
+#registroLink {
+    width: 100%;
+    margin-bottom: .6rem
+}

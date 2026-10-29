@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de participantes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/site.css">
+    <link rel="stylesheet" href="css/fx.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/tema-sereno.css">
+    <link rel="stylesheet" href="css/registro.css">
+</head>
+
+<body class="quiz">
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="index.html">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2.2" /><circle cx="18" cy="7" r="2.2" /><circle cx="12" cy="17" r="2.6" /><path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" /></svg></span>
+                <span>IA para todos<small>Registro del equipo</small></span>
+            </a>
+            <a class="btn ghost volver" href="index.html#act3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>Ir a la ruleta</a>
+        </div>
+    </header>
+
+    <main class="qwrap reg">
+        <p class="rq-chip">📋 Para el equipo de la charla</p>
+        <h1>Registro de participantes</h1>
+        <p class="lead">Escriba el nombre de cada persona cuando llegue. Aparece <b>al instante</b> en la ruleta de la
+            pantalla grande y en los demás celulares del equipo.</p>
+
+        <p class="reg-estado" id="estado" role="status">Conectando…</p>
+
+        <form class="reg-form panel" id="form">
+            <label for="nombre">Nombre de la persona</label>
+            <div class="reg-fila">
+                <input id="nombre" maxlength="400" autocomplete="off" autocapitalize="words" enterkeyhint="done"
+                    placeholder="Ej.: Doña María">
+                <button class="btn rq-grande" type="submit" id="agregar">➕ Agregar</button>
+            </div>
+            <p class="small">Puede escribir varios nombres separados por comas. Use solo el nombre o un apodo, sin
+                apellidos ni datos personales.</p>
+            <div class="reg-ok" id="ok" aria-live="polite"></div>
+        </form>
+
+        <section class="reg-lista panel" aria-labelledby="tLista">
+            <h2 id="tLista">En la ruleta <span class="cuenta" id="cuenta">0</span></h2>
+            <ul class="chips-nombres" id="lista"></ul>
+            <p class="small" id="vacia">Todavía no hay nombres. ¡Agregue el primero!</p>
+            <div id="hechosBox" hidden>
+                <h3>Ya participaron <span class="cuenta hechos-c" id="cuentaH">0</span></h3>
+                <ul class="chips-hechos" id="hechos"></ul>
+            </div>
+        </section>
+    </main>
+    <script src="js/registro.js"></script>
+</body>
+
+</html>
