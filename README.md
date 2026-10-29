@@ -15,6 +15,7 @@ Páginas importantes (cambie la dirección por la suya):
 - `/registro.html` → **registro de participantes**: sus compañeros lo abren en el celular y agregan los nombres al llegar. Aparecen al instante en la ruleta.
 - `/presentador.html` → crear el Reto IA en vivo (muestra un código y un QR).
 - `/quiz.html` → el público entra desde su celular con el código.
+- `/compartir.html` → los **enlaces** de la charla y del registro listos para copiar, y el **código QR** de la charla para proyectar, descargar o imprimir.
 
 Consejos: el plan gratuito "se duerme" tras 15 minutos sin uso; ábralo unos minutos antes de la charla (la primera carga tarda ~1 minuto). Mientras la ruleta, el registro o el presentador estén abiertos, la página lo mantiene despierto. Los nombres de la ruleta se guardan en el servidor, y si se borraran, la computadora de la ruleta los vuelve a enviar.
 

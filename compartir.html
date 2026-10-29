@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Compartir la charla</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Lexend:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/fx.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/tema-sereno.css">
+    <link rel="stylesheet" href="css/compartir.css">
+</head>
+
+<body class="quiz">
+    <header class="top">
+        <div class="wrap">
+            <a class="brand" href="index.html">
+                <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="7" r="2.2" /><circle cx="18" cy="7" r="2.2" /><circle cx="12" cy="17" r="2.6" /><path d="M8 8.2 10.6 15M16 8.2 13.4 15M8.2 7h7.6" /></svg></span>
+                <span>IA para todos<small>Compartir</small></span>
+            </a>
+            <a class="btn ghost volver" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>Volver a la charla</a>
+        </div>
+    </header>
+
+    <main class="qwrap wide comp">
+        <h1>Enlaces y código QR</h1>
+        <p class="lead">Copie los enlaces para enviarlos por WhatsApp o correo. El código QR lleva solo al material de
+            la charla: proyéctelo o imprímalo para que el público lo escanee con la cámara del celular.</p>
+
+        <div class="comp-grid">
+            <section class="comp-qr panel" aria-labelledby="tQr">
+                <p class="rq-chip">📱 Para el público</p>
+                <h2 id="tQr">Material de la charla</h2>
+                <div class="qr-caja" id="qr" role="img" aria-label="Código QR del material de la charla"></div>
+                <p class="comp-url" id="urlQr"></p>
+                <div class="btns">
+                    <button class="btn" id="descargar" type="button">⬇️ Descargar el QR</button>
+                    <button class="btn ghost" id="imprimir" type="button">🖨️ Imprimir</button>
+                </div>
+            </section>
+
+            <div class="comp-links">
+                <section class="comp-link panel">
+                    <p class="rq-chip">🎓 Para el público</p>
+                    <h2>Material de la charla</h2>
+                    <p class="small">La página con todo el contenido, las actividades y el Reto IA.</p>
+                    <div class="comp-fila"><input id="linkCharla" readonly aria-label="Enlace de la charla"><button class="btn" data-copia="linkCharla" type="button">Copiar</button></div>
+                    <a class="btn ghost" id="abrirCharla" target="_blank">Abrir</a>
+                </section>
+                <section class="comp-link panel">
+                    <p class="rq-chip">📋 Solo para el equipo</p>
+                    <h2>Registro de participantes</h2>
+                    <p class="small">Sus compañeros agregan aquí los nombres de quienes llegan; aparecen en la ruleta.
+                        No lo comparta con el público.</p>
+                    <div class="comp-fila"><input id="linkRegistro" readonly aria-label="Enlace del registro"><button class="btn" data-copia="linkRegistro" type="button">Copiar</button></div>
+                    <a class="btn ghost" id="abrirRegistro" target="_blank">Abrir</a>
+                </section>
+                <p class="comp-aviso" id="aviso" hidden>⚠️ Esta página está abierta desde su computadora, así que los
+                    enlaces no funcionarán en otros celulares. Ábrala desde la dirección de Render (por ejemplo
+                    <b>https://ia-para-todos.onrender.com/compartir.html</b>).</p>
+            </div>
+        </div>
+    </main>
+    <script src="js/vendor/qrcode.js"></script>
+    <script src="js/compartir.js"></script>
+</body>
+
+</html>

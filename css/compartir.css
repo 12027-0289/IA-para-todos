@@ -1,0 +1,107 @@
+/* Página para compartir enlaces y el QR */
+.comp-grid {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 1.2fr;
+    gap: 1.4rem;
+    align-items: start
+}
+
+.comp-qr {
+    text-align: center
+}
+
+.comp-qr h2,
+.comp-link h2 {
+    margin: .5rem 0
+}
+
+.qr-caja {
+    width: min(100%, 340px);
+    margin: .8rem auto;
+    padding: .6rem;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid var(--line)
+}
+
+.qr-caja svg {
+    display: block;
+    width: 100%;
+    height: auto
+}
+
+.comp-url {
+    font: 700 1.15rem var(--font-head);
+    color: var(--primary);
+    overflow-wrap: anywhere
+}
+
+.comp-qr .btns {
+    justify-content: center
+}
+
+.comp-links {
+    display: grid;
+    gap: 1.2rem
+}
+
+.comp-link .btn.ghost {
+    margin-top: .6rem
+}
+
+.comp-fila {
+    display: flex;
+    gap: .5rem
+}
+
+.comp-fila input {
+    flex: 1;
+    min-width: 0;
+    min-height: 56px !important;
+    font-size: 1rem !important
+}
+
+.comp-aviso {
+    padding: .9rem 1.1rem;
+    border-radius: 14px;
+    background: #fff4e0;
+    border: 2px solid #f5c770
+}
+
+@media (max-width: 860px) {
+    .comp-grid {
+        grid-template-columns: 1fr
+    }
+}
+
+/* Al imprimir: solo el QR, grande */
+@media print {
+
+    .top,
+    .lead,
+    .comp-links,
+    .comp-qr .btns,
+    .comp > h1,
+    #sbar,
+    .rq-chip {
+        display: none !important
+    }
+
+    .comp-grid {
+        display: block
+    }
+
+    .comp-qr {
+        border: 0;
+        box-shadow: none
+    }
+
+    .qr-caja {
+        width: 12cm;
+        border: 0
+    }
+
+    .comp-qr h2 {
+        font-size: 28pt
+    }
+}

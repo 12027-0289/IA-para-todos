@@ -25,7 +25,7 @@ function lobby(s) {
         const cb = h('button', 'btn ghost', 'Copiar enlace'), cc = h('button', 'btn ghost', 'Copiar código'); cb.onclick = () => copy(link(), cb); cc.onclick = () => copy(S.hcode, cc);
         left.append(cb, document.createTextNode(' '), cc); row.append(left, qr); v.append(row);
         if (NOLAN) v.append(h('p', 'err', 'No encontramos la dirección de esta computadora en la red. Conéctela al mismo Wi-Fi que los teléfonos o publique el servidor.'));
-        if (window.QRCode) new QRCode(qr, { text: link(), width: 200, height: 200 }); else qr.append(h('p', 'small', 'El código QR no pudo cargarse. Use el enlace o el código.'));
+        if (window.qrcode) { const q = qrcode(0, 'M'); q.addData(link()); q.make(); qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); qr.firstChild.style.width = '220px' } else qr.append(h('p', 'small', 'El código QR no pudo cargarse. Use el enlace o el código.'));
         const info = h('div', 'panel'); info.append(h('p', null, 'Reglas: cada respuesta correcta da entre 800 y 1000 puntos (la rapidez suma poco). Incorrecta o tardía: 0. Empate: más respuestas correctas y, si sigue, menor tiempo en las correctas.')); v.append(info);
         const names = h('div', 'panel'); names.id = 'names'; v.append(names);
         const go = h('button', 'btn', 'Iniciar la partida'); go.onclick = () => act('start'); v.append(go);
