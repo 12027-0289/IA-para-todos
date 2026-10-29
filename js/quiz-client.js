@@ -6,7 +6,15 @@ function connect(qs, onState, onConn) { const es = new EventSource('/api/events?
 let _t; function timer(el, s) { clearInterval(_t); if (s.state !== 'question') { el.textContent = ''; return } const end = performance.now() + s.remaining, f = () => { el.textContent = 'Tiempo: ' + Math.max(0, Math.ceil((end - performance.now()) / 1000)) + ' s' }; f(); _t = setInterval(f, 250) }
 const MARK = ['▲ A', '◆ B', '● C', '■ D'];
 function dist(box, d) { box.replaceChildren(); const m = Math.max(1, ...d); d.forEach((n, i) => { const r = h('div', 'bar2'), b = h('i'); b.style.width = (n / m * 70) + '%'; r.append(h('b', null, MARK[i]), b, h('span', null, n + '')); box.append(r) }) }
-function podium(box, top) { box.replaceChildren();[[1, '🥇', 'Primer lugar', 'p1'], [0, '🥈', 'Segundo lugar', 'p2'], [2, '🥉', 'Tercer lugar', 'p3']].forEach(([i, m, l, c]) => { const p = top[i]; if (!p) return; const d = h('div', c); d.append(h('div', null, m), h('b', null, l), h('p', null, p.name), h('p', null, p.score + ' puntos'), h('p', null, p.correct + ' de ' + p.answered + ' correctas (' + p.pct + '%)')); box.append(d) }) }
+// Podio (top 3) en orden: 1.º, 2.º y 3.º. Gana quien más acierta; en empate, quien respondió más rápido.
+function podium(box, top) {
+    box.replaceChildren();
+    [['🥇', 'Primer lugar', 'p1'], ['🥈', 'Segundo lugar', 'p2'], ['🥉', 'Tercer lugar', 'p3']].forEach(([m, l, c], i) => {
+        const p = top[i]; if (!p) return; const d = h('div', c);
+        d.append(h('div', null, m), h('b', null, l), h('p', 'pod-nombre', p.name), h('p', null, '✔ ' + p.correct + (p.correct === 1 ? ' respuesta correcta' : ' respuestas correctas')), h('p', 'small', '⏱ ' + p.seg + ' s en total'));
+        box.append(d);
+    });
+}
 const copy = async (t, btn) => { try { await navigator.clipboard.writeText(t); const o = btn.textContent; btn.textContent = '¡Copiado!'; setTimeout(() => btn.textContent = o, 1500) } catch { prompt('Copie este texto:', t) } };
 
 if ($('#player')) {
@@ -36,8 +44,8 @@ if ($('#player')) {
             });
             v.append(box);
             if (s.state === 'question' && s.mine) v.append(h('p', 'fb', '¡Respuesta recibida! Espera los resultados.'));
-            if (s.state === 'results') { const ok = s.mine && s.mine.ok; v.append(h('p', 'fb', s.mine ? (ok ? '¡Correcto! Ganó ' + s.mine.pts + ' puntos.' : 'Esta vez no fue la respuesta correcta.') : 'No alcanzó a responder esta vez.'), h('p', null, 'La respuesta correcta era: ' + MARK[s.correct] + '  ' + s.q.opts[s.correct]), h('p', null, s.expl)); if (s.me) v.append(h('p', null, 'Su puesto: ' + s.me.pos + '.º con ' + s.me.score + ' puntos.')); v.append(h('p', 'small', 'Espere a que el presentador continúe.')) }
+            if (s.state === 'results') { const ok = s.mine && s.mine.ok; v.append(h('p', 'fb', s.mine ? (ok ? '¡Correcto! 🎉' : 'Esta vez no fue la respuesta correcta.') : 'No alcanzó a responder esta vez.'), h('p', null, 'La respuesta correcta era: ' + MARK[s.correct] + '  ' + s.q.opts[s.correct]), h('p', null, s.expl)); if (s.me) v.append(h('p', null, 'Su puesto por ahora: ' + s.me.pos + '.º con ' + s.me.correct + (s.me.correct === 1 ? ' correcta' : ' correctas') + '.')); v.append(h('p', 'small', 'Espere a que el presentador continúe.')) }
         }
-        if (s.state === 'ended') { v.append(h('p', 'qtxt', '¡Terminó el concurso!')); const pd = h('div', 'pod'); v.append(pd); podium(pd, s.podium || []); if (s.me) v.append(h('p', 'fb', 'Usted quedó en el puesto ' + s.me.pos + ' con ' + s.me.score + ' puntos y ' + s.me.correct + (s.me.correct === 1 ? ' respuesta correcta.' : ' respuestas correctas.'))); v.append(h('p', null, '¡Gracias por participar! Cada pregunta es una oportunidad para aprender.'), Object.assign(h('a', 'btn', 'Regresar a la charla'), { href: 'index.html' })) }
+        if (s.state === 'ended') { v.append(h('p', 'qtxt', '¡Terminó el concurso!')); const pd = h('div', 'pod'); v.append(pd); podium(pd, s.podium || []); if (s.me) v.append(h('p', 'fb', 'Usted quedó en el puesto ' + s.me.pos + ' con ' + s.me.correct + (s.me.correct === 1 ? ' respuesta correcta' : ' respuestas correctas') + ' (' + s.me.seg + ' s en total).')); v.append(h('p', null, '¡Gracias por participar! Cada pregunta es una oportunidad para aprender.'), Object.assign(h('a', 'btn', 'Regresar a la charla'), { href: 'index.html' })) }
     }
 }

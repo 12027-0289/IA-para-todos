@@ -26,7 +26,7 @@ function lobby(s) {
         left.append(cb, document.createTextNode(' '), cc); row.append(left, qr); v.append(row);
         if (NOLAN) v.append(h('p', 'err', 'No encontramos la dirección de esta computadora en la red. Conéctela al mismo Wi-Fi que los teléfonos o publique el servidor.'));
         if (window.qrcode) { const q = qrcode(0, 'M'); q.addData(link()); q.make(); qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true }); qr.firstChild.style.width = '220px' } else qr.append(h('p', 'small', 'El código QR no pudo cargarse. Use el enlace o el código.'));
-        const info = h('div', 'panel'); info.append(h('p', null, 'Reglas: cada respuesta correcta da entre 800 y 1000 puntos (la rapidez suma poco). Incorrecta o tardía: 0. Empate: más respuestas correctas y, si sigue, menor tiempo en las correctas.')); v.append(info);
+        const info = h('div', 'panel'); info.append(h('p', null, 'Reglas: gana quien tenga más respuestas correctas. Si hay empate, gana quien respondió más rápido (menos tiempo total en sus respuestas correctas). Al final se muestra el top 3.')); v.append(info);
         const names = h('div', 'panel'); names.id = 'names'; v.append(names);
         const go = h('button', 'btn', 'Iniciar la partida'); go.onclick = () => act('start'); v.append(go);
     }
@@ -43,11 +43,11 @@ function render(s) {
         if (s.state === 'results' && festejo !== s.idx && window.tono) { festejo = s.idx; sonidoBien(); setTimeout(() => confeti(box.children[s.correct]), 60) }
         v.append(h('p', null, 'Respondieron ' + s.answered + ' de ' + s.count + (s.state === 'question' ? '. Faltan ' + (s.count - s.answered) + '.' : '.')));
         const db = h('div', 'bars'); v.append(db); dist(db, s.dist);
-        if (s.order && s.order.length) { const o = h('div', 'panel'); o.append(h('b', null, 'Orden en que llegaron las respuestas')); const ol = h('ol'); s.order.slice(0, 8).forEach((x, i) => ol.append(h('li', null, x.name + ' — ' + ['primero', 'segundo', 'tercero'][i] + ' (' + (x.ms / 1000).toFixed(1) + ' s)' + (x.ok === undefined ? '' : x.ok ? ' ✔ acertó' : ' ✖ no acertó')))); o.append(ol); v.append(o) }
+        if (s.order && s.order.length) { const o = h('div', 'panel'); o.append(h('b', null, 'Orden en que llegaron las respuestas')); const ol = h('ol'); s.order.slice(0, 8).forEach((x, i) => ol.append(h('li', null, x.name + ' — ' + ['primero', 'segundo', 'tercero', 'cuarto', 'quinto', 'sexto', 'séptimo', 'octavo'][i] + ' (' + (x.ms / 1000).toFixed(1) + ' s)' + (x.ok === undefined ? '' : x.ok ? ' ✔ acertó' : ' ✖ no acertó')))); o.append(ol); v.append(o) }
         const ctl = h('div', 'btns');
         if (s.state === 'question') { const c = h('button', 'btn', 'Cerrar la pregunta ahora'); c.onclick = () => act('close'); ctl.append(c) }
         else {
-            v.append(h('p', 'fb', 'Respuesta correcta: ' + MARK[s.correct] + '  ' + s.q.opts[s.correct]), h('p', null, s.expl)); const t = h('table'); s.board.forEach(p => { const r = t.insertRow();[p.pos + '.º', p.name, p.score + ' puntos'].forEach(x => r.insertCell().textContent = x) }); v.append(t);
+            v.append(h('p', 'fb', 'Respuesta correcta: ' + MARK[s.correct] + '  ' + s.q.opts[s.correct]), h('p', null, s.expl)); const t = h('table'); s.board.forEach(p => { const r = t.insertRow();[p.pos + '.º', p.name, '✔ ' + p.correct + (p.correct === 1 ? ' correcta' : ' correctas'), '⏱ ' + p.seg + ' s'].forEach(x => r.insertCell().textContent = x) }); v.append(t);
             const n = h('button', 'btn', s.last ? 'Ver el podio final' : 'Siguiente pregunta'); n.onclick = () => act('next'); ctl.append(n)
         }
         const e = h('button', 'btn ghost', 'Finalizar el concurso'); e.onclick = () => { if (confirm('¿Finalizar el concurso ahora?')) act('end') }; ctl.append(e); v.append(ctl);

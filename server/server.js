@@ -54,8 +54,9 @@ function newGame(n, secs) {
     const g = { code, hostToken: tok(), qs: pool.slice(0, n), limit: secs, state: 'lobby', qi: -1, players: new Map(), answers: new Map(), order: [], clients: new Set(), last: Date.now(), timer: null };
     games.set(code, g); return g;
 }
-const ranking = g => [...g.players.entries()].map(([id, p]) => ({ id, ...p })).sort((a, b) => b.score - a.score || b.correct - a.correct || a.time - b.time)
-    .map((p, i) => ({ id: p.id, pos: i + 1, name: p.name, score: p.score, correct: p.correct, answered: p.answered, pct: p.answered ? Math.round(100 * p.correct / p.answered) : 0 }));
+// Ranking: gana quien tenga más respuestas correctas; si hay empate, quien tardó menos en total en sus respuestas correctas.
+const ranking = g => [...g.players.entries()].map(([id, p]) => ({ id, ...p })).sort((a, b) => b.correct - a.correct || a.time - b.time || a.name.localeCompare(b.name))
+    .map((p, i) => ({ id: p.id, pos: i + 1, name: p.name, score: p.score, correct: p.correct, answered: p.answered, seg: +(p.time / 1000).toFixed(1), pct: p.answered ? Math.round(100 * p.correct / p.answered) : 0 }));
 function snap(g, role, pid) {
     const q = g.qs[g.qi], now = Date.now();
     const s = { code: g.code, state: g.state, total: g.qs.length, idx: g.qi + 1, names: [...g.players.values()].map(p => p.name), count: g.players.size, limit: g.limit };

@@ -1017,3 +1017,18 @@ html.no-anim .rq-tarjeta {
 .bars .bar2:nth-child(4) i {
     background: #7c5ce0
 }
+
+/* Podio: 1.º, 2.º y 3.º de izquierda a derecha; el primero más grande */
+.pod {
+    align-items: stretch
+}
+
+.pod .p1 {
+    background: #fff8e1;
+    border: 3px solid #f5b301;
+    transform: scale(1.04)
+}
+
+.pod-nombre {
+    font: 700 1.4rem var(--font-head)
+}
